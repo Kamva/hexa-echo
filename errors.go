@@ -38,4 +38,10 @@ var (
 		true, http.StatusInternalServerError, "KE_2_E_02",
 		kitty.ErrorKeyInternalError, "request id not found in the request.",
 	)
+
+	//--------------------------------
+	// Other errors
+	//--------------------------------
+	errUnknownError = kitty.NewError(true, http.StatusInternalServerError, "KE_3_E_00",
+		"err_unknown_error","")
 )

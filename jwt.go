@@ -6,7 +6,7 @@ import (
 	"github.com/labstack/echo/v4/middleware"
 )
 
-const JwtContextKey="jwt"
+const JwtContextKey = "jwt"
 
 // skipIfNotProvidedHeader skip jwt middleware if jwt authorization header
 // is not provided.

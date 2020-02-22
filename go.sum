@@ -21,6 +21,12 @@ github.com/Kamva/kitty v0.0.0-20200222164512-5ff7e2613559 h1:mYW5tmnPHXb5AvWIoIQ
 github.com/Kamva/kitty v0.0.0-20200222164512-5ff7e2613559/go.mod h1:KtQw+TewkCdYXreXA1T19ZTCxd3hjJhqS/uU/mrdkFM=
 github.com/Kamva/kitty v0.0.0-20200222182057-2d00094387ac h1:12IKYenG5ipSYRdUIWY6S3mhr+ht8P8S51cuoevFSe8=
 github.com/Kamva/kitty v0.0.0-20200222182057-2d00094387ac/go.mod h1:KtQw+TewkCdYXreXA1T19ZTCxd3hjJhqS/uU/mrdkFM=
+github.com/Kamva/kitty v0.0.0-20200222220956-899f10f5bce8 h1:52ii7mTXi0fKaz12lT75vvAS8D1E3JUywV+cHJU5mZ4=
+github.com/Kamva/kitty v0.0.0-20200222220956-899f10f5bce8/go.mod h1:KtQw+TewkCdYXreXA1T19ZTCxd3hjJhqS/uU/mrdkFM=
+github.com/Kamva/kitty v0.0.0-20200222222218-53496956e35b h1:GMvDehf4ea2dLirOqbhAqPT6l3AS/v3hcg+7SpXhgMs=
+github.com/Kamva/kitty v0.0.0-20200222222218-53496956e35b/go.mod h1:KtQw+TewkCdYXreXA1T19ZTCxd3hjJhqS/uU/mrdkFM=
+github.com/Kamva/kitty v0.0.0-20200222222920-4d6f19472261 h1:1AvgKuFyI//DyLduQCqIvOypeI+EB/uZGiWZLu7Qdw0=
+github.com/Kamva/kitty v0.0.0-20200222222920-4d6f19472261/go.mod h1:KtQw+TewkCdYXreXA1T19ZTCxd3hjJhqS/uU/mrdkFM=
 github.com/Kamva/mgm/v2 v2.0.0/go.mod h1:DgcNZxH74WB3FMcxV6e/MKNdNzu3EI1vuStdOjkasTE=
 github.com/OneOfOne/xxhash v1.2.2/go.mod h1:HSdplMjZKSmBqAxg5vPj2TmRDmfkzw+cTzAElWljhcU=
 github.com/alecthomas/template v0.0.0-20160405071501-a0175ee3bccc/go.mod h1:LOuyumcjzFXgccqObfd/Ljyb9UuFJ6TxHnclSeseNhc=
