@@ -6,6 +6,8 @@ import (
 	"github.com/labstack/echo/v4/middleware"
 )
 
+const JwtContextKey="jwt"
+
 // skipIfNotProvidedHeader skip jwt middleware if jwt authorization header
 // is not provided.
 func skipIfNotProvidedHeader(header string) middleware.Skipper {
@@ -28,7 +30,7 @@ func jwtErrorHandler(err error) error {
 var jwtConfig = middleware.JWTConfig{
 	Skipper:       skipIfNotProvidedHeader(echo.HeaderAuthorization),
 	SigningMethod: middleware.AlgorithmHS256,
-	ContextKey:    "jwt",
+	ContextKey:    JwtContextKey,
 	TokenLookup:   "header:" + echo.HeaderAuthorization,
 	AuthScheme:    "Bearer",
 	Claims:        jwt.MapClaims{},
