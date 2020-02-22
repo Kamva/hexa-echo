@@ -7,22 +7,35 @@ import (
 
 var (
 	// Error code description:
-	// KE = kitty echo
-	// E = Error
-	// 00 = error number.
+	// KE = kitty echo (package or project name)
+	// 1 = errors about user section (identify some part in application)
+	// E = Error (type of code : error|response)
+	// 00 = error number zero (id of code in that part and type)
 
-	userNotFound = kitty.NewError(
-		true, http.StatusInternalServerError, "KE_E_00",
+	//--------------------------------
+	// User and authentication Errors
+	//--------------------------------
+	errUserNotFound = kitty.NewError(
+		true, http.StatusInternalServerError, "KE_1_E_0",
 		kitty.ErrorKeyInternalError, "user not found",
 	)
 
-	contextUserNotImplementedKittyUser = kitty.NewError(
-		true, http.StatusInternalServerError, "KE_E_01",
+	errContextUserNotImplementedKittyUser = kitty.NewError(
+		true, http.StatusInternalServerError, "KE_1_E_1",
 		kitty.ErrorKeyInternalError, "context's user not implemented the kitty User interface.",
 	)
 
-	requestIdNotFound = kitty.NewError(
-		true, http.StatusInternalServerError, "KE_E_02",
+	errJwtMissing = kitty.NewError(false, http.StatusBadRequest, "KE_1_E_2",
+		"missing_jwt_token", "missing or malformed jwt")
+
+	errInvalidOrExpiredJwt = kitty.NewError(false, http.StatusUnauthorized, "KE_1_E_3",
+		"invalid_or_expired_jwt", "invalid or expired jwt")
+
+	//--------------------------------
+	// Request errors
+	//--------------------------------
+	errRequestIdNotFound = kitty.NewError(
+		true, http.StatusInternalServerError, "KE_2_E_02",
 		kitty.ErrorKeyInternalError, "request id not found in the request.",
 	)
 )

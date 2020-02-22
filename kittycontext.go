@@ -19,13 +19,13 @@ func getKittyUser(ctx echo.Context) (kitty.User, kitty.Error) {
 	u := ctx.Get(ContextKeyKittyUser)
 
 	if u == nil {
-		return nil, userNotFound
+		return nil, errUserNotFound
 	}
 
 	if u, ok := u.(kitty.User); ok {
 		return u, nil
 	} else {
-		return nil, contextUserNotImplementedKittyUser
+		return nil, errContextUserNotImplementedKittyUser
 	}
 }
 
@@ -36,7 +36,7 @@ func getRequestID(ctx echo.Context) (string, kitty.Error) {
 	rid := req.Header.Get(echo.HeaderXRequestID)
 
 	if rid == "" {
-		return "", requestIdNotFound
+		return "", errRequestIdNotFound
 	}
 
 	return rid, nil
