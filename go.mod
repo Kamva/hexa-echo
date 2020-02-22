@@ -1,4 +1,4 @@
-module github.com/Kamva/kecho
+module github.com/Kamva/kitty-echo
 
 go 1.13
 
