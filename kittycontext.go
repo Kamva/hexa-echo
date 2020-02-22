@@ -2,7 +2,6 @@ package kecho
 
 import (
 	"github.com/Kamva/kitty"
-	"github.com/Kamva/kitty/kittylogger"
 	"github.com/labstack/echo/v4"
 	"github.com/sirupsen/logrus"
 )
@@ -44,7 +43,7 @@ func getRequestID(ctx echo.Context) (string, kitty.Error) {
 }
 
 // tuneLogger function tune the logger for users request.
-func tuneLogger(ctx echo.Context, requestID string, u kitty.User, logger *logrus.Entry) *logrus.Entry {
+func tuneLogger(ctx echo.Context, requestID string, u kitty.User, logger kitty.Logger) kitty.Logger {
 
 	logger = logger.WithFields(logrus.Fields{
 		"guest":    u.IsGuest(),
@@ -70,7 +69,7 @@ func localizeTranslator(ctx echo.Context, t kitty.Translator) kitty.Translator {
 }
 
 // KittyContext set kitty context on each request.
-func KittyContext(logger *logrus.Entry, translator kitty.Translator) echo.MiddlewareFunc {
+func KittyContext(logger kitty.Logger, translator kitty.Translator) echo.MiddlewareFunc {
 	return func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(ctx echo.Context) error {
 			user, err := getKittyUser(ctx)
@@ -89,7 +88,11 @@ func KittyContext(logger *logrus.Entry, translator kitty.Translator) echo.Middle
 
 			translator := localizeTranslator(ctx, translator)
 
-			ctx.Set(ContextKeyKittyCtx, kitty.NewCtx(rid, user, kittylogger.NewLogrusDriver(logger), translator))
+			// Set context
+			ctx.Set(ContextKeyKittyCtx, kitty.NewCtx(rid, user, logger, translator))
+
+			// Set context logger
+			ctx.SetLogger(KittyLoggerToEchoLogger(logger))
 
 			return next(ctx)
 		}
