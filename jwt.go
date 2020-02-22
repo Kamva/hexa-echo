@@ -4,14 +4,14 @@ import (
 	"github.com/dgrijalva/jwt-go"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
-	"strings"
 )
 
 // skipIfNotProvidedHeader skip jwt middleware if jwt authorization header
 // is not provided.
-func skipIfNotProvidedHeader(ctx echo.Context) bool {
-	parts := strings.Split(jwtConfig.TokenLookup, ":")
-	return ctx.Request().Header.Get(parts[1]) != ""
+func skipIfNotProvidedHeader(header string) middleware.Skipper {
+	return func(c echo.Context) bool {
+		return c.Request().Header.Get(header) != ""
+	}
 }
 
 // jwtErrorHandler check errors type and return relative kitty error.
@@ -26,7 +26,7 @@ func jwtErrorHandler(err error) error {
 }
 
 var jwtConfig = middleware.JWTConfig{
-	Skipper:       skipIfNotProvidedHeader,
+	Skipper:       skipIfNotProvidedHeader(echo.HeaderAuthorization),
 	SigningMethod: middleware.AlgorithmHS256,
 	ContextKey:    "jwt",
 	TokenLookup:   "header:" + echo.HeaderAuthorization,
