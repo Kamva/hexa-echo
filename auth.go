@@ -22,7 +22,7 @@ func AuthMiddleware() echo.MiddlewareFunc {
 }
 
 // AuthWithConfig is a middleware to specify user should be authenticated or
-// be guest to access to specific API.g
+// be guest to access to specific API.
 func AuthWithConfig(cfg AuthMiddlewareConfig) echo.MiddlewareFunc {
 	return func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(ctx echo.Context) error {
