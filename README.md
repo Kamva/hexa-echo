@@ -16,6 +16,10 @@ users accept-languages and then fallback and default languages.
 
 ##### Handlers
 * error handler: handle kitty errors.
+    
+##### Middleware dependencies:
+* `kecho.CurrentUser` middleware requires `kecho.JWT` middleware (load `JWT` middleware before `CurrentUser`).
+* `kecho.KittyContext` middleware requires echo `middleware.Request` and kitty `CurrentUser` middleware (load these before the `KittyContext` middleware).
 
 #### Todo:
 - [ ] Tests
