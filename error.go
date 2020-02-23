@@ -28,3 +28,4 @@ func HTTPErrorHandler(requestErr error, c echo.Context) {
 		kittyCtx.Logger().Error(requestErr)
 	}
 }
+

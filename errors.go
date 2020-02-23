@@ -17,7 +17,7 @@ var (
 	//--------------------------------
 	errUserNotFound = kitty.NewError(
 		true, http.StatusInternalServerError, "KE_1_E_0",
-		kitty.ErrorKeyInternalError, "user not found",
+		kitty.ErrorKeyInternalError, "user not found.",
 	)
 
 	errContextUserNotImplementedKittyUser = kitty.NewError(
@@ -26,10 +26,16 @@ var (
 	)
 
 	errJwtMissing = kitty.NewError(false, http.StatusBadRequest, "KE_1_E_2",
-		"missing_jwt_token", "missing or malformed jwt")
+		"missing_jwt_token", "missing or malformed jwt.")
 
 	errInvalidOrExpiredJwt = kitty.NewError(false, http.StatusUnauthorized, "KE_1_E_3",
-		"invalid_or_expired_jwt", "invalid or expired jwt")
+		"invalid_or_expired_jwt", "invalid or expired jwt.")
+
+	errUserMustBeGuest = kitty.NewError(false, http.StatusUnauthorized, "KE_1_E_4",
+		"user_must_be_guest", "The user must be guest to access this API.")
+
+	errUserNeedToAuthenticate = kitty.NewError(false, http.StatusUnauthorized, "KE_1_E_5",
+		"user_must_be_guest", "The user need to login to access this API.")
 
 	//--------------------------------
 	// Request errors
@@ -43,5 +49,5 @@ var (
 	// Other errors
 	//--------------------------------
 	errUnknownError = kitty.NewError(true, http.StatusInternalServerError, "KE_3_E_00",
-		"err_unknown_error","")
+		"err_unknown_error", "")
 )
