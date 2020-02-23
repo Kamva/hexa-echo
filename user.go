@@ -9,7 +9,7 @@ import (
 
 type (
 	// UserFinderByJwtSub is a function to use to find current user by jwt claims.
-	UserFinderByJwtSub func(sub string) kitty.User
+	UserFinderByJwtSub func(sub string) (kitty.User, error)
 
 	// CurrentUserConfig is the config to use in CurrentUser middleware.
 	CurrentUserConfig struct {
@@ -43,7 +43,13 @@ func CurrentUserWithConfig(cfg CurrentUserConfig) echo.MiddlewareFunc {
 
 			if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
 				// Set the user.
-				ctx.Set(cfg.UserContextKey, cfg.UserFinderByJwtSub(claims["sub"].(string)))
+				user, err := cfg.UserFinderByJwtSub(claims["sub"].(string))
+
+				if err != nil {
+					return err
+				}
+
+				ctx.Set(cfg.UserContextKey, user)
 
 				return next(ctx)
 			}
