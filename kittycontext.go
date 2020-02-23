@@ -3,7 +3,6 @@ package kecho
 import (
 	"github.com/Kamva/kitty"
 	"github.com/labstack/echo/v4"
-	"github.com/sirupsen/logrus"
 )
 
 // ContextKeyKittyCtx is the identifier to set the kitty context as a field in the context of a request.
@@ -42,16 +41,29 @@ func getRequestID(ctx echo.Context) (string, kitty.Error) {
 	return rid, nil
 }
 
+// getCorrelationID returns the request correlation id.
+func getCorrelationID(ctx echo.Context) (string, kitty.Error) {
+	req := ctx.Request()
+	// Get Request ID if exists:
+	rid := req.Header.Get(HeaderCorrelationID)
+
+	if rid == "" {
+		return "", errCorrelationIDNotFound
+	}
+
+	return rid, nil
+}
+
 // tuneLogger function tune the logger for users request.
-func tuneLogger(ctx echo.Context, requestID string, u kitty.User, logger kitty.Logger) kitty.Logger {
+func tuneLogger(ctx echo.Context, requestID string, correlationID string, u kitty.User, logger kitty.Logger) kitty.Logger {
 
-	logger = logger.WithFields(logrus.Fields{
-		"guest":    u.IsGuest(),
-		"user_id":  u.GetID(),
-		"username": u.GetUsername(),
-	})
-
-	logger = logger.WithFields(logrus.Fields{"request_id": requestID})
+	logger = logger.WithFields(
+		"__guest__", u.IsGuest(),
+		"__user_id__", u.GetID(),
+		"__username__", u.GetUsername(),
+		"__request_id__", requestID,
+		"__correlation_id__", correlationID,
+	)
 
 	return logger
 }
@@ -84,12 +96,18 @@ func KittyContext(logger kitty.Logger, translator kitty.Translator) echo.Middlew
 				return err
 			}
 
-			logger := tuneLogger(ctx, rid, user, logger)
+			cid, err := getCorrelationID(ctx)
+
+			if err != nil {
+				return err
+			}
+
+			logger := tuneLogger(ctx, rid, cid, user, logger)
 
 			translator := localizeTranslator(ctx, translator)
 
 			// Set context
-			ctx.Set(ContextKeyKittyCtx, kitty.NewCtx(rid, user, logger, translator))
+			ctx.Set(ContextKeyKittyCtx, kitty.NewCtx(rid, cid, user, logger, translator))
 
 			// Set context logger
 			ctx.SetLogger(KittyLoggerToEchoLogger(logger))

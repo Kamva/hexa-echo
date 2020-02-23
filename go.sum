@@ -29,6 +29,8 @@ github.com/Kamva/kitty v0.0.0-20200222222920-4d6f19472261 h1:1AvgKuFyI//DyLduQCq
 github.com/Kamva/kitty v0.0.0-20200222222920-4d6f19472261/go.mod h1:KtQw+TewkCdYXreXA1T19ZTCxd3hjJhqS/uU/mrdkFM=
 github.com/Kamva/kitty v0.0.0-20200223151335-a2d8a6c6bd99 h1:nmu0mekN2hu14pwRhnWCw33R58vl6d3iW/U51OrWpH0=
 github.com/Kamva/kitty v0.0.0-20200223151335-a2d8a6c6bd99/go.mod h1:KtQw+TewkCdYXreXA1T19ZTCxd3hjJhqS/uU/mrdkFM=
+github.com/Kamva/kitty v0.0.0-20200223203916-b6a9896fa3ef h1:gj3S5TLv6+z5/cOqgYeq/Dniu5G3Abfm6v8K902sPMo=
+github.com/Kamva/kitty v0.0.0-20200223203916-b6a9896fa3ef/go.mod h1:KtQw+TewkCdYXreXA1T19ZTCxd3hjJhqS/uU/mrdkFM=
 github.com/Kamva/mgm/v2 v2.0.0/go.mod h1:DgcNZxH74WB3FMcxV6e/MKNdNzu3EI1vuStdOjkasTE=
 github.com/OneOfOne/xxhash v1.2.2/go.mod h1:HSdplMjZKSmBqAxg5vPj2TmRDmfkzw+cTzAElWljhcU=
 github.com/alecthomas/template v0.0.0-20160405071501-a0175ee3bccc/go.mod h1:LOuyumcjzFXgccqObfd/Ljyb9UuFJ6TxHnclSeseNhc=

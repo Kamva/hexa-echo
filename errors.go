@@ -45,6 +45,11 @@ var (
 		kitty.ErrorKeyInternalError, "request id not found in the request.",
 	)
 
+	errCorrelationIDNotFound = kitty.NewError(
+		true, http.StatusInternalServerError, "KE_2_E_03",
+		kitty.ErrorKeyInternalError, "correlation id not found in the request.",
+	)
+
 	//--------------------------------
 	// Other errors
 	//--------------------------------
