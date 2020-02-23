@@ -1,6 +1,7 @@
 package kecho
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
 	"github.com/Kamva/kitty"
@@ -15,12 +16,15 @@ type (
 	// RefreshTokenAuthorizer is a type check that user can get new token.
 	RefreshTokenAuthorizer func(claim jwt.MapClaims) error
 
+	SubGenerator func(user kitty.User) (string, error)
+
 	// GenerateTokenConfig use as config to generate new token.
 	GenerateTokenConfig struct {
 		User                    kitty.User
 		Secret                  kitty.Secret
 		ExpireTokenAfter        time.Duration
 		ExpireRefreshTokenAfter time.Duration
+		SubGenerator            SubGenerator
 	}
 
 	// RefreshTokenConfig use as config to refresh access token.
@@ -31,6 +35,10 @@ type (
 		Authorizer RefreshTokenAuthorizer
 	}
 )
+
+//--------------------------------
+// JWT Middleware
+//--------------------------------
 
 const JwtContextKey = "jwt"
 
@@ -71,17 +79,39 @@ func JWT(key string) echo.MiddlewareFunc {
 	return middleware.JWTWithConfig(cfg)
 }
 
+//--------------------------------
+// JWT Generator
+//--------------------------------
+
+// IDAsSubjectGenerator return user's id as jwt subject (sub).
+func IDAsSubjectGenerator(user kitty.User) (string, error) {
+	id := user.GetID()
+	switch id.(type) {
+	case string:
+		return id.(string), nil
+	case json.Marshaler:
+		m, err := id.(json.Marshaler).MarshalJSON()
+		return string(m), err
+	}
+
+	return fmt.Sprint(id), nil
+}
+
 // GenerateToken generate new token for the user.
 func GenerateToken(cfg GenerateTokenConfig) (token, rToken kitty.Secret, err error) {
 	if err = validateGenerateTokenCfg(cfg); err != nil {
 		return
 	}
 
+	sub, err := cfg.SubGenerator(cfg.User)
+	if err != nil {
+		return
+	}
+
 	// Generate Token
 	token, err = generateToken(jwt.MapClaims{
-		"sub":      cfg.User.GetID(),
-		"username": cfg.User.GetID(),
-		"exp":      time.Now().Add(cfg.ExpireTokenAfter).Unix(),
+		"sub": sub,
+		"exp": time.Now().Add(cfg.ExpireTokenAfter).Unix(),
 	}, cfg.Secret)
 
 	if err != nil {
@@ -90,13 +120,14 @@ func GenerateToken(cfg GenerateTokenConfig) (token, rToken kitty.Secret, err err
 
 	// Generate Refresh token
 	rToken, err = generateToken(jwt.MapClaims{
-		"sub": cfg.User.GetID(),
+		"sub": sub,
 		"exp": time.Now().Add(cfg.ExpireRefreshTokenAfter).Unix(),
 	}, cfg.Secret)
 
 	return
 }
 
+// RefreshToken refresh the jwt token by provided config.
 func RefreshToken(cfg RefreshTokenConfig) (token, rToken kitty.Secret, err error) {
 	if err = validateRefreshTokenCfg(cfg); err != nil {
 		return
@@ -109,7 +140,6 @@ func RefreshToken(cfg RefreshTokenConfig) (token, rToken kitty.Secret, err error
 			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
 		}
 
-		// hmacSampleSecret is a []byte containing your secret, e.g. []byte("my_secret_key")
 		return []byte(cfg.Secret), nil
 	})
 
@@ -133,6 +163,10 @@ func validateGenerateTokenCfg(cfg GenerateTokenConfig) error {
 
 	if cfg.User == nil || cfg.Secret == "" {
 		return errors.New("invalid config values to generate token pairs")
+	}
+
+	if cfg.SubGenerator == nil {
+		return errors.New("invalid subject generator for jwt")
 	}
 
 	return nil

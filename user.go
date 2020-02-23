@@ -1,19 +1,21 @@
 package kecho
 
 import (
+	"errors"
 	"github.com/Kamva/kitty"
+	"github.com/dgrijalva/jwt-go"
 	"github.com/labstack/echo/v4"
 )
 
 type (
-	// UserFinder is a function to use to find current user by jwt claims.
-	UserFinder func(jwtClaim interface{}) kitty.User
+	// UserFinderByJwtSub is a function to use to find current user by jwt claims.
+	UserFinderByJwtSub func(sub string) kitty.User
 
 	// CurrentUserConfig is the config to use in CurrentUser middleware.
 	CurrentUserConfig struct {
-		UserFinder     UserFinder
-		UserContextKey string
-		JWTContextKey  string
+		UserFinderByJwtSub UserFinderByJwtSub
+		UserContextKey     string
+		JWTContextKey      string
 	}
 )
 
@@ -23,11 +25,11 @@ var (
 	CurrentUserContextKey = "user"
 )
 
-func CurrentUser(userFinder UserFinder) echo.MiddlewareFunc {
+func CurrentUser(userFinder UserFinderByJwtSub) echo.MiddlewareFunc {
 	return CurrentUserWithConfig(CurrentUserConfig{
-		UserFinder:     userFinder,
-		UserContextKey: CurrentUserContextKey,
-		JWTContextKey:  JwtContextKey,
+		UserFinderByJwtSub: userFinder,
+		UserContextKey:     CurrentUserContextKey,
+		JWTContextKey:      JwtContextKey,
 	})
 }
 
@@ -37,12 +39,16 @@ func CurrentUserWithConfig(cfg CurrentUserConfig) echo.MiddlewareFunc {
 	return func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(ctx echo.Context) error {
 			// Get jwt
-			jwt := ctx.Get(cfg.JWTContextKey)
+			token := ctx.Get(cfg.JWTContextKey).(*jwt.Token)
 
-			// Set the user.
-			ctx.Set(cfg.UserContextKey, cfg.UserFinder(jwt))
+			if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
+				// Set the user.
+				ctx.Set(cfg.UserContextKey, cfg.UserFinderByJwtSub(claims["sub"].(string)))
 
-			return next(ctx)
+				return next(ctx)
+			}
+
+			return errors.New("JWT claims is not valid")
 		}
 	}
 }
