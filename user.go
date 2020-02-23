@@ -6,12 +6,12 @@ import (
 )
 
 type (
-	// UserGetter is a function to use to get current user from jwt claims.
-	UserGetter func(jwtClaim interface{}) kitty.User
+	// UserFinder is a function to use to find current user by jwt claims.
+	UserFinder func(jwtClaim interface{}) kitty.User
 
 	// CurrentUserConfig is the config to use in CurrentUser middleware.
 	CurrentUserConfig struct {
-		UserGetter     UserGetter
+		UserFinder     UserFinder
 		UserContextKey string
 		JWTContextKey  string
 	}
@@ -23,9 +23,9 @@ var (
 	CurrentUserContextKey = "user"
 )
 
-func CurrentUser(getter UserGetter) echo.MiddlewareFunc {
+func CurrentUser(userFinder UserFinder) echo.MiddlewareFunc {
 	return CurrentUserWithConfig(CurrentUserConfig{
-		UserGetter:     getter,
+		UserFinder:     userFinder,
 		UserContextKey: CurrentUserContextKey,
 		JWTContextKey:  JwtContextKey,
 	})
@@ -40,7 +40,7 @@ func CurrentUserWithConfig(cfg CurrentUserConfig) echo.MiddlewareFunc {
 			jwt := ctx.Get(cfg.JWTContextKey)
 
 			// Set the user.
-			ctx.Set(cfg.UserContextKey, cfg.UserGetter(jwt))
+			ctx.Set(cfg.UserContextKey, cfg.UserFinder(jwt))
 
 			return next(ctx)
 		}
