@@ -14,7 +14,7 @@ import (
 type (
 
 	// RefreshTokenAuthorizer is a type check that user can get new token.
-	RefreshTokenAuthorizer func(claim jwt.MapClaims) error
+	RefreshTokenAuthorizer func(sub string) (kitty.User, error)
 
 	SubGenerator func(user kitty.User) (string, error)
 
@@ -128,6 +128,8 @@ func GenerateToken(cfg GenerateTokenConfig) (token, rToken kitty.Secret, err err
 }
 
 // RefreshToken refresh the jwt token by provided config.
+// In provided config to this function set user as just simple
+// kitty guest user. we set it by your authorizer later.
 func RefreshToken(cfg RefreshTokenConfig) (token, rToken kitty.Secret, err error) {
 	if err = validateRefreshTokenCfg(cfg); err != nil {
 		return
@@ -148,9 +150,14 @@ func RefreshToken(cfg RefreshTokenConfig) (token, rToken kitty.Secret, err error
 	}
 
 	// Authorize user to verify user can get new access token.
-	if err = cfg.Authorizer(jToken.Claims.(jwt.MapClaims)); err != nil {
+	user, err := cfg.Authorizer(jToken.Claims.(jwt.MapClaims)["sub"].(string))
+
+	if err != nil {
 		return
 	}
+
+	// Set provided user.
+	cfg.GenerateTokenConfig.User = user
 
 	return GenerateToken(cfg.GenerateTokenConfig)
 }
