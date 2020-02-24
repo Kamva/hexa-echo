@@ -5,25 +5,25 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-type AuthMiddlewareConfig struct {
+type GateMiddlewareConfig struct {
 	MustBeGuest bool
 }
 
 // GuestMiddleware is a middleware that force user to be guest to access to specific API.
 // GuestMiddleware should be after the kittyContext middleware.
 func GuestMiddleware() echo.MiddlewareFunc {
-	return AuthWithConfig(AuthMiddlewareConfig{MustBeGuest: true})
+	return UserGateMiddleware(GateMiddlewareConfig{MustBeGuest: true})
 }
 
 // AuthMiddleware is a middleware that force user to authenticate to access to specific API.
 // AuthMiddleware should be after the kittyContext middleware.
 func AuthMiddleware() echo.MiddlewareFunc {
-	return AuthWithConfig(AuthMiddlewareConfig{MustBeGuest: false})
+	return UserGateMiddleware(GateMiddlewareConfig{MustBeGuest: false})
 }
 
-// AuthWithConfig is a middleware to specify user should be authenticated or
+// UserGateMiddleware is a middleware to specify user should be authenticated or
 // be guest to access to specific API.
-func AuthWithConfig(cfg AuthMiddlewareConfig) echo.MiddlewareFunc {
+func UserGateMiddleware(cfg GateMiddlewareConfig) echo.MiddlewareFunc {
 	return func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(ctx echo.Context) error {
 			kittyCtx := ctx.Get(ContextKeyKittyCtx).(kitty.Context)
