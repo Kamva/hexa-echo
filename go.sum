@@ -7,6 +7,8 @@ github.com/Kamva/elogrus/v4 v4.0.1 h1:q9eRZ2s7WIZczdC+E77RH8I+6FED3jNNugFR0iTzSi
 github.com/Kamva/elogrus/v4 v4.0.1/go.mod h1:SUtLT126xeK4fXYv1EPggfk2bXe+cY5uE4e5r1jBgxU=
 github.com/Kamva/gutil v0.0.0-20200220090603-f3d8cdcee96d h1:DAZVM0irbYsl20Fn2fz5CXTQpF0nMHKi1Z2l0tl5kN0=
 github.com/Kamva/gutil v0.0.0-20200220090603-f3d8cdcee96d/go.mod h1:YT1t6WMVNyhTWa7/KUGKUXMxBffvws0g27bU4DL3s30=
+github.com/Kamva/gutil v0.0.0-20200223213106-083cc09e3b52 h1:dflulaQzHMAzCiopT8N1oxJCpXyC2IA3hfGC8jSaO0Q=
+github.com/Kamva/gutil v0.0.0-20200223213106-083cc09e3b52/go.mod h1:KvaAPqUTtjac/70L9pCuNEJX0FSH7+WrTo6sariE4FM=
 github.com/Kamva/kitty v0.0.0-20200222125456-65da8a60724c h1:UphWfiwOymZ6Jb59dghG2bXvbnu14RaSeMtWKBpwUn8=
 github.com/Kamva/kitty v0.0.0-20200222125456-65da8a60724c/go.mod h1:dWkpiMvkgvmG8JAwMyE45Br62tv5KvqDZUVRaK516iY=
 github.com/Kamva/kitty v0.0.0-20200222134907-87bff0cf9123 h1:UEco67HyzwFLE6CGJjehoSDDeV8NjM9QxI7C2Q9fOFA=
@@ -31,6 +33,8 @@ github.com/Kamva/kitty v0.0.0-20200223151335-a2d8a6c6bd99 h1:nmu0mekN2hu14pwRhnW
 github.com/Kamva/kitty v0.0.0-20200223151335-a2d8a6c6bd99/go.mod h1:KtQw+TewkCdYXreXA1T19ZTCxd3hjJhqS/uU/mrdkFM=
 github.com/Kamva/kitty v0.0.0-20200223203916-b6a9896fa3ef h1:gj3S5TLv6+z5/cOqgYeq/Dniu5G3Abfm6v8K902sPMo=
 github.com/Kamva/kitty v0.0.0-20200223203916-b6a9896fa3ef/go.mod h1:KtQw+TewkCdYXreXA1T19ZTCxd3hjJhqS/uU/mrdkFM=
+github.com/Kamva/kitty v0.0.0-20200224150856-77961702aa63 h1:mGrIxR99oMspZIE+E/JDomC6WKHPrtX4pWfI4P86VN8=
+github.com/Kamva/kitty v0.0.0-20200224150856-77961702aa63/go.mod h1:RhIoKkwI8iei3aKPEOKAZNzHssP0uPWnyFMsxeWVWTM=
 github.com/Kamva/mgm/v2 v2.0.0/go.mod h1:DgcNZxH74WB3FMcxV6e/MKNdNzu3EI1vuStdOjkasTE=
 github.com/OneOfOne/xxhash v1.2.2/go.mod h1:HSdplMjZKSmBqAxg5vPj2TmRDmfkzw+cTzAElWljhcU=
 github.com/alecthomas/template v0.0.0-20160405071501-a0175ee3bccc/go.mod h1:LOuyumcjzFXgccqObfd/Ljyb9UuFJ6TxHnclSeseNhc=
@@ -137,6 +141,7 @@ github.com/stretchr/objx v0.1.0/go.mod h1:HFkY916IF+rwdDfMAkV7OtwuqBVzrE8GR6GFx+
 github.com/stretchr/objx v0.1.1/go.mod h1:HFkY916IF+rwdDfMAkV7OtwuqBVzrE8GR6GFx+wExME=
 github.com/stretchr/testify v1.2.2/go.mod h1:a8OnRcib4nhh0OaRAV+Yts87kKdq0PP7pXfy6kDkUVs=
 github.com/stretchr/testify v1.4.0/go.mod h1:j7eGeouHqKxXV5pUuKE4zz7dFj8WfuZ+81PSLYec5m4=
+github.com/stretchr/testify v1.5.1/go.mod h1:5W2xD1RspED5o8YsWQXVCued0rvSQ+mT+I5cxcmMvtA=
 github.com/subosito/gotenv v1.2.0/go.mod h1:N0PQaV/YGNqwC0u51sEeR/aUtSLEXKX9iv69rRypqCw=
 github.com/tidwall/pretty v1.0.0/go.mod h1:XNkn88O1ChpSDQmQeStsy+sBenx6DDtFZJxhVysOjyk=
 github.com/tmc/grpc-websocket-proxy v0.0.0-20190109142713-0ad062ec5ee5/go.mod h1:ncp9v5uamzpCO7NfCPTXjqaC+bZgJeR0sMTm6dMHP7U=
