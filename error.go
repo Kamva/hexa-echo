@@ -16,7 +16,7 @@ func HTTPErrorHandler(l kitty.Logger, t kitty.Translator) echo.HTTPErrorHandler 
 			requestErr = errUnknownError.SetInternalMessage(requestErr.Error())
 		}
 
-		kerr := requestErr.(kitty.Error)
+		kerr := requestErr.(kitty.Reply)
 
 		// Maybe error occur before set kitty context in middleware
 		if kittyCtx,ok := c.Get(ContextKeyKittyCtx).(kitty.Context);ok{
