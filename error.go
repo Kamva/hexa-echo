@@ -1,6 +1,7 @@
 package kecho
 
 import (
+	"github.com/Kamva/gutil"
 	"github.com/Kamva/kitty"
 	"github.com/labstack/echo/v4"
 )
@@ -19,14 +20,18 @@ func HTTPErrorHandler(l kitty.Logger, t kitty.Translator) echo.HTTPErrorHandler 
 		kerr := requestErr.(kitty.Reply)
 
 		// Maybe error occur before set kitty context in middleware
-		if kittyCtx,ok := c.Get(ContextKeyKittyCtx).(kitty.Context);ok{
+		if kittyCtx, ok := c.Get(ContextKeyKittyCtx).(kitty.Context); ok {
 			l = kittyCtx.Logger()
 			t = kittyCtx.Translator()
 		}
 
-		msg, err := t.Translate(kerr.Key(), kerr.Params())
+		msg, err := t.Translate(kerr.Key(), gutil.MapToKeyValue(kerr.Params())...)
 
 		if err != nil {
+			d := kerr.Data()
+			d["__translation_err__"] = err.Error()
+			kerr = kerr.SetData(d)
+
 			msg = ""
 		}
 
