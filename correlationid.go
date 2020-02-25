@@ -1,7 +1,6 @@
 package kecho
 
 import (
-	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 )
@@ -25,7 +24,7 @@ var (
 	// DefaultCorrelationIDConfig is the default CorrelationID middleware config.
 	DefaultCorrelationIDConfig = CorrelationIDConfig{
 		Skipper:   middleware.DefaultSkipper,
-		Generator: generator,
+		Generator: uuidGenerator,
 	}
 )
 
@@ -41,7 +40,7 @@ func CorrelationIDWithConfig(config CorrelationIDConfig) echo.MiddlewareFunc {
 		config.Skipper = DefaultCorrelationIDConfig.Skipper
 	}
 	if config.Generator == nil {
-		config.Generator = generator
+		config.Generator = uuidGenerator
 	}
 
 	return func(next echo.HandlerFunc) echo.HandlerFunc {
@@ -56,13 +55,11 @@ func CorrelationIDWithConfig(config CorrelationIDConfig) echo.MiddlewareFunc {
 			if cid == "" {
 				cid = config.Generator()
 			}
+
+			c.Set(ContextKeyKittyCorrelationID, cid)
 			res.Header().Set(HeaderCorrelationID, cid)
 
 			return next(c)
 		}
 	}
-}
-
-func generator() string {
-	return uuid.New().String()
 }

@@ -5,12 +5,20 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-// ContextKeyKittyCtx is the identifier to set the kitty context as a field in the context of a request.
-// e.g ctx.Set(kitty.ContextIdentifier,kittyCtx) // kittyCtx is kitty Context.
-const ContextKeyKittyCtx = "__kitty_ctx.ctx__"
+const (
+	// ContextKeyKittyRequestID uses as key in context to store request id to use in context middleware
+	ContextKeyKittyRequestID = "__kitty_ctx.rid__"
 
-// ContextKeyKittyUser is the identifier to set the kitty user as a field in the context of a request.
-const ContextKeyKittyUser = "__kitty_ctx.user__"
+	// ContextKeyKittyCorrelationID uses as key in context to store correlation id to use in context middleware
+	ContextKeyKittyCorrelationID = "__kitty_ctx.cid__"
+
+	// ContextKeyKittyCtx is the identifier to set the kitty context as a field in the context of a request.
+	// e.g ctx.Set(kitty.ContextIdentifier,kittyCtx) // kittyCtx is kitty Context.
+	ContextKeyKittyCtx = "__kitty_ctx.ctx__"
+
+	// ContextKeyKittyUser is the identifier to set the kitty user as a field in the context of a request.
+	ContextKeyKittyUser = "__kitty_ctx.user__"
+)
 
 // getKittyUser returns kitty user instance from the current user.
 func getKittyUser(ctx echo.Context) (kitty.User, kitty.Error) {

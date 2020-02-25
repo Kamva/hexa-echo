@@ -173,7 +173,7 @@ func validateGenerateTokenCfg(cfg GenerateTokenConfig) error {
 	}
 
 	if cfg.SubGenerator == nil {
-		return errors.New("invalid subject generator for jwt")
+		return errors.New("invalid subject uuidGenerator for jwt")
 	}
 
 	return nil
