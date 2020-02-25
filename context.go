@@ -51,7 +51,7 @@ func getRequestID(ctx echo.Context) (string, kitty.Error) {
 // getCorrelationID returns the request correlation id.
 func getCorrelationID(ctx echo.Context) (string, kitty.Error) {
 	// Get Request ID if exists:
-	cid := ctx.Get(HeaderCorrelationID).(string)
+	cid := ctx.Get(ContextKeyKittyCorrelationID).(string)
 
 	if cid == "" {
 		return "", errCorrelationIDNotFound
