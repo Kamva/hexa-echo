@@ -16,43 +16,43 @@ var (
 	// User and authentication Errors
 	//--------------------------------
 	errUserNotFound = kitty.NewError(
-		true, http.StatusInternalServerError, "KE_1_E_0",
+		true, http.StatusInternalServerError, "ke.1.e.0",
 		kitty.ErrorKeyInternalError, "user not found.",
 	)
 
 	errContextUserNotImplementedKittyUser = kitty.NewError(
-		true, http.StatusInternalServerError, "KE_1_E_1",
+		true, http.StatusInternalServerError, "ke.1.e.1",
 		kitty.ErrorKeyInternalError, "context's user not implemented the kitty User interface.",
 	)
 
-	errJwtMissing = kitty.NewError(false, http.StatusBadRequest, "KE_1_E_2",
+	errJwtMissing = kitty.NewError(false, http.StatusBadRequest, "ke.1.e.2",
 		"missing_jwt_token", "missing or malformed jwt.")
 
-	errInvalidOrExpiredJwt = kitty.NewError(false, http.StatusUnauthorized, "KE_1_E_3",
+	errInvalidOrExpiredJwt = kitty.NewError(false, http.StatusUnauthorized, "ke.1.e.3",
 		"invalid_or_expired_jwt", "invalid or expired jwt.")
 
-	errUserMustBeGuest = kitty.NewError(false, http.StatusUnauthorized, "KE_1_E_4",
+	errUserMustBeGuest = kitty.NewError(false, http.StatusUnauthorized, "ke.1.e.4",
 		"user_must_be_guest", "The user must be guest to access this API.")
 
-	errUserNeedToAuthenticate = kitty.NewError(false, http.StatusUnauthorized, "KE_1_E_5",
+	errUserNeedToAuthenticate = kitty.NewError(false, http.StatusUnauthorized, "ke.1.e.5",
 		"user_must_be_guest", "The user need to login to access this API.")
 
 	//--------------------------------
 	// Request errors
 	//--------------------------------
 	errRequestIdNotFound = kitty.NewError(
-		true, http.StatusInternalServerError, "KE_2_E_02",
+		true, http.StatusInternalServerError, "ke.2.e.2",
 		kitty.ErrorKeyInternalError, "request id not found in the request.",
 	)
 
 	errCorrelationIDNotFound = kitty.NewError(
-		true, http.StatusInternalServerError, "KE_2_E_03",
+		true, http.StatusInternalServerError, "ke.2.e.3",
 		kitty.ErrorKeyInternalError, "correlation id not found in the request.",
 	)
 
 	//--------------------------------
 	// Other errors
 	//--------------------------------
-	errUnknownError = kitty.NewError(true, http.StatusInternalServerError, "KE_3_E_00",
+	errUnknownError = kitty.NewError(true, http.StatusInternalServerError, "ke.3.e.0",
 		"err_unknown_error", "")
 )
