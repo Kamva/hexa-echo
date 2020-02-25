@@ -8,7 +8,7 @@ import (
 
 // HTTPErrorHandler is the echo error handler.
 // this function need to the KittyContext middleware.
-func HTTPErrorHandler(l kitty.Logger, t kitty.Translator) echo.HTTPErrorHandler {
+func HTTPErrorHandler(l kitty.Logger, t kitty.Translator, debug bool) echo.HTTPErrorHandler {
 	return func(requestErr error, c echo.Context) {
 		l := l
 		t := t
@@ -45,11 +45,25 @@ func HTTPErrorHandler(l kitty.Logger, t kitty.Translator) echo.HTTPErrorHandler 
 		// Report
 		kerr.ReportIfNeeded(l, t)
 
-		err = c.JSON(kerr.HTTPStatus(), kitty.NewBody(kerr.Code(), msg, kitty.Data(kerr.Data())))
+		err = errorHandlerRespBody(c, msg, kerr, debug)
 
 		if err != nil {
 			l.Error(err)
 		}
 	}
 
+}
+
+func errorHandlerRespBody(c echo.Context, msg string, err kitty.Reply, debug bool) error {
+	body := kitty.NewBody(err.Code(), msg, kitty.Data(err.Data()))
+
+	debugData := kitty.Data(err.ReportData())
+
+	if _, ok := err.Type().(kitty.ReplyTypeError); ok {
+		debugData["err"] = err.Error()
+	}
+
+	body.Debug(debug, debugData)
+
+	return c.JSON(err.HTTPStatus(), body)
 }
