@@ -36,9 +36,9 @@ func HTTPErrorHandler(l kitty.Logger, t kitty.Translator) echo.HTTPErrorHandler 
 		msg, err := t.Translate(kerr.Key(), gutil.MapToKeyValue(kerr.Params())...)
 
 		if err != nil {
-			d := kerr.Data()
+			d := kerr.ReportData()
 			d["__translation_err__"] = err.Error()
-			kerr = kerr.SetData(d)
+			kerr = kerr.SetReportData(d)
 
 			msg = ""
 		}
