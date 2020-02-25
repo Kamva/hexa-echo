@@ -41,26 +41,31 @@ func CurrentUser(userFinder UserFinderByJwtSub) echo.MiddlewareFunc {
 // otherwise set guest user.
 func CurrentUserWithConfig(cfg CurrentUserConfig) echo.MiddlewareFunc {
 	return func(next echo.HandlerFunc) echo.HandlerFunc {
-		return func(ctx echo.Context) error {
+		return func(ctx echo.Context) (err error) {
+
+			var user = kitty.NewGuestUser()
+
 			// Get jwt (if exists)
 			if token, ok := ctx.Get(cfg.JWTContextKey).(*jwt.Token); ok {
 				if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
 					// Set the user.
-					user, err := cfg.UserFinderByJwtSub(claims["sub"].(string))
+					user, err = cfg.UserFinderByJwtSub(claims["sub"].(string))
 
 					if err != nil {
-						return err
+						return
 					}
-
-					ctx.Set(cfg.UserContextKey, user)
-
-					return next(ctx)
+				} else {
+					return errors.New("JWT claims is not valid")
 				}
 
-				return errors.New("JWT claims is not valid")
 			}
 
-			ctx.Set(cfg.UserContextKey, kitty.NewGuestUser())
+			// Set user in context with the given key
+			ctx.Set(cfg.UserContextKey, user)
+
+			// Also set for user to uas in kitty context
+			ctx.Set(ContextKeyKittyUser, user)
+
 			return next(ctx)
 		}
 	}
