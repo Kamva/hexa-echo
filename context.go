@@ -38,9 +38,8 @@ func getKittyUser(ctx echo.Context) (kitty.User, kitty.Error) {
 
 // getRequestID returns the request id.
 func getRequestID(ctx echo.Context) (string, kitty.Error) {
-	req := ctx.Request()
 	// Get Request ID if exists:
-	rid := req.Header.Get(echo.HeaderXRequestID)
+	rid := ctx.Get(ContextKeyKittyRequestID).(string)
 
 	if rid == "" {
 		return "", errRequestIdNotFound
@@ -51,15 +50,14 @@ func getRequestID(ctx echo.Context) (string, kitty.Error) {
 
 // getCorrelationID returns the request correlation id.
 func getCorrelationID(ctx echo.Context) (string, kitty.Error) {
-	req := ctx.Request()
 	// Get Request ID if exists:
-	rid := req.Header.Get(HeaderCorrelationID)
+	cid := ctx.Get(HeaderCorrelationID).(string)
 
-	if rid == "" {
+	if cid == "" {
 		return "", errCorrelationIDNotFound
 	}
 
-	return rid, nil
+	return cid, nil
 }
 
 // tuneLogger function tune the logger for users request.

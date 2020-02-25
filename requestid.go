@@ -53,7 +53,7 @@ func RequestIDWithConfig(config RequestIDConfig) echo.MiddlewareFunc {
 				rid = config.Generator()
 			}
 
-			c.Set(ContextKeyKittyCorrelationID, rid)
+			c.Set(ContextKeyKittyRequestID, rid)
 			res.Header().Set(echo.HeaderXRequestID, rid)
 
 			return next(c)
