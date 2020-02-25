@@ -15,38 +15,34 @@ var (
 	//--------------------------------
 	// User and authentication Errors
 	//--------------------------------
-	errUserNotFound = kitty.NewError(
-		true, http.StatusInternalServerError, "ke.1.e.0",
+	errUserNotFound = kitty.NewError(http.StatusInternalServerError, "ke.1.e.0",
 		kitty.ReplyErrKeyInternalError, "user not found.",
 	)
 
-	errContextUserNotImplementedKittyUser = kitty.NewError(
-		true, http.StatusInternalServerError, "ke.1.e.1",
+	errContextUserNotImplementedKittyUser = kitty.NewError(http.StatusInternalServerError, "ke.1.e.1",
 		kitty.ReplyErrKeyInternalError, "context's user not implemented the kitty User interface.",
 	)
 
-	errJwtMissing = kitty.NewError(false, http.StatusBadRequest, "ke.1.e.2",
+	errJwtMissing = kitty.NewError(http.StatusBadRequest, "ke.1.e.2",
 		"missing_jwt_token", "missing or malformed jwt.")
 
-	errInvalidOrExpiredJwt = kitty.NewError(false, http.StatusUnauthorized, "ke.1.e.3",
+	errInvalidOrExpiredJwt = kitty.NewError(http.StatusUnauthorized, "ke.1.e.3",
 		"invalid_or_expired_jwt", "invalid or expired jwt.")
 
-	errUserMustBeGuest = kitty.NewError(false, http.StatusUnauthorized, "ke.1.e.4",
+	errUserMustBeGuest = kitty.NewError(http.StatusUnauthorized, "ke.1.e.4",
 		"user_must_be_guest", "The user must be guest to access this API.")
 
-	errUserNeedToAuthenticate = kitty.NewError(false, http.StatusUnauthorized, "ke.1.e.5",
+	errUserNeedToAuthenticate = kitty.NewError(http.StatusUnauthorized, "ke.1.e.5",
 		"user_must_authenticate", "The user need to login to access this API.")
 
 	//--------------------------------
 	// Request errors
 	//--------------------------------
-	errRequestIdNotFound = kitty.NewError(
-		true, http.StatusInternalServerError, "ke.2.e.2",
+	errRequestIdNotFound = kitty.NewError(http.StatusInternalServerError, "ke.2.e.2",
 		kitty.ReplyErrKeyInternalError, "request id not found in the request.",
 	)
 
-	errCorrelationIDNotFound = kitty.NewError(
-		true, http.StatusInternalServerError, "ke.2.e.3",
+	errCorrelationIDNotFound = kitty.NewError(http.StatusInternalServerError, "ke.2.e.3",
 		kitty.ReplyErrKeyInternalError, "correlation id not found in the request.",
 	)
 
@@ -54,8 +50,7 @@ var (
 	// Other errors
 	//--------------------------------
 	// Set this error status manually on return relative to echo error code.
-	errEchoHTTPError = kitty.NewError(false, http.StatusNotFound, "ke.3.e.0", "-", "")
+	errEchoHTTPError = kitty.NewError(http.StatusNotFound, "ke.3.e.0", "-", "")
 
-	errUnknownError = kitty.NewError(true, http.StatusInternalServerError, "ke.3.e.1",
-		"err_unknown_error", "")
+	errUnknownError = kitty.NewError(http.StatusInternalServerError, "ke.3.e.1", "err_unknown_error", "")
 )

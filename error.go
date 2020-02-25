@@ -15,7 +15,6 @@ func HTTPErrorHandler(l kitty.Logger, t kitty.Translator) echo.HTTPErrorHandler 
 
 		if httpErr, ok := requestErr.(*echo.HTTPError); ok {
 
-			requestErr = errEchoHTTPError.SetShouldReport(httpErr.Code >= 500)
 			requestErr = errEchoHTTPError.SetHTTPStatus(httpErr.Code)
 			if httpErr.Internal != nil {
 				requestErr = errEchoHTTPError.SetInternalMessage(httpErr.Internal.Error())
@@ -43,10 +42,8 @@ func HTTPErrorHandler(l kitty.Logger, t kitty.Translator) echo.HTTPErrorHandler 
 			msg = ""
 		}
 
-		// Report if need to report:
-		if kerr.ShouldReport() {
-			kerr.Report(l, t)
-		}
+		// Report
+		kerr.ReportIfNeeded(l, t)
 
 		err = c.JSON(kerr.HTTPStatus(), kitty.NewBody(kerr.Code(), msg, kitty.Data(kerr.Data())))
 

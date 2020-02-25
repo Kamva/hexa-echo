@@ -9,6 +9,8 @@ github.com/Kamva/gutil v0.0.0-20200220090603-f3d8cdcee96d h1:DAZVM0irbYsl20Fn2fz
 github.com/Kamva/gutil v0.0.0-20200220090603-f3d8cdcee96d/go.mod h1:YT1t6WMVNyhTWa7/KUGKUXMxBffvws0g27bU4DL3s30=
 github.com/Kamva/gutil v0.0.0-20200223213106-083cc09e3b52 h1:dflulaQzHMAzCiopT8N1oxJCpXyC2IA3hfGC8jSaO0Q=
 github.com/Kamva/gutil v0.0.0-20200223213106-083cc09e3b52/go.mod h1:KvaAPqUTtjac/70L9pCuNEJX0FSH7+WrTo6sariE4FM=
+github.com/Kamva/gutil v0.0.0-20200225211319-e2d1e50b2724 h1:QC3fML91vopN8Mc/GHWIJ7iTjrpHS4vAcGmTJfbM/9g=
+github.com/Kamva/gutil v0.0.0-20200225211319-e2d1e50b2724/go.mod h1:KvaAPqUTtjac/70L9pCuNEJX0FSH7+WrTo6sariE4FM=
 github.com/Kamva/kitty v0.0.0-20200222125456-65da8a60724c h1:UphWfiwOymZ6Jb59dghG2bXvbnu14RaSeMtWKBpwUn8=
 github.com/Kamva/kitty v0.0.0-20200222125456-65da8a60724c/go.mod h1:dWkpiMvkgvmG8JAwMyE45Br62tv5KvqDZUVRaK516iY=
 github.com/Kamva/kitty v0.0.0-20200222134907-87bff0cf9123 h1:UEco67HyzwFLE6CGJjehoSDDeV8NjM9QxI7C2Q9fOFA=
@@ -47,6 +49,10 @@ github.com/Kamva/kitty v0.0.0-20200225142755-a6ab3d6b0772 h1:6YnjqYNCkqlYFWWgC+m
 github.com/Kamva/kitty v0.0.0-20200225142755-a6ab3d6b0772/go.mod h1:RhIoKkwI8iei3aKPEOKAZNzHssP0uPWnyFMsxeWVWTM=
 github.com/Kamva/kitty v0.0.0-20200225144733-750fa20a9890 h1:aHVOKvSCKkc+QQPZIPCsbIHkzyDYzmIpDevmHyIva3g=
 github.com/Kamva/kitty v0.0.0-20200225144733-750fa20a9890/go.mod h1:RhIoKkwI8iei3aKPEOKAZNzHssP0uPWnyFMsxeWVWTM=
+github.com/Kamva/kitty v0.0.0-20200225211958-2b90a5a20e39 h1:tm/KK/EH4F+XBk5FF+l7tXPB0ew06TOPKZ/USiJsfP4=
+github.com/Kamva/kitty v0.0.0-20200225211958-2b90a5a20e39/go.mod h1:slx3Y1/aZ5ecPT8OW1GUEuWx0s+sZUQ3XGrPv3fvzkk=
+github.com/Kamva/kitty v0.0.0-20200225212149-2a2698278df3 h1:Cxaf4b3dH8l6E55UF/aESkiLfx0kcWgckPMZGqd1mPk=
+github.com/Kamva/kitty v0.0.0-20200225212149-2a2698278df3/go.mod h1:slx3Y1/aZ5ecPT8OW1GUEuWx0s+sZUQ3XGrPv3fvzkk=
 github.com/Kamva/mgm/v2 v2.0.0/go.mod h1:DgcNZxH74WB3FMcxV6e/MKNdNzu3EI1vuStdOjkasTE=
 github.com/OneOfOne/xxhash v1.2.2/go.mod h1:HSdplMjZKSmBqAxg5vPj2TmRDmfkzw+cTzAElWljhcU=
 github.com/alecthomas/template v0.0.0-20160405071501-a0175ee3bccc/go.mod h1:LOuyumcjzFXgccqObfd/Ljyb9UuFJ6TxHnclSeseNhc=
