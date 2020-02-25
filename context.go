@@ -7,10 +7,10 @@ import (
 
 // ContextKeyKittyCtx is the identifier to set the kitty context as a field in the context of a request.
 // e.g ctx.Set(kitty.ContextIdentifier,kittyCtx) // kittyCtx is kitty Context.
-const ContextKeyKittyCtx = "__kitty_ctx__"
+const ContextKeyKittyCtx = "__kitty_ctx.ctx__"
 
 // ContextKeyKittyUser is the identifier to set the kitty user as a field in the context of a request.
-const ContextKeyKittyUser = "__kitty_user__"
+const ContextKeyKittyUser = "__kitty_ctx.user__"
 
 // getKittyUser returns kitty user instance from the current user.
 func getKittyUser(ctx echo.Context) (kitty.User, kitty.Error) {

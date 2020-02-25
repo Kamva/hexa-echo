@@ -30,15 +30,15 @@ func HTTPErrorHandler(l kitty.Logger, t kitty.Translator) echo.HTTPErrorHandler 
 			msg = ""
 		}
 
-		requestErr = c.JSON(kerr.HTTPStatus(), kitty.NewBody(kerr.Code(), msg, kitty.Data(kerr.Data())))
-
 		// Report if need to report:
 		if kerr.ShouldReport() {
 			kerr.Report(l, t)
 		}
 
-		if requestErr != nil {
-			l.Error(requestErr)
+		err = c.JSON(kerr.HTTPStatus(), kitty.NewBody(kerr.Code(), msg, kitty.Data(kerr.Data())))
+
+		if err != nil {
+			l.Error(err)
 		}
 	}
 
