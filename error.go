@@ -63,7 +63,7 @@ func errorHandlerRespBody(c echo.Context, msg string, err kitty.Reply, debug boo
 		debugData["err"] = err.Error()
 	}
 
-	body.Debug(debug, debugData)
+	body = body.Debug(debug, debugData)
 
 	return c.JSON(err.HTTPStatus(), body)
 }
