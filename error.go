@@ -18,10 +18,8 @@ func HTTPErrorHandler(l kitty.Logger, t kitty.Translator) echo.HTTPErrorHandler 
 
 		kerr := requestErr.(kitty.Error)
 
-		kittyCtx := c.Get(ContextKeyKittyCtx).(kitty.Context)
-
 		// Maybe error occur before set kitty context in middleware
-		if kittyCtx != nil {
+		if kittyCtx,ok := c.Get(ContextKeyKittyCtx).(kitty.Context);ok{
 			l = kittyCtx.Logger()
 			t = kittyCtx.Translator()
 		}
