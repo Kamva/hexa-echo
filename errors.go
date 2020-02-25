@@ -35,7 +35,7 @@ var (
 		"user_must_be_guest", "The user must be guest to access this API.")
 
 	errUserNeedToAuthenticate = kitty.NewError(false, http.StatusUnauthorized, "ke.1.e.5",
-		"user_must_be_guest", "The user need to login to access this API.")
+		"user_must_authenticate", "The user need to login to access this API.")
 
 	//--------------------------------
 	// Request errors
