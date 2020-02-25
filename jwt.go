@@ -46,7 +46,7 @@ const JwtContextKey = "jwt"
 // is not provided.
 func skipIfNotProvidedHeader(header string) middleware.Skipper {
 	return func(c echo.Context) bool {
-		return c.Request().Header.Get(header) != ""
+		return c.Request().Header.Get(header) == ""
 	}
 }
 
