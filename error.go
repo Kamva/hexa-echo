@@ -13,7 +13,13 @@ func HTTPErrorHandler(l kitty.Logger, t kitty.Translator) echo.HTTPErrorHandler 
 		l := l
 		t := t
 
-		if _, ok := requestErr.(kitty.Reply); !ok {
+		if httpErr, ok := requestErr.(*echo.HTTPError); ok {
+
+			requestErr = errEchoHTTPError.SetShouldReport(httpErr.Code >= 500)
+			requestErr = errEchoHTTPError.SetHTTPStatus(httpErr.Code)
+			requestErr = errEchoHTTPError.SetInternalMessage(httpErr.Internal.Error())
+
+		} else if _, ok := requestErr.(kitty.Reply); !ok {
 			requestErr = errUnknownError.SetInternalMessage(requestErr.Error())
 		}
 
