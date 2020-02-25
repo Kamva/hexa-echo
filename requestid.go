@@ -21,7 +21,7 @@ var (
 	// DefaultRequestIDConfig is the default RequestID middleware config.
 	DefaultRequestIDConfig = RequestIDConfig{
 		Skipper:   middleware.DefaultSkipper,
-		Generator: generator,
+		Generator: uuidGenerator,
 	}
 )
 
