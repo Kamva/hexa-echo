@@ -34,7 +34,7 @@ func UserGateMiddleware(cfg GateMiddlewareConfig) echo.MiddlewareFunc {
 				return errUserMustBeGuest
 			}
 
-			if u.IsGuest() {
+			if !cfg.MustBeGuest && u.IsGuest() {
 				return errUserNeedToAuthenticate
 			}
 
