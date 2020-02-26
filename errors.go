@@ -57,7 +57,7 @@ var (
 	// Other errors
 	//--------------------------------
 	// Set this error status manually on return relative to echo error code.
-	errEchoHTTPError = kitty.NewError(http.StatusNotFound, "ke.4.e.0", "-", "")
+	errEchoHTTPError = kitty.NewError(http.StatusNotFound, "ke.4.e.0", kitty.TranslateKeyEmptyMessage, "")
 
 	errUnknownError = kitty.NewError(http.StatusInternalServerError, "ke.4.e.1", "err_unknown_error", "")
 )
