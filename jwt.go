@@ -72,9 +72,9 @@ var jwtConfig = middleware.JWTConfig{
 }
 
 // JWT middleware
-func JWT(key string) echo.MiddlewareFunc {
+func JWT(key kitty.Secret) echo.MiddlewareFunc {
 	cfg := jwtConfig
-	cfg.SigningKey = key
+	cfg.SigningKey = []byte(key)
 
 	return middleware.JWTWithConfig(cfg)
 }
