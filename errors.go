@@ -47,10 +47,17 @@ var (
 	)
 
 	//--------------------------------
+	// DEBUG
+	//--------------------------------
+	errRouteAvaialbeInDebugMode = kitty.NewError(http.StatusUnauthorized, "ke.3.e.0",
+		"route_available_in_debug_mode", "Route is available just in debug mode.",
+	)
+
+	//--------------------------------
 	// Other errors
 	//--------------------------------
 	// Set this error status manually on return relative to echo error code.
-	errEchoHTTPError = kitty.NewError(http.StatusNotFound, "ke.3.e.0", "-", "")
+	errEchoHTTPError = kitty.NewError(http.StatusNotFound, "ke.4.e.0", "-", "")
 
-	errUnknownError = kitty.NewError(http.StatusInternalServerError, "ke.3.e.1", "err_unknown_error", "")
+	errUnknownError = kitty.NewError(http.StatusInternalServerError, "ke.4.e.1", "err_unknown_error", "")
 )

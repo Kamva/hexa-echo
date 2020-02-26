@@ -27,6 +27,7 @@ users accept-languages and then fallback and default languages.
     
 
 #### Todo:
+- [ ] Map echo errors (see errors list in `echo.go:263`) to kitty error with translation.
 - [ ] Tests
 - [ ] Add badges to readme.
 - [ ] CI 
