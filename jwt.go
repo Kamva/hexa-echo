@@ -1,13 +1,13 @@
 package kecho
 
 import (
-	"encoding/json"
 	"errors"
 	"fmt"
 	"github.com/Kamva/kitty"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"time"
 )
 
@@ -89,9 +89,9 @@ func IDAsSubjectGenerator(user kitty.User) (string, error) {
 	switch id.(type) {
 	case string:
 		return id.(string), nil
-	case json.Marshaler:
-		m, err := id.(json.Marshaler).MarshalJSON()
-		return string(m), err
+	case primitive.ObjectID:
+		m := id.(primitive.ObjectID).Hex()
+		return m, nil
 	}
 
 	return fmt.Sprint(id), nil
