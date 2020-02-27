@@ -1,6 +1,7 @@
 package kecho
 
 import (
+	"fmt"
 	"github.com/Kamva/gutil"
 	"github.com/Kamva/kitty"
 	"github.com/Kamva/tracer"
@@ -27,6 +28,7 @@ func HTTPErrorHandler(l kitty.Logger, t kitty.Translator, debug bool) echo.HTTPE
 		} else {
 			_, ok := baseErr.(kitty.Reply)
 			_, ok2 := baseErr.(kitty.Error)
+			fmt.Println(ok, ok2, baseErr,stacked)
 
 			if !ok && !ok2 {
 				baseErr = errUnknownError.SetError(stacked)
