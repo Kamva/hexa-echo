@@ -4,9 +4,9 @@ go 1.13
 
 require (
 	github.com/Kamva/elogrus/v4 v4.0.1 // indirect
-	github.com/Kamva/kitty v0.0.0-20200226075925-3eb254fd38e5 // indirect
+	github.com/Kamva/kitty v0.0.0-20200227163612-21ff3fbae240 // indirect
+	github.com/Kamva/mgm/v2 v2.0.0 // indirect
 	github.com/google/uuid v1.1.1 // indirect
-	github.com/konsorten/go-windows-terminal-sequences v1.0.2 // indirect
 	github.com/mattn/go-isatty v0.0.12 // indirect
 	golang.org/x/crypto v0.0.0-20200221231518-2aa609cf4a9d // indirect
 	golang.org/x/net v0.0.0-20200222125558-5a598a2470a0 // indirect

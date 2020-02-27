@@ -3,28 +3,31 @@ package kecho
 import (
 	"github.com/Kamva/gutil"
 	"github.com/Kamva/kitty"
+	"github.com/Kamva/tracer"
 	"github.com/labstack/echo/v4"
 )
 
 // HTTPErrorHandler is the echo error handler.
 // this function need to the KittyContext middleware.
 func HTTPErrorHandler(l kitty.Logger, t kitty.Translator, debug bool) echo.HTTPErrorHandler {
-	return func(requestErr error, c echo.Context) {
+	return func(rErr error, c echo.Context) {
 		l := l
 		t := t
 
-		if httpErr, ok := requestErr.(*echo.HTTPError); ok {
+		if httpErr, ok := tracer.Cause(rErr).(*echo.HTTPError); ok {
+			newErr := errEchoHTTPError.SetHTTPStatus(httpErr.Code)
 
-			requestErr = errEchoHTTPError.SetHTTPStatus(httpErr.Code)
 			if httpErr.Internal != nil {
-				requestErr = errEchoHTTPError.SetInternalMessage(httpErr.Internal.Error())
+				newErr = errEchoHTTPError.SetInternalMessage(httpErr.Internal.Error())
 			}
 
-		} else if _, ok := requestErr.(kitty.Reply); !ok {
-			requestErr = errUnknownError.SetInternalMessage(requestErr.Error())
+			rErr = tracer.MoveStack(rErr, newErr)
+
+		} else if _, ok := tracer.Cause(rErr).(kitty.Reply); !ok {
+			rErr = tracer.MoveStack(rErr, errUnknownError.SetInternalMessage(rErr.Error()))
 		}
 
-		kerr := requestErr.(kitty.Reply)
+		kerr := tracer.Cause(rErr).(kitty.Reply)
 
 		// Maybe error occur before set kitty context in middleware
 		if kittyCtx, ok := c.Get(ContextKeyKittyCtx).(kitty.Context); ok {
@@ -45,7 +48,7 @@ func HTTPErrorHandler(l kitty.Logger, t kitty.Translator, debug bool) echo.HTTPE
 		// Report
 		kerr.ReportIfNeeded(l, t)
 
-		err = errorHandlerRespBody(c, msg, kerr, debug)
+		err = writeResponse(c, msg, kerr, debug)
 
 		if err != nil {
 			l.Error(err)
@@ -54,7 +57,7 @@ func HTTPErrorHandler(l kitty.Logger, t kitty.Translator, debug bool) echo.HTTPE
 
 }
 
-func errorHandlerRespBody(c echo.Context, msg string, err kitty.Reply, debug bool) error {
+func writeResponse(c echo.Context, msg string, err kitty.Reply, debug bool) error {
 	body := kitty.NewBody(err.Code(), msg, kitty.Data(err.Data()))
 
 	debugData := kitty.Data(err.ReportData())
