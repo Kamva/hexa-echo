@@ -4,7 +4,7 @@ go 1.13
 
 require (
 	github.com/Kamva/elogrus/v4 v4.0.1 // indirect
-	github.com/Kamva/kitty v0.0.0-20200227163612-21ff3fbae240 // indirect
+	github.com/Kamva/kitty v0.0.0-20200227181646-5f27dfd1ead0 // indirect
 	github.com/Kamva/mgm/v2 v2.0.0 // indirect
 	github.com/google/uuid v1.1.1 // indirect
 	github.com/mattn/go-isatty v0.0.12 // indirect

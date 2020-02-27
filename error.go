@@ -14,20 +14,24 @@ func HTTPErrorHandler(l kitty.Logger, t kitty.Translator, debug bool) echo.HTTPE
 		l := l
 		t := t
 
-		if httpErr, ok := tracer.Cause(rErr).(*echo.HTTPError); ok {
-			newErr := errEchoHTTPError.SetHTTPStatus(httpErr.Code)
+		// We finally need to have a Reply or Error that internal error is stacked.
+		stacked, baseErr := rErr, tracer.Cause(rErr)
+
+		if httpErr, ok := baseErr.(*echo.HTTPError); ok {
+			baseErr = errEchoHTTPError.SetHTTPStatus(httpErr.Code)
 
 			if httpErr.Internal != nil {
-				newErr = errEchoHTTPError.SetInternalMessage(httpErr.Internal.Error())
+				baseErr = errEchoHTTPError.SetError(tracer.MoveStack(stacked, httpErr.Internal))
 			}
 
-			rErr = tracer.MoveStack(rErr, newErr)
+		} else {
+			_, ok := baseErr.(kitty.Reply)
+			_, ok2 := baseErr.(kitty.Error)
 
-		} else if _, ok := tracer.Cause(rErr).(kitty.Reply); !ok {
-			rErr = tracer.MoveStack(rErr, errUnknownError.SetInternalMessage(rErr.Error()))
+			if !ok && !ok2 {
+				baseErr = errUnknownError.SetError(stacked)
+			}
 		}
-
-		kerr := tracer.Cause(rErr).(kitty.Reply)
 
 		// Maybe error occur before set kitty context in middleware
 		if kittyCtx, ok := c.Get(ContextKeyKittyCtx).(kitty.Context); ok {
@@ -35,38 +39,55 @@ func HTTPErrorHandler(l kitty.Logger, t kitty.Translator, debug bool) echo.HTTPE
 			t = kittyCtx.Translator()
 		}
 
-		msg, err := t.Translate(kerr.Key(), gutil.MapToKeyValue(kerr.Params())...)
-
-		if err != nil {
-			d := kerr.ReportData()
-			d["__translation_err__"] = err.Error()
-			kerr = kerr.SetReportData(d)
-
-			msg = ""
-		}
-
-		// Report
-		kerr.ReportIfNeeded(l, t)
-
-		err = writeResponse(c, msg, kerr, debug)
-
-		if err != nil {
-			l.Error(err)
+		if kittyErr, ok := baseErr.(kitty.Error); ok {
+			handleError(kittyErr, c, l, t, debug)
+		} else {
+			handleReply(baseErr.(kitty.Reply), c, l, t)
 		}
 	}
 
 }
 
-func writeResponse(c echo.Context, msg string, err kitty.Reply, debug bool) error {
-	body := kitty.NewBody(err.Code(), msg, kitty.Data(err.Data()))
+func handleError(kittyErr kitty.Error, c echo.Context, l kitty.Logger, t kitty.Translator, debug bool) {
+	msg, err := t.Translate(kittyErr.Key(), gutil.MapToKeyValue(kittyErr.Params())...)
 
-	debugData := kitty.Data(err.ReportData())
+	if err != nil {
+		l.WithFields("key", kittyErr.Key()).Warn("translation for specified key not found.")
 
-	if _, ok := err.Type().(kitty.ReplyTypeError); ok {
-		debugData["err"] = err.Error()
+		d := kittyErr.ReportData()
+		d["__translation_err__"] = err.Error()
+		kittyErr = kittyErr.SetReportData(d)
 	}
+
+	// Report
+	kittyErr.ReportIfNeeded(l, t)
+
+	debugData := kitty.Data(kittyErr.ReportData())
+	debugData["err"] = kittyErr.Error()
+
+	body := kitty.NewBody(kittyErr.Code(), msg, kitty.Data(kittyErr.Data()))
 
 	body = body.Debug(debug, debugData)
 
-	return c.JSON(err.HTTPStatus(), body)
+	err = c.JSON(kittyErr.HTTPStatus(), body)
+
+	if err != nil {
+		l.Error(err)
+	}
+}
+
+func handleReply(rep kitty.Reply, c echo.Context, l kitty.Logger, t kitty.Translator) {
+	msg, err := t.Translate(rep.Key(), gutil.MapToKeyValue(rep.Params())...)
+
+	if err != nil {
+		l.WithFields("key", rep.Key()).Warn("translation for specified key not found.")
+	}
+
+	body := kitty.NewBody(rep.Code(), msg, kitty.Data(rep.Data()))
+
+	err = c.JSON(rep.HTTPStatus(), body)
+
+	if err != nil {
+		l.Error(err)
+	}
 }
