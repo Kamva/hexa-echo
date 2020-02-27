@@ -18,6 +18,10 @@ func HTTPErrorHandler(l kitty.Logger, t kitty.Translator, debug bool) echo.HTTPE
 		// We finally need to have a Reply or Error that internal error is stacked.
 		stacked, baseErr := rErr, tracer.Cause(rErr)
 
+		_, ok := baseErr.(kitty.Reply)
+		_, ok2 := baseErr.(kitty.Error)
+		fmt.Println(ok, ok2, baseErr,stacked)
+
 		if httpErr, ok := baseErr.(*echo.HTTPError); ok {
 			baseErr = errEchoHTTPError.SetHTTPStatus(httpErr.Code)
 
