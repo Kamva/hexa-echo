@@ -58,7 +58,7 @@ func jwtErrorHandler(err error) error {
 	}
 
 	// otherwise authorization error
-	return errInvalidOrExpiredJwt.SetInternalMessage(err.Error())
+	return errInvalidOrExpiredJwt.SetError(err)
 }
 
 var jwtConfig = middleware.JWTConfig{
