@@ -53,7 +53,7 @@ func CurrentUserWithConfig(cfg CurrentUserConfig) echo.MiddlewareFunc {
 					user, err = cfg.UserFinderByJwtSub(claims["sub"].(string))
 
 					if err != nil {
-						err=tracer.Trace(err)
+						err = tracer.Trace(err)
 						return
 					}
 				} else {

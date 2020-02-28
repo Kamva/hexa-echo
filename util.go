@@ -6,4 +6,3 @@ import "github.com/google/uuid"
 func uuidGenerator() string {
 	return uuid.New().String()
 }
-
