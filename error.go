@@ -64,10 +64,10 @@ func handleError(kittyErr kitty.Error, c echo.Context, l kitty.Logger, t kitty.T
 	// Report
 	kittyErr.ReportIfNeeded(l, t)
 
-	debugData := kitty.Data(kittyErr.ReportData())
+	debugData := kittyErr.ReportData()
 	debugData["err"] = kittyErr.Error()
 
-	body := kitty.NewBody(kittyErr.Code(), msg, kitty.Data(kittyErr.Data()))
+	body := kitty.NewBody(kittyErr.Code(), msg, kittyErr.Data())
 
 	body = body.Debug(debug, debugData)
 
