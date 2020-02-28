@@ -1,6 +1,7 @@
 package kecho
 
 import (
+	"github.com/Kamva/tracer"
 	"github.com/labstack/echo/v4"
 )
 
@@ -12,7 +13,7 @@ func DebugMiddleware(e *echo.Echo) echo.MiddlewareFunc {
 				return errRouteAvaialbeInDebugMode
 			}
 
-			return next(ctx)
+			return tracer.Trace(next(ctx))
 		}
 	}
 }

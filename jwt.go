@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/Kamva/kitty"
+	"github.com/Kamva/tracer"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
@@ -54,11 +55,11 @@ func skipIfNotProvidedHeader(header string) middleware.Skipper {
 func jwtErrorHandler(err error) error {
 	// missing or malformed jwt token
 	if err == middleware.ErrJWTMissing {
-		return errJwtMissing
+		return errJwtMissing.SetError(tracer.Trace(err))
 	}
 
 	// otherwise authorization error
-	return errInvalidOrExpiredJwt.SetError(err)
+	return errInvalidOrExpiredJwt.SetError(tracer.Trace(err))
 }
 
 var jwtConfig = middleware.JWTConfig{
@@ -99,12 +100,13 @@ func IDAsSubjectGenerator(user kitty.User) (string, error) {
 
 // GenerateToken generate new token for the user.
 func GenerateToken(cfg GenerateTokenConfig) (token, rToken kitty.Secret, err error) {
-	if err = validateGenerateTokenCfg(cfg); err != nil {
+	if err = tracer.Trace(validateGenerateTokenCfg(cfg)); err != nil {
 		return
 	}
 
 	sub, err := cfg.SubGenerator(cfg.User)
 	if err != nil {
+		err = tracer.Trace(err)
 		return
 	}
 
@@ -115,6 +117,7 @@ func GenerateToken(cfg GenerateTokenConfig) (token, rToken kitty.Secret, err err
 	}, cfg.Secret)
 
 	if err != nil {
+		err = tracer.Trace(err)
 		return
 	}
 
@@ -123,7 +126,7 @@ func GenerateToken(cfg GenerateTokenConfig) (token, rToken kitty.Secret, err err
 		"sub": sub,
 		"exp": time.Now().Add(cfg.ExpireRefreshTokenAfter).Unix(),
 	}, cfg.Secret)
-
+	err = tracer.Trace(err)
 	return
 }
 
@@ -131,7 +134,7 @@ func GenerateToken(cfg GenerateTokenConfig) (token, rToken kitty.Secret, err err
 // In provided config to this function set user as just simple
 // kitty guest user. we set it by your authorizer later.
 func RefreshToken(cfg RefreshTokenConfig) (token, rToken kitty.Secret, err error) {
-	if err = validateRefreshTokenCfg(cfg); err != nil {
+	if err = tracer.Trace(validateRefreshTokenCfg(cfg)); err != nil {
 		return
 	}
 
@@ -139,13 +142,14 @@ func RefreshToken(cfg RefreshTokenConfig) (token, rToken kitty.Secret, err error
 	jToken, err := jwt.Parse(string(cfg.RefreshToken), func(token *jwt.Token) (interface{}, error) {
 		// validate hashing method.
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
-			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
+			return nil, tracer.Trace(fmt.Errorf("unexpected signing method: %v", token.Header["alg"]))
 		}
 
 		return []byte(cfg.Secret), nil
 	})
 
 	if err != nil {
+		err = tracer.Trace(err)
 		return
 	}
 
@@ -153,6 +157,7 @@ func RefreshToken(cfg RefreshTokenConfig) (token, rToken kitty.Secret, err error
 	user, err := cfg.Authorizer(jToken.Claims.(jwt.MapClaims)["sub"].(string))
 
 	if err != nil {
+		err = tracer.Trace(err)
 		return
 	}
 
@@ -169,11 +174,11 @@ func validateGenerateTokenCfg(cfg GenerateTokenConfig) error {
 	}
 
 	if cfg.User == nil || cfg.Secret == "" {
-		return errors.New("invalid config values to generate token pairs")
+		return tracer.Trace(errors.New("invalid config values to generate token pairs"))
 	}
 
 	if cfg.SubGenerator == nil {
-		return errors.New("invalid subject uuidGenerator for jwt")
+		return tracer.Trace(errors.New("invalid subject uuidGenerator for jwt"))
 	}
 
 	return nil
@@ -181,15 +186,15 @@ func validateGenerateTokenCfg(cfg GenerateTokenConfig) error {
 
 func validateRefreshTokenCfg(cfg RefreshTokenConfig) error {
 	if err := validateGenerateTokenCfg(cfg.GenerateTokenConfig); err != nil {
-		return err
+		return tracer.Trace(err)
 	}
 
 	if cfg.Authorizer == nil {
-		return errors.New("authorizer can not be nil")
+		return tracer.Trace(errors.New("authorizer can not be nil"))
 	}
 
 	if cfg.RefreshToken == "" {
-		return errors.New("refresh token can not be empty")
+		return tracer.Trace(errors.New("refresh token can not be empty"))
 	}
 
 	return nil
@@ -198,18 +203,14 @@ func validateRefreshTokenCfg(cfg RefreshTokenConfig) error {
 // generateToken generate new jwt token.
 func generateToken(claims jwt.MapClaims, secret kitty.Secret) (token kitty.Secret, err error) {
 	jToken := jwt.New(jwt.SigningMethodHS256)
-
 	// Set claims
 	jToken.Claims = claims
-
 	// Generate encoded token and send it as response.
 	t, err := jToken.SignedString([]byte(secret))
-
 	if err != nil {
+		err = tracer.Trace(err)
 		return
 	}
-
 	token = kitty.Secret(t)
-
 	return
 }

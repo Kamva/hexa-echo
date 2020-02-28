@@ -3,6 +3,7 @@ package kecho
 import (
 	"errors"
 	"github.com/Kamva/kitty"
+	"github.com/Kamva/tracer"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/labstack/echo/v4"
 )
@@ -52,6 +53,7 @@ func CurrentUserWithConfig(cfg CurrentUserConfig) echo.MiddlewareFunc {
 					user, err = cfg.UserFinderByJwtSub(claims["sub"].(string))
 
 					if err != nil {
+						err=tracer.Trace(err)
 						return
 					}
 				} else {

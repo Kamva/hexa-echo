@@ -18,10 +18,6 @@ func HTTPErrorHandler(l kitty.Logger, t kitty.Translator, debug bool) echo.HTTPE
 		// We finally need to have a Reply or Error that internal error is stacked.
 		stacked, baseErr := rErr, tracer.Cause(rErr)
 
-		_, ok := baseErr.(kitty.Reply)
-		_, ok2 := baseErr.(kitty.Error)
-		fmt.Println(ok, ok2, baseErr,stacked)
-
 		if httpErr, ok := baseErr.(*echo.HTTPError); ok {
 			baseErr = errEchoHTTPError.SetHTTPStatus(httpErr.Code)
 
@@ -32,7 +28,7 @@ func HTTPErrorHandler(l kitty.Logger, t kitty.Translator, debug bool) echo.HTTPE
 		} else {
 			_, ok := baseErr.(kitty.Reply)
 			_, ok2 := baseErr.(kitty.Error)
-			fmt.Println(ok, ok2, baseErr,stacked)
+			fmt.Println(ok, ok2, baseErr, stacked)
 
 			if !ok && !ok2 {
 				baseErr = errUnknownError.SetError(stacked)
@@ -89,7 +85,7 @@ func handleReply(rep kitty.Reply, c echo.Context, l kitty.Logger, t kitty.Transl
 		l.WithFields("key", rep.Key()).Warn("translation for specified key not found.")
 	}
 
-	body := kitty.NewBody(rep.Code(), msg, kitty.Data(rep.Data()))
+	body := kitty.NewBody(rep.Code(), msg, rep.Data())
 
 	err = c.JSON(rep.HTTPStatus(), body)
 

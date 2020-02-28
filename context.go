@@ -2,6 +2,7 @@ package kecho
 
 import (
 	"github.com/Kamva/kitty"
+	"github.com/Kamva/tracer"
 	"github.com/labstack/echo/v4"
 )
 
@@ -93,19 +94,19 @@ func KittyContext(logger kitty.Logger, translator kitty.Translator) echo.Middlew
 			user, err := getKittyUser(ctx)
 
 			if err != nil {
-				return err
+				return tracer.Trace(err)
 			}
 
 			rid, err := getRequestID(ctx)
 
 			if err != nil {
-				return err
+				return tracer.Trace(err)
 			}
 
 			cid, err := getCorrelationID(ctx)
 
 			if err != nil {
-				return err
+				return tracer.Trace(err)
 			}
 
 			logger := tuneLogger(ctx, rid, cid, user, logger)

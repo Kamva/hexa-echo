@@ -69,6 +69,8 @@ github.com/Kamva/kitty v0.0.0-20200227181646-5f27dfd1ead0 h1:eL/YJnYKJg3Gs3C5VjB
 github.com/Kamva/kitty v0.0.0-20200227181646-5f27dfd1ead0/go.mod h1:eTbJM4CmI4zjjiGJWrqet/4baqXc44k4739kmEGK0QA=
 github.com/Kamva/kitty v0.0.0-20200227203053-09b7688349fd h1:p2VVZ3qGnSQD3Z/VUa+VoCQoGZgCd4a9GJerBVLRqX0=
 github.com/Kamva/kitty v0.0.0-20200227203053-09b7688349fd/go.mod h1:JioAcHaMsnbLACDVv8KKsba0sY1BeuwwkxdJvUz4TXQ=
+github.com/Kamva/kitty v0.0.0-20200228061329-98991ee7b7cd h1:OcwRSM88RgcsusJzSdNSrUX1xv0BbsTlnJ5I67cQI5s=
+github.com/Kamva/kitty v0.0.0-20200228061329-98991ee7b7cd/go.mod h1:JioAcHaMsnbLACDVv8KKsba0sY1BeuwwkxdJvUz4TXQ=
 github.com/Kamva/mgm/v2 v2.0.0/go.mod h1:DgcNZxH74WB3FMcxV6e/MKNdNzu3EI1vuStdOjkasTE=
 github.com/Kamva/tracer v0.0.0-20200227133325-b8bdd2b65f3d h1:/IcO4Z3ZMtzussYPNWOECvxE2gmux3JvYWK73E1TDpI=
 github.com/Kamva/tracer v0.0.0-20200227133325-b8bdd2b65f3d/go.mod h1:q7uOy720KXnYAgQMewzuxaeILdKRUNgy+P1v82vz5+0=
