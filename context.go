@@ -97,8 +97,3 @@ func KittyContext(logger kitty.Logger, translator kitty.Translator) echo.Middlew
 		}
 	}
 }
-
-// KittyCtx extract kitty context from the echo context.
-func KittyCtx(c echo.Context) kitty.Context {
-	return c.Get(ContextKeyKittyCtx).(kitty.Context)
-}
