@@ -24,6 +24,7 @@ var (
 		kitty.ErrKeyInternalError, errors.New("context's user not implemented the kitty User interface"),
 	)
 
+
 	errJwtMissing = kitty.NewError(http.StatusBadRequest, "ke.us.e.2",
 		"err_missing_jwt_token", errors.New("missing or malformed jwt"))
 
