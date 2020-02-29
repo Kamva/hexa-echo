@@ -22,24 +22,24 @@ type DeleteResource interface {
 }
 
 // Resource define each method that exists in provided resource.
-func Resource(group *echo.Group, resource interface{}) {
+func Resource(group *echo.Group, resource interface{}, m ...echo.MiddlewareFunc) {
 	if r, ok := resource.(GetResource); ok {
-		group.GET("/:id", r.Get)
+		group.GET("/:id", r.Get, m...)
 	}
 
 	if r, ok := resource.(CreateResource); ok {
-		group.POST("/:id", r.Create)
+		group.POST("/:id", r.Create, m...)
 	}
 
 	if r, ok := resource.(UpdateResource); ok {
-		group.PUT("/:id", r.Update)
+		group.PUT("/:id", r.Update, m...)
 	}
 
 	if r, ok := resource.(PatchResource); ok {
-		group.PATCH("/:id", r.Patch)
+		group.PATCH("/:id", r.Patch, m...)
 	}
 
 	if r, ok := resource.(DeleteResource); ok {
-		group.DELETE("/:id", r.Delete)
+		group.DELETE("/:id", r.Delete, m...)
 	}
 }
