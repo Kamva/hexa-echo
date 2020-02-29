@@ -25,16 +25,16 @@ var (
 	)
 
 	errJwtMissing = kitty.NewError(http.StatusBadRequest, "ke.1.e.2",
-		"missing_jwt_token", errors.New("missing or malformed jwt"))
+		"err_missing_jwt_token", errors.New("missing or malformed jwt"))
 
 	errInvalidOrExpiredJwt = kitty.NewError(http.StatusUnauthorized, "ke.1.e.3",
-		"invalid_or_expired_jwt", errors.New("invalid or expired jwt"))
+		"err_invalid_or_expired_jwt", errors.New("invalid or expired jwt"))
 
 	errUserMustBeGuest = kitty.NewError(http.StatusUnauthorized, "ke.1.e.4",
-		"user_must_be_guest", errors.New("the user must be guest to access this API"))
+		"err_user_must_be_guest", errors.New("the user must be guest to access this API"))
 
 	errUserNeedToAuthenticate = kitty.NewError(http.StatusUnauthorized, "ke.1.e.5",
-		"user_must_authenticate", errors.New("the user need to login to access this API"))
+		"err_user_must_authenticate", errors.New("the user need to login to access this API"))
 
 	//--------------------------------
 	// Request errors
@@ -51,7 +51,7 @@ var (
 	// DEBUG
 	//--------------------------------
 	errRouteAvaialbeInDebugMode = kitty.NewError(http.StatusUnauthorized, "ke.3.e.0",
-		"route_available_in_debug_mode", errors.New("route is available just in debug mode"),
+		"err_route_available_in_debug_mode", errors.New("route is available just in debug mode"),
 	)
 
 	//--------------------------------
