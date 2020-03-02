@@ -85,7 +85,7 @@ func JWT(key kitty.Secret) echo.MiddlewareFunc {
 
 // IDAsSubjectGenerator return user's id as jwt subject (sub).
 func IDAsSubjectGenerator(user kitty.User) (string, error) {
-	return user.ID().String(), nil
+	return user.Identifier().String(), nil
 }
 
 // GenerateToken generate new token for the user.
