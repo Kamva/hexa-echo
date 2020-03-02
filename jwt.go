@@ -8,7 +8,6 @@ import (
 	"github.com/dgrijalva/jwt-go"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
-	"go.mongodb.org/mongo-driver/bson/primitive"
 	"time"
 )
 
@@ -86,16 +85,7 @@ func JWT(key kitty.Secret) echo.MiddlewareFunc {
 
 // IDAsSubjectGenerator return user's id as jwt subject (sub).
 func IDAsSubjectGenerator(user kitty.User) (string, error) {
-	id := user.GetID()
-	switch id.(type) {
-	case string:
-		return id.(string), nil
-	case primitive.ObjectID:
-		m := id.(primitive.ObjectID).Hex()
-		return m, nil
-	}
-
-	return fmt.Sprint(id), nil
+	return user.ID().String(), nil
 }
 
 // GenerateToken generate new token for the user.
