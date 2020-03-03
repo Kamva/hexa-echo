@@ -147,7 +147,7 @@ func RefreshToken(cfg RefreshTokenConfig) (token, rToken kitty.Secret, err error
 	user, err := cfg.Authorizer(jToken.Claims.(jwt.MapClaims)["sub"].(string))
 
 	if err != nil {
-		err = errInvalidRefreshToken.SetError(tracer.Trace(err))
+		err = tracer.Trace(err)
 		return
 	}
 
