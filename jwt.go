@@ -184,7 +184,7 @@ func validateRefreshTokenCfg(cfg RefreshTokenConfig) error {
 	}
 
 	if cfg.RefreshToken == "" {
-		return tracer.Trace(errors.New("refresh token can not be empty"))
+		return errRefreshTokenCanNotBeEmpty
 	}
 
 	return nil

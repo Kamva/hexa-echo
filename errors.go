@@ -16,27 +16,28 @@ var (
 	//--------------------------------
 	// User and authentication Errors
 	//--------------------------------
-	errUserNotFound = kitty.NewError(http.StatusInternalServerError, "ke.us.e.0",
+	errUserNotFound = kitty.NewError(http.StatusInternalServerError, "ke.ua.e.0",
 		kitty.ErrKeyInternalError, errors.New("user not found"),
 	)
 
-	errContextUserNotImplementedKittyUser = kitty.NewError(http.StatusInternalServerError, "ke.us.e.1",
+	errContextUserNotImplementedKittyUser = kitty.NewError(http.StatusInternalServerError, "ke.ua.e.1",
 		kitty.ErrKeyInternalError, errors.New("context's user not implemented the kitty User interface"),
 	)
 
-
-	errJwtMissing = kitty.NewError(http.StatusBadRequest, "ke.us.e.2",
+	errJwtMissing = kitty.NewError(http.StatusBadRequest, "ke.ua.e.2",
 		"err_missing_jwt_token", errors.New("missing or malformed jwt"))
 
-	errInvalidOrExpiredJwt = kitty.NewError(http.StatusUnauthorized, "ke.us.e.3",
+	errInvalidOrExpiredJwt = kitty.NewError(http.StatusUnauthorized, "ke.ua.e.3",
 		"err_invalid_or_expired_jwt", errors.New("invalid or expired jwt"))
 
-	errUserMustBeGuest = kitty.NewError(http.StatusUnauthorized, "ke.us.e.4",
+	errUserMustBeGuest = kitty.NewError(http.StatusUnauthorized, "ke.ua.e.4",
 		"err_user_must_be_guest", errors.New("the user must be guest to access this API"))
 
-	errUserNeedToAuthenticate = kitty.NewError(http.StatusUnauthorized, "ke.us.e.5",
+	errUserNeedToAuthenticate = kitty.NewError(http.StatusUnauthorized, "ke.ua.e.5",
 		"err_user_must_authenticate", errors.New("the user need to login to access this API"))
 
+	errRefreshTokenCanNotBeEmpty = kitty.NewError(http.StatusBadRequest, "ke.ua.e.6",
+		"err_refresh_token_empty", errors.New("refresh token can not be empty"))
 	//--------------------------------
 	// Request errors
 	//--------------------------------
