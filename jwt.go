@@ -139,7 +139,7 @@ func RefreshToken(cfg RefreshTokenConfig) (token, rToken kitty.Secret, err error
 	})
 
 	if err != nil {
-		err = tracer.Trace(err)
+		err = errInvalidRefreshToken.SetError(tracer.Trace(err))
 		return
 	}
 

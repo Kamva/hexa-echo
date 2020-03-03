@@ -37,7 +37,11 @@ var (
 		"err_user_must_authenticate", errors.New("the user need to login to access this API"))
 
 	errRefreshTokenCanNotBeEmpty = kitty.NewError(http.StatusBadRequest, "ke.ua.e.6",
-		"err_refresh_token_empty", errors.New("refresh token can not be empty"))
+		"err_invalid_refresh_token_empty", errors.New("refresh token can not be empty"))
+
+	errInvalidRefreshToken = kitty.NewError(http.StatusBadRequest, "ke.ua.e.7",
+		"err_invalid_refresh_token_empty", nil)
+
 	//--------------------------------
 	// Request errors
 	//--------------------------------
