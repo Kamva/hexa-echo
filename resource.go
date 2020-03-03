@@ -7,6 +7,10 @@ import (
 )
 
 type (
+	QueryResource interface {
+		Query(ctx echo.Context) error
+	}
+
 	GetResource interface {
 		Get(ctx echo.Context) error
 	}
@@ -38,12 +42,16 @@ func (r Resource) Ctx(c echo.Context) kitty.Context {
 
 // Resource define each method that exists in provided resource.
 func ResourceAPI(group *echo.Group, resource interface{}, prefix string, m ...echo.MiddlewareFunc) {
+	if r, ok := resource.(QueryResource); ok {
+		group.GET("", r.Query, m...).Name = routeName(prefix, "get")
+	}
+
 	if r, ok := resource.(GetResource); ok {
 		group.GET("/:id", r.Get, m...).Name = routeName(prefix, "get")
 	}
 
 	if r, ok := resource.(CreateResource); ok {
-		group.POST("/:id", r.Create, m...).Name = routeName(prefix, "post")
+		group.POST("", r.Create, m...).Name = routeName(prefix, "post")
 	}
 
 	if r, ok := resource.(UpdateResource); ok {
