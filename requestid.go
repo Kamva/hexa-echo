@@ -1,4 +1,4 @@
-package kecho
+package hecho
 
 import (
 	"github.com/labstack/echo/v4"
@@ -53,7 +53,7 @@ func RequestIDWithConfig(config RequestIDConfig) echo.MiddlewareFunc {
 				rid = config.Generator()
 			}
 
-			c.Set(ContextKeyKittyRequestID, rid)
+			c.Set(ContextKeyHexaRequestID, rid)
 			res.Header().Set(echo.HeaderXRequestID, rid)
 
 			return next(c)

@@ -1,4 +1,4 @@
-package kecho
+package hecho
 
 import "github.com/google/uuid"
 

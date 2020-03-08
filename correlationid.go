@@ -1,4 +1,4 @@
-package kecho
+package hecho
 
 import (
 	"github.com/labstack/echo/v4"
@@ -56,7 +56,7 @@ func CorrelationIDWithConfig(config CorrelationIDConfig) echo.MiddlewareFunc {
 				cid = config.Generator()
 			}
 
-			c.Set(ContextKeyKittyCorrelationID, cid)
+			c.Set(ContextKeyHexaCorrelationID, cid)
 			res.Header().Set(HeaderCorrelationID, cid)
 
 			return next(c)

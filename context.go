@@ -1,46 +1,45 @@
-package kecho
+package hecho
 
 import (
-	"github.com/Kamva/kitty"
+	 "github.com/Kamva/hexa"
 	"github.com/Kamva/tracer"
 	"github.com/labstack/echo/v4"
 )
 
 const (
-	// ContextKeyKittyRequestID uses as key in context to store request id to use in context middleware
-	ContextKeyKittyRequestID = "__kitty_ctx.rid__"
+	// ContextKeyHexaRequestID uses as key in context to store request id to use in context middleware
+	ContextKeyHexaRequestID = "__hexa_ctx.rid__"
 
-	// ContextKeyKittyCorrelationID uses as key in context to store correlation id to use in context middleware
-	ContextKeyKittyCorrelationID = "__kitty_ctx.cid__"
+	// ContextKeyHexaCorrelationID uses as key in context to store correlation id to use in context middleware
+	ContextKeyHexaCorrelationID = "__hexa_ctx.cid__"
 
-	// ContextKeyKittyCtx is the identifier to set the kitty context as a field in the context of a request.
-	// e.g ctx.Set(kitty.ContextIdentifier,kittyCtx) // kittyCtx is kitty Context.
-	ContextKeyKittyCtx = "__kitty_ctx.ctx__"
+	// ContextKeyHexaCtx is the identifier to set the hexa context as a field in the context of a request.
+	ContextKeyHexaCtx = "__hexa_ctx.ctx__"
 
-	// ContextKeyKittyUser is the identifier to set the kitty user as a field in the context of a request.
-	ContextKeyKittyUser = "__kitty_ctx.user__"
+	// ContextKeyHexaUser is the identifier to set the hexa user as a field in the context of a request.
+	ContextKeyHexaUser = "__hexa_ctx.user__"
 )
 
-// getKittyUser returns kitty user instance from the current user.
-func getKittyUser(ctx echo.Context) (kitty.User, kitty.Error) {
+// getHexaUser returns hexa user instance from the current user.
+func getHexaUser(ctx echo.Context) (hexa.User, hexa.Error) {
 	// Get user if exists:
-	u := ctx.Get(ContextKeyKittyUser)
+	u := ctx.Get(ContextKeyHexaUser)
 
 	if u == nil {
 		return nil, errUserNotFound
 	}
 
-	if u, ok := u.(kitty.User); ok {
+	if u, ok := u.(hexa.User); ok {
 		return u, nil
 	} else {
-		return nil, errContextUserNotImplementedKittyUser
+		return nil, errContextUserNotImplementedHexaUser
 	}
 }
 
 // getRequestID returns the request id.
-func getRequestID(ctx echo.Context) (string, kitty.Error) {
+func getRequestID(ctx echo.Context) (string, hexa.Error) {
 	// Get Request ID if exists:
-	rid := ctx.Get(ContextKeyKittyRequestID).(string)
+	rid := ctx.Get(ContextKeyHexaRequestID).(string)
 
 	if rid == "" {
 		return "", errRequestIdNotFound
@@ -50,9 +49,9 @@ func getRequestID(ctx echo.Context) (string, kitty.Error) {
 }
 
 // getCorrelationID returns the request correlation id.
-func getCorrelationID(ctx echo.Context) (string, kitty.Error) {
+func getCorrelationID(ctx echo.Context) (string, hexa.Error) {
 	// Get Request ID if exists:
-	cid := ctx.Get(ContextKeyKittyCorrelationID).(string)
+	cid := ctx.Get(ContextKeyHexaCorrelationID).(string)
 
 	if cid == "" {
 		return "", errCorrelationIDNotFound
@@ -61,13 +60,13 @@ func getCorrelationID(ctx echo.Context) (string, kitty.Error) {
 	return cid, nil
 }
 
-// KittyContext set kitty context on each request.
-func KittyContext(logger kitty.Logger, translator kitty.Translator) echo.MiddlewareFunc {
+// HexaContext set hexa context on each request.
+func HexaContext(logger hexa.Logger, translator hexa.Translator) echo.MiddlewareFunc {
 	return func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(ctx echo.Context) error {
 			req := ctx.Request()
 
-			user, err := getKittyUser(ctx)
+			user, err := getHexaUser(ctx)
 
 			if err != nil {
 				return tracer.Trace(err)
@@ -88,10 +87,10 @@ func KittyContext(logger kitty.Logger, translator kitty.Translator) echo.Middlew
 			al := req.Header.Get("Accept-Language")
 
 			// Set context
-			ctx.Set(ContextKeyKittyCtx, kitty.NewCtx(rid, cid, al, user, logger, translator))
+			ctx.Set(ContextKeyHexaCtx, hexa.NewCtx(rid, cid, al, user, logger, translator))
 
 			// Set context logger
-			ctx.SetLogger(KittyLoggerToEchoLogger(logger))
+			ctx.SetLogger(HexaToEchoLogger(logger))
 
 			return next(ctx)
 		}

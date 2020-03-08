@@ -1,9 +1,9 @@
-package kecho
+package hecho
 
 import (
 	"errors"
 	"fmt"
-	"github.com/Kamva/kitty"
+	"github.com/Kamva/hexa"
 	"github.com/Kamva/tracer"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/labstack/echo/v4"
@@ -14,14 +14,14 @@ import (
 type (
 
 	// RefreshTokenAuthorizer is a type check that user can get new token.
-	RefreshTokenAuthorizer func(sub string) (kitty.User, error)
+	RefreshTokenAuthorizer func(sub string) (hexa.User, error)
 
-	SubGenerator func(user kitty.User) (string, error)
+	SubGenerator func(user hexa.User) (string, error)
 
 	// GenerateTokenConfig use as config to generate new token.
 	GenerateTokenConfig struct {
-		User                    kitty.User
-		Secret                  kitty.Secret
+		User                    hexa.User
+		Secret                  hexa.Secret
 		ExpireTokenAfter        time.Duration
 		ExpireRefreshTokenAfter time.Duration
 		SubGenerator            SubGenerator
@@ -30,7 +30,7 @@ type (
 	// RefreshTokenConfig use as config to refresh access token.
 	RefreshTokenConfig struct {
 		GenerateTokenConfig
-		RefreshToken kitty.Secret
+		RefreshToken hexa.Secret
 		// Use Authorizer to verify that can get new token.
 		Authorizer RefreshTokenAuthorizer
 	}
@@ -50,7 +50,7 @@ func skipIfNotProvidedHeader(header string) middleware.Skipper {
 	}
 }
 
-// jwtErrorHandler check errors type and return relative kitty error.
+// jwtErrorHandler check errors type and return relative hexa error.
 func jwtErrorHandler(err error) error {
 	// missing or malformed jwt token
 	if err == middleware.ErrJWTMissing {
@@ -72,7 +72,7 @@ var jwtConfig = middleware.JWTConfig{
 }
 
 // JWT middleware
-func JWT(key kitty.Secret) echo.MiddlewareFunc {
+func JWT(key hexa.Secret) echo.MiddlewareFunc {
 	cfg := jwtConfig
 	cfg.SigningKey = []byte(key)
 
@@ -84,12 +84,12 @@ func JWT(key kitty.Secret) echo.MiddlewareFunc {
 //--------------------------------
 
 // IDAsSubjectGenerator return user's id as jwt subject (sub).
-func IDAsSubjectGenerator(user kitty.User) (string, error) {
+func IDAsSubjectGenerator(user hexa.User) (string, error) {
 	return user.Identifier().String(), nil
 }
 
 // GenerateToken generate new token for the user.
-func GenerateToken(cfg GenerateTokenConfig) (token, rToken kitty.Secret, err error) {
+func GenerateToken(cfg GenerateTokenConfig) (token, rToken hexa.Secret, err error) {
 	if err = tracer.Trace(validateGenerateTokenCfg(cfg)); err != nil {
 		return
 	}
@@ -122,8 +122,8 @@ func GenerateToken(cfg GenerateTokenConfig) (token, rToken kitty.Secret, err err
 
 // RefreshToken refresh the jwt token by provided config.
 // In provided config to this function set user as just simple
-// kitty guest user. we set it by your authorizer later.
-func RefreshToken(cfg RefreshTokenConfig) (token, rToken kitty.Secret, err error) {
+// hexa guest user. we set it by your authorizer later.
+func RefreshToken(cfg RefreshTokenConfig) (token, rToken hexa.Secret, err error) {
 	if err = tracer.Trace(validateRefreshTokenCfg(cfg)); err != nil {
 		return
 	}
@@ -191,7 +191,7 @@ func validateRefreshTokenCfg(cfg RefreshTokenConfig) error {
 }
 
 // generateToken generate new jwt token.
-func generateToken(claims jwt.MapClaims, secret kitty.Secret) (token kitty.Secret, err error) {
+func generateToken(claims jwt.MapClaims, secret hexa.Secret) (token hexa.Secret, err error) {
 	jToken := jwt.New(jwt.SigningMethodHS256)
 	// Set claims
 	jToken.Claims = claims
@@ -201,6 +201,6 @@ func generateToken(claims jwt.MapClaims, secret kitty.Secret) (token kitty.Secre
 		err = tracer.Trace(err)
 		return
 	}
-	token = kitty.Secret(t)
+	token = hexa.Secret(t)
 	return
 }

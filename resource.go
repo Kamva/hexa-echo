@@ -1,8 +1,8 @@
-package kecho
+package hecho
 
 import (
 	"fmt"
-	"github.com/Kamva/kitty"
+	 "github.com/Kamva/hexa"
 	"github.com/labstack/echo/v4"
 )
 
@@ -35,9 +35,9 @@ type (
 	}
 )
 
-// Ctx method extract the kitty context from the echo context.
-func (r Resource) Ctx(c echo.Context) kitty.Context {
-	return c.Get(ContextKeyKittyCtx).(kitty.Context)
+// Ctx method extract the hexa context from the echo context.
+func (r Resource) Ctx(c echo.Context) hexa.Context {
+	return c.Get(ContextKeyHexaCtx).(hexa.Context)
 }
 
 // Resource define each method that exists in provided resource.

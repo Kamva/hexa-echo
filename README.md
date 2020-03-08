@@ -1,8 +1,8 @@
-#### kecho (kitty echo) contain middlewares,handlers,... for the echo.
+#### hecho (hexa echo) contain middlewares,handlers,... for the echo.
 
 #### Install
 ```
-go get github.com/Kamva/kecho
+go get github.com/Kamva/hecho
 ```
 
 ##### Middlewares
@@ -15,19 +15,19 @@ users accept-languages and then fallback and default languages.
 
 
 ##### Handlers
-* error handler: handle kitty errors.
+* error handler: handle hexa errors.
     
 ##### Middleware dependencies:
 * `kecho.CurrentUser` middleware requires
     - `kecho.JWT` middleware (load `JWT` middleware before `CurrentUser`).
-* `kecho.KittyContext` middleware requires 
+* `kecho.HexaContext` middleware requires 
     - echo `middleware.RequestID`
-    - kitty `kecho.CorrelationID`
-    - kitty `kecho.CurrentUser` middleware.
+    - hexa `kecho.CorrelationID`
+    - hexa `kecho.CurrentUser` middleware.
     
 
 #### Todo:
-- [ ] Map echo errors (see errors list in `echo.go:263`) to kitty error with translation.
+- [ ] Map echo errors (see errors list in `echo.go:263`) to hexa error with translation.
 - [ ] Tests
 - [ ] Add badges to readme.
 - [ ] CI 

@@ -1,16 +1,16 @@
-package kecho
+package hecho
 
 import (
 	"fmt"
 	"github.com/Kamva/gutil"
-	"github.com/Kamva/kitty"
+	 "github.com/Kamva/hexa"
 	"github.com/Kamva/tracer"
 	"github.com/labstack/echo/v4"
 )
 
 // HTTPErrorHandler is the echo error handler.
-// this function need to the KittyContext middleware.
-func HTTPErrorHandler(l kitty.Logger, t kitty.Translator, debug bool) echo.HTTPErrorHandler {
+// this function need to the HexaContext middleware.
+func HTTPErrorHandler(l hexa.Logger, t hexa.Translator, debug bool) echo.HTTPErrorHandler {
 	return func(rErr error, c echo.Context) {
 		l := l
 		t := t
@@ -26,8 +26,8 @@ func HTTPErrorHandler(l kitty.Logger, t kitty.Translator, debug bool) echo.HTTPE
 			}
 
 		} else {
-			_, ok := baseErr.(kitty.Reply)
-			_, ok2 := baseErr.(kitty.Error)
+			_, ok := baseErr.(hexa.Reply)
+			_, ok2 := baseErr.(hexa.Error)
 			fmt.Println(ok, ok2, baseErr, stacked)
 
 			if !ok && !ok2 {
@@ -35,57 +35,57 @@ func HTTPErrorHandler(l kitty.Logger, t kitty.Translator, debug bool) echo.HTTPE
 			}
 		}
 
-		// Maybe error occur before set kitty context in middleware
-		if kittyCtx, ok := c.Get(ContextKeyKittyCtx).(kitty.Context); ok {
-			l = kittyCtx.Logger()
-			t = kittyCtx.Translator()
+		// Maybe error occur before set hexa context in middleware
+		if hexaCtx, ok := c.Get(ContextKeyHexaCtx).(hexa.Context); ok {
+			l = hexaCtx.Logger()
+			t = hexaCtx.Translator()
 		}
 
-		if kittyErr, ok := baseErr.(kitty.Error); ok {
-			handleError(kittyErr, c, l, t, debug)
+		if hexaErr, ok := baseErr.(hexa.Error); ok {
+			handleError(hexaErr, c, l, t, debug)
 		} else {
-			handleReply(baseErr.(kitty.Reply), c, l, t)
+			handleReply(baseErr.(hexa.Reply), c, l, t)
 		}
 	}
 
 }
 
-func handleError(kittyErr kitty.Error, c echo.Context, l kitty.Logger, t kitty.Translator, debug bool) {
-	msg, err := t.Translate(kittyErr.Key(), gutil.MapToKeyValue(kittyErr.Params())...)
+func handleError(hexaErr hexa.Error, c echo.Context, l hexa.Logger, t hexa.Translator, debug bool) {
+	msg, err := t.Translate(hexaErr.Key(), gutil.MapToKeyValue(hexaErr.Params())...)
 
 	if err != nil {
-		l.WithFields("key", kittyErr.Key()).Warn("translation for specified key not found.")
+		l.WithFields("key", hexaErr.Key()).Warn("translation for specified key not found.")
 
-		d := kittyErr.ReportData()
+		d := hexaErr.ReportData()
 		d["__translation_err__"] = err.Error()
-		kittyErr = kittyErr.SetReportData(d)
+		hexaErr = hexaErr.SetReportData(d)
 	}
 
 	// Report
-	kittyErr.ReportIfNeeded(l, t)
+	hexaErr.ReportIfNeeded(l, t)
 
-	debugData := kittyErr.ReportData()
-	debugData["err"] = kittyErr.Error()
+	debugData := hexaErr.ReportData()
+	debugData["err"] = hexaErr.Error()
 
-	body := kitty.NewBody(kittyErr.Code(), msg, kittyErr.Data())
+	body := hexa.NewBody(hexaErr.Code(), msg, hexaErr.Data())
 
 	body = body.Debug(debug, debugData)
 
-	err = c.JSON(kittyErr.HTTPStatus(), body)
+	err = c.JSON(hexaErr.HTTPStatus(), body)
 
 	if err != nil {
 		l.Error(err)
 	}
 }
 
-func handleReply(rep kitty.Reply, c echo.Context, l kitty.Logger, t kitty.Translator) {
+func handleReply(rep hexa.Reply, c echo.Context, l hexa.Logger, t hexa.Translator) {
 	msg, err := t.Translate(rep.Key(), gutil.MapToKeyValue(rep.Params())...)
 
 	if err != nil {
 		l.WithFields("key", rep.Key()).Warn("translation for specified key not found.")
 	}
 
-	body := kitty.NewBody(rep.Code(), msg, rep.Data())
+	body := hexa.NewBody(rep.Code(), msg, rep.Data())
 
 	err = c.JSON(rep.HTTPStatus(), body)
 

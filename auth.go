@@ -1,7 +1,7 @@
-package kecho
+package hecho
 
 import (
-	"github.com/Kamva/kitty"
+	"github.com/Kamva/hexa"
 	"github.com/labstack/echo/v4"
 )
 
@@ -10,13 +10,13 @@ type GateMiddlewareConfig struct {
 }
 
 // GuestMiddleware is a middleware that force user to be guest to access to specific API.
-// GuestMiddleware should be after the kittyContext middleware.
+// GuestMiddleware should be after the hexaContext middleware.
 func GuestMiddleware() echo.MiddlewareFunc {
 	return UserGateMiddleware(GateMiddlewareConfig{MustBeGuest: true})
 }
 
 // AuthMiddleware is a middleware that force user to authenticate to access to specific API.
-// AuthMiddleware should be after the kittyContext middleware.
+// AuthMiddleware should be after the HexaContext middleware.
 func AuthMiddleware() echo.MiddlewareFunc {
 	return UserGateMiddleware(GateMiddlewareConfig{MustBeGuest: false})
 }
@@ -26,8 +26,8 @@ func AuthMiddleware() echo.MiddlewareFunc {
 func UserGateMiddleware(cfg GateMiddlewareConfig) echo.MiddlewareFunc {
 	return func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(ctx echo.Context) error {
-			kittyCtx := ctx.Get(ContextKeyKittyCtx).(kitty.Context)
-			u := kittyCtx.User()
+			hexaCtx := ctx.Get(ContextKeyHexaCtx).(hexa.Context)
+			u := hexaCtx.User()
 
 			// validate guest rule:
 			if cfg.MustBeGuest && !u.IsGuest() {

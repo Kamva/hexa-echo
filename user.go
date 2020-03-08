@@ -1,8 +1,8 @@
-package kecho
+package hecho
 
 import (
 	"errors"
-	"github.com/Kamva/kitty"
+	"github.com/Kamva/hexa"
 	"github.com/Kamva/tracer"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/labstack/echo/v4"
@@ -10,7 +10,7 @@ import (
 
 type (
 	// UserFinderByJwtSub is a function to use to find current user by jwt claims.
-	UserFinderByJwtSub func(sub string) (kitty.User, error)
+	UserFinderByJwtSub func(sub string) (hexa.User, error)
 
 	// CurrentUserConfig is the config to use in CurrentUser middleware.
 	CurrentUserConfig struct {
@@ -44,7 +44,7 @@ func CurrentUserWithConfig(cfg CurrentUserConfig) echo.MiddlewareFunc {
 	return func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(ctx echo.Context) (err error) {
 
-			var user = kitty.NewGuestUser()
+			var user = hexa.NewGuestUser()
 
 			// Get jwt (if exists)
 			if token, ok := ctx.Get(cfg.JWTContextKey).(*jwt.Token); ok {
@@ -65,8 +65,8 @@ func CurrentUserWithConfig(cfg CurrentUserConfig) echo.MiddlewareFunc {
 			// Set user in context with the given key
 			ctx.Set(cfg.UserContextKey, user)
 
-			// Also set for user to uas in kitty context
-			ctx.Set(ContextKeyKittyUser, user)
+			// Also set for user to uas in hexa context
+			ctx.Set(ContextKeyHexaUser, user)
 
 			return next(ctx)
 		}
