@@ -2,7 +2,7 @@ package hecho
 
 import (
 	"fmt"
-	 "github.com/Kamva/hexa"
+	"github.com/Kamva/hexa"
 	"github.com/labstack/echo/v4"
 )
 
@@ -51,7 +51,7 @@ func ResourceAPI(group *echo.Group, resource interface{}, prefix string, m ...ec
 	}
 
 	if r, ok := resource.(CreateResource); ok {
-		group.POST("", r.Create, m...).Name = routeName(prefix, "post")
+		group.POST("", r.Create, m...).Name = routeName(prefix, "create")
 	}
 
 	if r, ok := resource.(UpdateResource); ok {
