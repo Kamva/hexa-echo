@@ -43,7 +43,7 @@ func (r Resource) Ctx(c echo.Context) hexa.Context {
 // Resource define each method that exists in provided resource.
 func ResourceAPI(group *echo.Group, resource interface{}, prefix string, m ...echo.MiddlewareFunc) {
 	if r, ok := resource.(QueryResource); ok {
-		group.GET("", r.Query, m...).Name = routeName(prefix, "get")
+		group.GET("", r.Query, m...).Name = routeName(prefix, "query")
 	}
 
 	if r, ok := resource.(GetResource); ok {
