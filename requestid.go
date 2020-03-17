@@ -54,6 +54,8 @@ func RequestIDWithConfig(config RequestIDConfig) echo.MiddlewareFunc {
 			}
 
 			c.Set(ContextKeyHexaRequestID, rid)
+			// Set on the request,later maybe user need to it (e.g initializing context logger)
+			req.Header.Set(echo.HeaderXRequestID, rid)
 			res.Header().Set(echo.HeaderXRequestID, rid)
 
 			return next(c)
