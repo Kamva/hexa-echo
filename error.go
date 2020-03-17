@@ -1,9 +1,8 @@
 package hecho
 
 import (
-	"fmt"
 	"github.com/Kamva/gutil"
-	 "github.com/Kamva/hexa"
+	"github.com/Kamva/hexa"
 	"github.com/Kamva/tracer"
 	"github.com/labstack/echo/v4"
 )
@@ -28,7 +27,6 @@ func HTTPErrorHandler(l hexa.Logger, t hexa.Translator, debug bool) echo.HTTPErr
 		} else {
 			_, ok := baseErr.(hexa.Reply)
 			_, ok2 := baseErr.(hexa.Error)
-			fmt.Println(ok, ok2, baseErr, stacked)
 
 			if !ok && !ok2 {
 				baseErr = errUnknownError.SetError(stacked)
