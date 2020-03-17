@@ -18,12 +18,14 @@ users accept-languages and then fallback and default languages.
 * error handler: handle hexa errors.
     
 ##### Middleware dependencies:
-* `kecho.CurrentUser` middleware requires
-    - `kecho.JWT` middleware (load `JWT` middleware before `CurrentUser`).
-* `kecho.HexaContext` middleware requires 
+* `hecho.CurrentUser` middleware requires
+    - `hecho.JWT` middleware (load `JWT` middleware before `CurrentUser`).
+* `hecho.HexaContext` middleware requires 
     - echo `middleware.RequestID`
-    - hexa `kecho.CorrelationID`
-    - hexa `kecho.CurrentUser` middleware.
+    - hexa `hecho.CorrelationID`
+    - hexa `hecho.CurrentUser` middleware.
+* `hecho.SetContextLogger` middleware requires
+    - hexa `hexa.HexaContext`
     
 
 #### Todo:

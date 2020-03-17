@@ -71,10 +71,8 @@ func HexaContext(logger hexa.Logger, translator hexa.Translator) echo.Middleware
 			// Set context
 			ctx.Set(ContextKeyHexaCtx, hexa.NewCtx(ctx.Request(), cid, al, user, logger, translator))
 
-			// Set context logger
-			ctx.SetLogger(HexaToEchoLogger(logger))
-
 			return next(ctx)
 		}
 	}
 }
+

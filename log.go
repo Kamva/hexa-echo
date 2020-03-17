@@ -143,7 +143,7 @@ func (l *echoLogger) Panicf(format string, args ...interface{}) {
 }
 
 // HexaToEchoLogger convert hexa logger to echo logger.
-func HexaToEchoLogger(logger hexa.Logger, cfg hexa.Config) echo.Logger {
+func HexaToEchoLogger(cfg hexa.Config, logger hexa.Logger) echo.Logger {
 	return &echoLogger{
 		logger: logger,
 		level:  cfg.GetString(hexa.LogConfigLevel),

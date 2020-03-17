@@ -11,6 +11,7 @@ require (
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/google/uuid v1.1.1
 	github.com/labstack/echo/v4 v4.1.14
+	github.com/labstack/gommon v0.3.0
 	github.com/mattn/go-isatty v0.0.12 // indirect
 	github.com/sirupsen/logrus v1.4.2
 	go.mongodb.org/mongo-driver v1.3.0
