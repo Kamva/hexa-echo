@@ -1,7 +1,7 @@
 package hecho
 
 import (
-	 "github.com/Kamva/hexa"
+	"github.com/Kamva/hexa"
 	"github.com/Kamva/tracer"
 	"github.com/labstack/echo/v4"
 )
@@ -36,18 +36,6 @@ func getHexaUser(ctx echo.Context) (hexa.User, hexa.Error) {
 	}
 }
 
-// getRequestID returns the request id.
-func getRequestID(ctx echo.Context) (string, hexa.Error) {
-	// Get Request ID if exists:
-	rid := ctx.Get(ContextKeyHexaRequestID).(string)
-
-	if rid == "" {
-		return "", errRequestIdNotFound
-	}
-
-	return rid, nil
-}
-
 // getCorrelationID returns the request correlation id.
 func getCorrelationID(ctx echo.Context) (string, hexa.Error) {
 	// Get Request ID if exists:
@@ -72,12 +60,6 @@ func HexaContext(logger hexa.Logger, translator hexa.Translator) echo.Middleware
 				return tracer.Trace(err)
 			}
 
-			rid, err := getRequestID(ctx)
-
-			if err != nil {
-				return tracer.Trace(err)
-			}
-
 			cid, err := getCorrelationID(ctx)
 
 			if err != nil {
@@ -87,7 +69,7 @@ func HexaContext(logger hexa.Logger, translator hexa.Translator) echo.Middleware
 			al := req.Header.Get("Accept-Language")
 
 			// Set context
-			ctx.Set(ContextKeyHexaCtx, hexa.NewCtx(rid, cid, al, user, logger, translator))
+			ctx.Set(ContextKeyHexaCtx, hexa.NewCtx(ctx.Request(), cid, al, user, logger, translator))
 
 			// Set context logger
 			ctx.SetLogger(HexaToEchoLogger(logger))
