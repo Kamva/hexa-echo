@@ -73,7 +73,7 @@ func RecoverWithConfig(config RecoverConfig) echo.MiddlewareFunc {
 					stack := make([]byte, config.StackSize)
 					length := runtime.Stack(stack, !config.DisableStackAll)
 					if !config.DisablePrintStack && !isHexaErr(err) {
-						c.Logger().Printf("[PANIC RECOVER] %v %s\n", err, stack[:length])
+						c.Logger().Errorf("[PANIC RECOVER] %v %s\n", err, stack[:length])
 					}
 					c.Error(err)
 				}
