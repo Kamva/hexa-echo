@@ -79,7 +79,7 @@ func CurrentUserWithConfig(cfg CurrentUserConfig) echo.MiddlewareFunc {
 						extension, err := cfg.JWTExtender(claims["sub"].(string))
 						if err != nil {
 							err = tracer.Trace(err)
-							return
+							return err
 						}
 						gutil.ExtendMap(claims, extension, true)
 					}
