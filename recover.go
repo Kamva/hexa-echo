@@ -13,7 +13,7 @@ func Recover() echo.MiddlewareFunc {
 }
 
 // RecoverWithConfig returns a Recover middleware with config.
-// See: `Recover()`.
+// See `Recover()` document.
 func RecoverWithConfig(skipper middleware.Skipper) echo.MiddlewareFunc {
 	if skipper == nil {
 		skipper = middleware.DefaultSkipper
