@@ -2,7 +2,7 @@ package hecho
 
 import (
 	"errors"
-	 "github.com/Kamva/hexa"
+	"github.com/Kamva/hexa"
 	"net/http"
 )
 
@@ -63,8 +63,11 @@ var (
 	//--------------------------------
 	// Other errors
 	//--------------------------------
+	errHTTPNotFoundError = hexa.NewError(http.StatusNotFound, "hec.ot.e.0",
+		"route_not_found", errors.New("provided route not found"))
+
 	// Set this error status manually on return relative to echo error code.
-	errEchoHTTPError = hexa.NewError(http.StatusNotFound, "hec.ot.e.0", hexa.TranslateKeyEmptyMessage, nil)
+	errEchoHTTPError = hexa.NewError(http.StatusNotFound, "hec.ot.e.1", hexa.TranslateKeyEmptyMessage, nil)
 
 	errUnknownError = hexa.NewError(http.StatusInternalServerError, "hec.ot.e.1", "err_unknown_error", nil)
 )

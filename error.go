@@ -5,6 +5,7 @@ import (
 	"github.com/Kamva/hexa"
 	"github.com/Kamva/tracer"
 	"github.com/labstack/echo/v4"
+	"net/http"
 )
 
 // HTTPErrorHandler is the echo error handler.
@@ -19,9 +20,11 @@ func HTTPErrorHandler(l hexa.Logger, t hexa.Translator, debug bool) echo.HTTPErr
 
 		if httpErr, ok := baseErr.(*echo.HTTPError); ok {
 			baseErr = errEchoHTTPError.SetHTTPStatus(httpErr.Code)
-
+			if httpErr.Code == http.StatusNotFound {
+				baseErr = errHTTPNotFoundError
+			}
 			if httpErr.Internal != nil {
-				baseErr = errEchoHTTPError.SetError(tracer.MoveStack(stacked, httpErr.Internal))
+				baseErr = baseErr.(hexa.Error).SetError(tracer.MoveStack(stacked, httpErr.Internal))
 			}
 
 		} else {
