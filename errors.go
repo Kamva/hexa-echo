@@ -63,8 +63,7 @@ var (
 	//--------------------------------
 	// Other errors
 	//--------------------------------
-	errHTTPNotFoundError = hexa.NewError(http.StatusNotFound, "hec.ot.e.0",
-		"route_not_found", errors.New("provided route not found"))
+	errHTTPNotFoundError = hexa.NewError(http.StatusNotFound, "hec.ot.e.0", "route_not_found", nil)
 
 	// Set this error status manually on return relative to echo error code.
 	errEchoHTTPError = hexa.NewError(http.StatusNotFound, "hec.ot.e.1", hexa.TranslateKeyEmptyMessage, nil)
