@@ -20,7 +20,6 @@ type (
 
 	// GenerateTokenConfig use as config to generate new token.
 	GenerateTokenConfig struct {
-		User                    hexa.User
 		Secret                  hexa.Secret
 		ExpireTokenAfter        time.Duration
 		ExpireRefreshTokenAfter time.Duration
@@ -89,12 +88,12 @@ func IDAsSubjectGenerator(user hexa.User) (string, error) {
 }
 
 // GenerateToken generate new token for the user.
-func GenerateToken(cfg GenerateTokenConfig) (token, rToken hexa.Secret, err error) {
+func GenerateToken(u hexa.User, cfg GenerateTokenConfig) (token, rToken hexa.Secret, err error) {
 	if err = tracer.Trace(validateGenerateTokenCfg(cfg)); err != nil {
 		return
 	}
 
-	sub, err := cfg.SubGenerator(cfg.User)
+	sub, err := cfg.SubGenerator(u)
 	if err != nil {
 		err = tracer.Trace(err)
 		return
@@ -150,11 +149,7 @@ func RefreshToken(cfg RefreshTokenConfig) (token, rToken hexa.Secret, err error)
 		err = tracer.Trace(err)
 		return
 	}
-
-	// Set provided user.
-	cfg.GenerateTokenConfig.User = user
-
-	return GenerateToken(cfg.GenerateTokenConfig)
+	return GenerateToken(user, cfg.GenerateTokenConfig)
 }
 
 func validateGenerateTokenCfg(cfg GenerateTokenConfig) error {
@@ -163,7 +158,7 @@ func validateGenerateTokenCfg(cfg GenerateTokenConfig) error {
 
 	}
 
-	if cfg.User == nil || cfg.Secret == "" {
+	if cfg.Secret == "" {
 		return tracer.Trace(errors.New("invalid config values to generate token pairs"))
 	}
 
