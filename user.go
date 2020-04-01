@@ -10,24 +10,13 @@ import (
 )
 
 type (
-	// JWTExtender is a function to get the sub and return map of
-	// extension values for jwt.
-	// Our pattern in authentication has this instruction:
-	// - Get jwt token (later can get api,oauth2,... tokens). here we just get jwt token, but later in API Gateway you
-	//  can get other types of tokens and extend jwt, then send extended jwt to microservices and disable
-	// "ExtendJWT" to true to prevent double extension of jwt(one time in gateway, another time in microservice).
-	// - Call to extender(if needed) to extend jwt token by adding some values to it (e.g permissionsList,...).
-	// - Call to user generator to generate user by jwt token.
-	JWTExtender func(sub string) (map[string]interface{}, error)
-
-	// UserGeneratorByJWT generate new user by extended jwt token.
-	// This function get jwt claims as its first argument.
-	UserGeneratorByExtendedJWT func(claims map[string]interface{}) (hexa.User, error)
+	// UserFinder find the user.
+	UserFinder func(sub string) (hexa.User, error)
 
 	// CurrentUserConfig is the config to use in CurrentUser middleware.
 	CurrentUserConfig struct {
-		JWTExtender
-		UserGeneratorByExtendedJWT
+		userSDK        hexa.UserSDK
+		uf             UserFinder // Can be nil if ExtendJWT is false.
 		ExtendJWT      bool
 		UserContextKey string
 		JWTContextKey  string
@@ -43,23 +32,25 @@ var (
 // CurrentUser is a middleware to set the user in the context.
 // If provided jwt, so this function find user and set it as user
 // otherwise set guest user.
-func CurrentUser(jwtExtender JWTExtender, userGenerator UserGeneratorByExtendedJWT) echo.MiddlewareFunc {
+func CurrentUser(uf UserFinder, userSDK hexa.UserSDK) echo.MiddlewareFunc {
 	return CurrentUserWithConfig(CurrentUserConfig{
-		ExtendJWT:                  true,
-		JWTExtender:                jwtExtender,
-		UserGeneratorByExtendedJWT: userGenerator,
-		UserContextKey:             CurrentUserContextKey,
-		JWTContextKey:              JwtContextKey,
+		ExtendJWT:      true,
+		userSDK:        userSDK,
+		uf:             uf,
+		UserContextKey: CurrentUserContextKey,
+		JWTContextKey:  JwtContextKey,
 	})
 }
 
-func CurrentUserWithoutExtender(userGenerator UserGeneratorByExtendedJWT) echo.MiddlewareFunc {
+// CurrentUserWithoutFetch is for when you have a gateway that find the user and include
+// it in the jwt. so you will dont need to any user finder.
+func CurrentUserWithoutFetch(userSDK hexa.UserSDK) echo.MiddlewareFunc {
 	return CurrentUserWithConfig(CurrentUserConfig{
-		ExtendJWT:                  false,
-		JWTExtender:                nil,
-		UserGeneratorByExtendedJWT: userGenerator,
-		UserContextKey:             CurrentUserContextKey,
-		JWTContextKey:              JwtContextKey,
+		ExtendJWT:      false,
+		uf:             nil,
+		userSDK:        userSDK,
+		UserContextKey: CurrentUserContextKey,
+		JWTContextKey:  JwtContextKey,
 	})
 }
 
@@ -70,21 +61,22 @@ func CurrentUserWithConfig(cfg CurrentUserConfig) echo.MiddlewareFunc {
 	return func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(ctx echo.Context) (err error) {
 
-			var user = hexa.NewGuestUser()
+			var user = cfg.userSDK.NewGuest()
 
 			// Get jwt (if exists)
 			if token, ok := ctx.Get(cfg.JWTContextKey).(*jwt.Token); ok {
 				if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
 					if cfg.ExtendJWT {
-						extension, err := cfg.JWTExtender(claims["sub"].(string))
+						user, err := cfg.uf(claims["sub"].(string))
 						if err != nil {
 							err = tracer.Trace(err)
 							return err
 						}
+						extension, err := cfg.userSDK.Export(user)
 						gutil.ExtendMap(claims, extension, true)
 					}
 
-					user, err = cfg.UserGeneratorByExtendedJWT(claims)
+					user, err = cfg.userSDK.Import(hexa.Map(claims))
 					if err != nil {
 						err = tracer.Trace(err)
 						return
