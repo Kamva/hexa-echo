@@ -10,13 +10,13 @@ import (
 )
 
 type (
-	// UserFinder find the user.
-	UserFinder func(sub string) (hexa.User, error)
+	// UserFinderBySub find the user by provided sub.
+	UserFinderBySub func(sub string) (hexa.User, error)
 
 	// CurrentUserConfig is the config to use in CurrentUser middleware.
 	CurrentUserConfig struct {
 		userSDK        hexa.UserSDK
-		uf             UserFinder // Can be nil if ExtendJWT is false.
+		uf             UserFinderBySub // Can be nil if ExtendJWT is false.
 		ExtendJWT      bool
 		UserContextKey string
 		JWTContextKey  string
@@ -32,7 +32,7 @@ var (
 // CurrentUser is a middleware to set the user in the context.
 // If provided jwt, so this function find user and set it as user
 // otherwise set guest user.
-func CurrentUser(uf UserFinder, userSDK hexa.UserSDK) echo.MiddlewareFunc {
+func CurrentUser(uf UserFinderBySub, userSDK hexa.UserSDK) echo.MiddlewareFunc {
 	return CurrentUserWithConfig(CurrentUserConfig{
 		ExtendJWT:      true,
 		userSDK:        userSDK,
