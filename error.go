@@ -17,7 +17,7 @@ func HTTPErrorHandler(l hexa.Logger, t hexa.Translator, debug bool) echo.HTTPErr
 		t := t
 
 		// We finally need to have a Reply or Error that internal error is stacked.
-		stacked, baseErr := rErr, tracer.Cause(rErr)
+		stacked, baseErr := rErr, gutil.CauseErr(rErr)
 
 		if httpErr, ok := baseErr.(*echo.HTTPError); ok {
 			baseErr = errEchoHTTPError.SetHTTPStatus(httpErr.Code)
