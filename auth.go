@@ -28,13 +28,13 @@ func UserGateMiddleware(cfg GateMiddlewareConfig) echo.MiddlewareFunc {
 		return func(ctx echo.Context) error {
 			hexaCtx := ctx.Get(ContextKeyHexaCtx).(hexa.Context)
 			u := hexaCtx.User()
-
+			isGuest := u.Type() == hexa.UserTypeGuest
 			// validate guest rule:
-			if cfg.MustBeGuest && !u.IsGuest() {
+			if cfg.MustBeGuest && !isGuest {
 				return errUserMustBeGuest
 			}
 
-			if !cfg.MustBeGuest && u.IsGuest() {
+			if !cfg.MustBeGuest && isGuest {
 				return errUserNeedToAuthenticate
 			}
 
