@@ -17,7 +17,8 @@ type echoLogger struct {
 }
 
 func (l *echoLogger) Output() io.Writer {
-	return os.Stderr
+	// TODO: return your implemented output that get data and log as info (or debug) to the logger
+	return os.Stdout
 }
 
 func (l *echoLogger) SetOutput(w io.Writer) {

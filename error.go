@@ -54,7 +54,7 @@ func HTTPErrorHandler(l hexa.Logger, t hexa.Translator, debug bool) echo.HTTPErr
 }
 
 func handleError(hexaErr hexa.Error, c echo.Context, l hexa.Logger, t hexa.Translator, debug bool) {
-	msg, err := t.Translate(hexaErr.Key(), gutil.MapToKeyValue(hexaErr.Params())...)
+	msg, err := hexaErr.Localize(t)
 
 	if err != nil {
 		l.WithFields("key", hexaErr.Key()).Warn("translation for specified key not found.")

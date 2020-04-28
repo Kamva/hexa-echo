@@ -43,6 +43,8 @@ github.com/Kamva/hexa v0.0.0-20200410110009-fdf62d44a4f0 h1:gjYgnVR0//xTijTvp15e
 github.com/Kamva/hexa v0.0.0-20200410110009-fdf62d44a4f0/go.mod h1:pT5c15h+Z8UDfokz8V4bpY5jxN4tBnj+1eBwlWR+ty8=
 github.com/Kamva/hexa v0.0.0-20200423181746-ed22ebd8dbcc h1:6DcBMJvdKRL4hkJTMcR2uNn6h02zP6k7ih/GjKIw4OA=
 github.com/Kamva/hexa v0.0.0-20200423181746-ed22ebd8dbcc/go.mod h1:QEZGetNIQZW9SkUXc3ev5STjd0XRTZqCtmC4Dsg9RGs=
+github.com/Kamva/hexa v0.0.0-20200423200657-4b7b40c8face h1:pGs50D5bB25xeiDFhM82jQMc2sgPHk25zGNptX2djLA=
+github.com/Kamva/hexa v0.0.0-20200423200657-4b7b40c8face/go.mod h1:QEZGetNIQZW9SkUXc3ev5STjd0XRTZqCtmC4Dsg9RGs=
 github.com/Kamva/mgm-relation v0.0.0-20200324113035-730a602d7654/go.mod h1:0gVcrgpfQe4vkz05+96xB3BdJYZaOuXXB06eL+d08W8=
 github.com/Kamva/mgm/v3 v3.0.0-alpha.1/go.mod h1:73dKZ4Qvfdxve41TwmJNnVaGPZ7MUDcphjVABUalB/s=
 github.com/Kamva/tracer v0.0.0-20200227202933-3d5974771f25 h1:8+MV2TSg/Qn1lLryNLDX1A9hIRMBQhcHGdurD142TIU=

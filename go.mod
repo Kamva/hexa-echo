@@ -5,7 +5,7 @@ go 1.13
 require (
 	github.com/Kamva/elogrus/v4 v4.0.1
 	github.com/Kamva/gutil v0.0.0-20200410105054-7e8534aaefbe
-	github.com/Kamva/hexa v0.0.0-20200423181746-ed22ebd8dbcc
+	github.com/Kamva/hexa v0.0.0-20200423200657-4b7b40c8face
 	github.com/Kamva/tracer v0.0.0-20200410105359-fd5aa0f880a8
 	github.com/contribsys/faktory_worker_go v1.0.2-0.20200224171227-14a9992ad00e // indirect
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
