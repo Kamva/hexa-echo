@@ -8,27 +8,27 @@ import (
 
 type (
 	QueryResource interface {
-		Query(ctx echo.Context) error
+		Query(c echo.Context) error
 	}
 
 	GetResource interface {
-		Get(ctx echo.Context) error
+		Get(c echo.Context) error
 	}
 
 	CreateResource interface {
-		Create(ctx echo.Context) error
+		Create(c echo.Context) error
 	}
 
 	UpdateResource interface {
-		Update(ctx echo.Context) error
+		Update(c echo.Context) error
 	}
 
 	PatchResource interface {
-		Patch(ctx echo.Context) error
+		Patch(c echo.Context) error
 	}
 
 	DeleteResource interface {
-		Delete(ctx echo.Context) error
+		Delete(c echo.Context) error
 	}
 
 	Resource struct {
