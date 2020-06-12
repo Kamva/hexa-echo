@@ -11,7 +11,6 @@ require (
 	github.com/labstack/echo/v4 v4.1.14
 	github.com/labstack/gommon v0.3.0
 	github.com/mattn/go-isatty v0.0.12 // indirect
-	go.mongodb.org/mongo-driver v1.3.0
 	golang.org/x/crypto v0.0.0-20200221231518-2aa609cf4a9d // indirect
 	golang.org/x/net v0.0.0-20200222125558-5a598a2470a0 // indirect
 	golang.org/x/sys v0.0.0-20200219091948-cb0a6d8edb6c // indirect
