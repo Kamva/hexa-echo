@@ -1,4 +1,4 @@
-module github.com/Kamva/hexa-echo
+module github.com/kamva/hexa-echo
 
 go 1.13
 
