@@ -3,8 +3,8 @@ module github.com/kamva/hexa-echo
 go 1.13
 
 require (
-	github.com/Kamva/gutil v0.0.0-20200410105054-7e8534aaefbe
-	github.com/Kamva/hexa v0.0.0-20200423200657-4b7b40c8face
+	github.com/Kamva/gutil v0.0.0-20200613071917-167e96babaec
+	github.com/Kamva/hexa v0.0.0-20200801194001-ccd401effd71
 	github.com/Kamva/tracer v0.0.0-20200410105359-fd5aa0f880a8
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/google/uuid v1.1.1
