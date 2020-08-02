@@ -2,9 +2,9 @@ package hecho
 
 import (
 	"fmt"
-	"github.com/Kamva/gutil"
-	"github.com/Kamva/hexa"
-	"github.com/Kamva/tracer"
+	"github.com/kamva/gutil"
+	"github.com/kamva/hexa"
+	"github.com/kamva/tracer"
 	"github.com/labstack/echo/v4"
 	"net/http"
 )

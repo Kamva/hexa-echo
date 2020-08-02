@@ -2,7 +2,7 @@ package hecho
 
 import (
 	"errors"
-	"github.com/Kamva/hexa"
+	"github.com/kamva/hexa"
 	"net/http"
 )
 

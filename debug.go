@@ -1,7 +1,7 @@
 package hecho
 
 import (
-	"github.com/Kamva/tracer"
+	"github.com/kamva/tracer"
 	"github.com/labstack/echo/v4"
 )
 

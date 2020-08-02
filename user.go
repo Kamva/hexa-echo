@@ -2,9 +2,9 @@ package hecho
 
 import (
 	"errors"
-	"github.com/Kamva/gutil"
-	"github.com/Kamva/hexa"
-	"github.com/Kamva/tracer"
+	"github.com/kamva/gutil"
+	"github.com/kamva/hexa"
+	"github.com/kamva/tracer"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/labstack/echo/v4"
 )

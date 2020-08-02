@@ -2,7 +2,7 @@
 
 #### Install
 ```
-go get github.com/Kamva/hecho
+go get github.com/kamva/hecho
 ```
 
 ##### Middlewares

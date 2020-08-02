@@ -1,13 +1,13 @@
-module github.com/Kamva/hexa-echo
+module github.com/kamva/hexa-echo
 
 go 1.13
 
 require (
-	github.com/Kamva/gutil v0.0.0-20200613071917-167e96babaec
-	github.com/Kamva/hexa v0.0.0-20200801194001-ccd401effd71
-	github.com/Kamva/tracer v0.0.0-20200410105359-fd5aa0f880a8
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/google/uuid v1.1.1
+	github.com/kamva/gutil v0.0.0-20200802192905-f876666b3671
+	github.com/kamva/hexa v0.0.0-20200802195555-bef52a2e7393
+	github.com/kamva/tracer v0.0.0-20200802193105-6c0f308b9655
 	github.com/labstack/echo/v4 v4.1.14
 	github.com/labstack/gommon v0.3.0
 	github.com/mattn/go-isatty v0.0.12 // indirect

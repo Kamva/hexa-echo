@@ -2,8 +2,8 @@ package hecho
 
 import (
 	"fmt"
-	"github.com/Kamva/gutil"
-	"github.com/Kamva/hexa"
+	"github.com/kamva/gutil"
+	"github.com/kamva/hexa"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/gommon/log"
 	"io"

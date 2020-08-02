@@ -1,7 +1,7 @@
 package hecho
 
 import (
-	"github.com/Kamva/hexa"
+	"github.com/kamva/hexa"
 	"github.com/labstack/echo/v4/middleware"
 	"net/http"
 )

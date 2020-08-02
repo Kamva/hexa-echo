@@ -2,7 +2,7 @@ package hecho
 
 import (
 	"fmt"
-	"github.com/Kamva/hexa"
+	"github.com/kamva/hexa"
 	"github.com/labstack/echo/v4"
 )
 
