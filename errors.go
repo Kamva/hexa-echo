@@ -90,7 +90,7 @@ var (
 	errHTTPNotFoundError = hexa.NewError(http.StatusNotFound, "lib.route.not_found_error", nil)
 
 	// Set this error status manually on return relative to echo error code.
-	errEchoHTTPError = hexa.NewError(http.StatusNotFound, "lib.error.occurred_an_error", nil)
+	errEchoHTTPError = hexa.NewError(http.StatusNotFound, "lib.server.occurred_an_error", nil)
 
-	errUnknownError = hexa.NewError(http.StatusInternalServerError, "lib.unknown.unknown_error", nil)
+	errUnknownError = hexa.NewError(http.StatusInternalServerError, "lib.server.unknown_error", nil)
 )
