@@ -10,7 +10,7 @@ func DebugMiddleware(e *echo.Echo) echo.MiddlewareFunc {
 	return func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(ctx echo.Context) error {
 			if !e.Debug {
-				return errRouteAvaialbeInDebugMode
+				return errRouteAvailableInDebugMode
 			}
 
 			return tracer.Trace(next(ctx))

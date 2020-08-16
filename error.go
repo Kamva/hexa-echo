@@ -23,7 +23,7 @@ func HTTPErrorHandler(l hexa.Logger, t hexa.Translator, debug bool) echo.HTTPErr
 			baseErr = errEchoHTTPError.SetHTTPStatus(httpErr.Code)
 			if httpErr.Code == http.StatusNotFound {
 				baseErr = errHTTPNotFoundError
-				httpErr.Internal=fmt.Errorf("route %s %s not found",c.Request().Method,c.Request().URL)
+				httpErr.Internal = fmt.Errorf("route %s %s not found", c.Request().Method, c.Request().URL)
 			}
 			if httpErr.Internal != nil {
 				baseErr = baseErr.(hexa.Error).SetError(tracer.MoveStack(stacked, httpErr.Internal))
@@ -57,7 +57,7 @@ func handleError(hexaErr hexa.Error, c echo.Context, l hexa.Logger, t hexa.Trans
 	msg, err := hexaErr.Localize(t)
 
 	if err != nil {
-		l.WithFields("key", hexaErr.Key()).Warn("translation for specified key not found.")
+		l.WithFields("translation_key", hexaErr.ID()).Warn("translation for specified key not found.")
 
 		d := hexaErr.ReportData()
 		d["__translation_err__"] = err.Error()
@@ -70,7 +70,7 @@ func handleError(hexaErr hexa.Error, c echo.Context, l hexa.Logger, t hexa.Trans
 	debugData := hexaErr.ReportData()
 	debugData["err"] = hexaErr.Error()
 
-	body := hexa.NewBody(hexaErr.Code(), msg, hexaErr.Data())
+	body := hexa.NewBody(hexaErr.ID(), msg, hexaErr.Data())
 
 	body = body.Debug(debug, debugData)
 
@@ -82,13 +82,13 @@ func handleError(hexaErr hexa.Error, c echo.Context, l hexa.Logger, t hexa.Trans
 }
 
 func handleReply(rep hexa.Reply, c echo.Context, l hexa.Logger, t hexa.Translator) {
-	msg, err := t.Translate(rep.Key(), gutil.MapToKeyValue(rep.Params())...)
+	msg, err := t.Translate(rep.ID(), gutil.MapToKeyValue(rep.Data())...)
 
 	if err != nil {
-		l.WithFields("key", rep.Key()).Warn("translation for specified key not found.")
+		l.WithFields("translation_key", rep.ID()).Warn("translation for specified key not found.")
 	}
 
-	body := hexa.NewBody(rep.Code(), msg, rep.Data())
+	body := hexa.NewBody(rep.ID(), msg, rep.Data())
 
 	err = c.JSON(rep.HTTPStatus(), body)
 
