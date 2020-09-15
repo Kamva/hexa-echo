@@ -18,7 +18,7 @@ func (t *Template) Render(w io.Writer, name string, data interface{}, c echo.Con
 // NewTemplate creaets new template engine.
 // This engine parses the template definitions from
 // the files identified by the pattern.
-func NewTemplate(pattern string) echo.Renderer {
+func NewRenderer(pattern string) echo.Renderer {
 	return &Template{
 		templates: template.Must(template.ParseGlob(pattern)),
 	}
