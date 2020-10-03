@@ -74,7 +74,8 @@ var jwtConfig = middleware.JWTConfig{
 func JWT(key hexa.Secret) echo.MiddlewareFunc {
 	cfg := jwtConfig
 	cfg.SigningKey = []byte(key)
-
+	// TODO: remove this function and user config, provide that config instead of secret in huner, also provide config for
+	// cont.TODO: generate and refresh token, change RefreshToken function to check for RSA algorithm also.
 	return middleware.JWTWithConfig(cfg)
 }
 
