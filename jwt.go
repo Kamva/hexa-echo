@@ -2,10 +2,10 @@ package hecho
 
 import (
 	"errors"
-	"fmt"
+	"github.com/dgrijalva/jwt-go"
+	"github.com/kamva/gutil"
 	"github.com/kamva/hexa"
 	"github.com/kamva/tracer"
-	"github.com/dgrijalva/jwt-go"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"time"
@@ -20,16 +20,17 @@ type (
 
 	// GenerateTokenConfig use as config to generate new token.
 	GenerateTokenConfig struct {
-		Secret                  hexa.Secret
-		ExpireTokenAfter        time.Duration
-		ExpireRefreshTokenAfter time.Duration
-		SubGenerator            SubGenerator
+		SingingMethod    jwt.SigningMethod
+		Key              interface{}
+		SubGenerator     SubGenerator
+		Claims           jwt.MapClaims
+		ExpireTokenAfter time.Duration
 	}
 
 	// RefreshTokenConfig use as config to refresh access token.
 	RefreshTokenConfig struct {
 		GenerateTokenConfig
-		RefreshToken hexa.Secret
+		RefreshToken string
 		// Use Authorizer to verify that can get new token.
 		Authorizer RefreshTokenAuthorizer
 	}
@@ -41,16 +42,16 @@ type (
 
 const JwtContextKey = "jwt"
 
-// skipIfNotProvidedHeader skip jwt middleware if jwt authorization header
+// SkipIfNotProvidedHeader skip jwt middleware if jwt authorization header
 // is not provided.
-func skipIfNotProvidedHeader(header string) middleware.Skipper {
+func SkipIfNotProvidedHeader(header string) middleware.Skipper {
 	return func(c echo.Context) bool {
 		return c.Request().Header.Get(header) == ""
 	}
 }
 
-// jwtErrorHandler check errors type and return relative hexa error.
-func jwtErrorHandler(err error) error {
+// JwtErrorHandler check errors type and return relative hexa error.
+func JwtErrorHandler(err error) error {
 	// missing or malformed jwt token
 	if err == middleware.ErrJWTMissing {
 		return errJwtMissing.SetError(tracer.Trace(err))
@@ -58,25 +59,6 @@ func jwtErrorHandler(err error) error {
 
 	// otherwise authorization error
 	return errInvalidOrExpiredJwt.SetError(tracer.Trace(err))
-}
-
-var jwtConfig = middleware.JWTConfig{
-	Skipper:       skipIfNotProvidedHeader(echo.HeaderAuthorization),
-	SigningMethod: middleware.AlgorithmHS256,
-	ContextKey:    JwtContextKey,
-	TokenLookup:   "header:" + echo.HeaderAuthorization,
-	AuthScheme:    "Bearer",
-	Claims:        jwt.MapClaims{},
-	ErrorHandler:  jwtErrorHandler,
-}
-
-// JWT middleware
-func JWT(key hexa.Secret) echo.MiddlewareFunc {
-	cfg := jwtConfig
-	cfg.SigningKey = []byte(key)
-	// TODO: remove this function and user config, provide that config instead of secret in huner, also provide config for
-	// cont.TODO: generate and refresh token, change RefreshToken function to check for RSA algorithm also.
-	return middleware.JWTWithConfig(cfg)
 }
 
 //--------------------------------
@@ -89,7 +71,7 @@ func IDAsSubjectGenerator(user hexa.User) (string, error) {
 }
 
 // GenerateToken generate new token for the user.
-func GenerateToken(u hexa.User, cfg GenerateTokenConfig) (token, rToken hexa.Secret, err error) {
+func GenerateToken(u hexa.User, cfg GenerateTokenConfig) (token string, err error) {
 	if err = tracer.Trace(validateGenerateTokenCfg(cfg)); err != nil {
 		return
 	}
@@ -99,43 +81,28 @@ func GenerateToken(u hexa.User, cfg GenerateTokenConfig) (token, rToken hexa.Sec
 		err = tracer.Trace(err)
 		return
 	}
-
-	// Generate Token
-	token, err = generateToken(jwt.MapClaims{
+	gutil.ExtendMap(cfg.Claims, jwt.MapClaims{
 		"sub": sub,
 		"exp": time.Now().Add(cfg.ExpireTokenAfter).Unix(),
-	}, cfg.Secret)
+	}, true)
 
-	if err != nil {
-		err = tracer.Trace(err)
-		return
-	}
-
-	// Generate Refresh token
-	rToken, err = generateToken(jwt.MapClaims{
-		"sub": sub,
-		"exp": time.Now().Add(cfg.ExpireRefreshTokenAfter).Unix(),
-	}, cfg.Secret)
-	err = tracer.Trace(err)
-	return
+	jToken := jwt.New(cfg.SingingMethod)
+	// Set claims
+	jToken.Claims = cfg.Claims
+	// Generate encoded token and send it as response.
+	t, err := jToken.SignedString(cfg.Key)
+	return t, tracer.Trace(err)
 }
 
-// RefreshToken refresh the jwt token by provided config.
-// In provided config to this function set user as just simple
-// hexa guest user. we set it by your authorizer later.
-func RefreshToken(cfg RefreshTokenConfig) (token, rToken hexa.Secret, err error) {
+// GenerateRefreshToken refresh the jwt token by provided config.
+func GenerateRefreshToken(cfg RefreshTokenConfig) (token string, err error) {
 	if err = tracer.Trace(validateRefreshTokenCfg(cfg)); err != nil {
 		return
 	}
 
 	// Parse token:
-	jToken, err := jwt.Parse(string(cfg.RefreshToken), func(token *jwt.Token) (interface{}, error) {
-		// validate hashing method.
-		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
-			return nil, tracer.Trace(fmt.Errorf("unexpected signing method: %v", token.Header["alg"]))
-		}
-
-		return []byte(cfg.Secret), nil
+	jToken, err := jwt.Parse(cfg.RefreshToken, func(token *jwt.Token) (interface{}, error) {
+		return cfg.Key, nil
 	})
 
 	if err != nil {
@@ -150,16 +117,12 @@ func RefreshToken(cfg RefreshTokenConfig) (token, rToken hexa.Secret, err error)
 		err = tracer.Trace(err)
 		return
 	}
+
 	return GenerateToken(user, cfg.GenerateTokenConfig)
 }
 
 func validateGenerateTokenCfg(cfg GenerateTokenConfig) error {
-	if cfg.ExpireTokenAfter > cfg.ExpireRefreshTokenAfter {
-		return errors.New("refresh token expire time can not be less than access token expire time")
-
-	}
-
-	if cfg.Secret == "" {
+	if gutil.IsNil(cfg.SingingMethod) || gutil.IsNil(cfg.Key) {
 		return tracer.Trace(errors.New("invalid config values to generate token pairs"))
 	}
 
@@ -184,19 +147,4 @@ func validateRefreshTokenCfg(cfg RefreshTokenConfig) error {
 	}
 
 	return nil
-}
-
-// generateToken generate new jwt token.
-func generateToken(claims jwt.MapClaims, secret hexa.Secret) (token hexa.Secret, err error) {
-	jToken := jwt.New(jwt.SigningMethodHS256)
-	// Set claims
-	jToken.Claims = claims
-	// Generate encoded token and send it as response.
-	t, err := jToken.SignedString([]byte(secret))
-	if err != nil {
-		err = tracer.Trace(err)
-		return
-	}
-	token = hexa.Secret(t)
-	return
 }
