@@ -94,6 +94,9 @@ func GenerateToken(u hexa.User, cfg GenerateTokenConfig) (token string, err erro
 		err = tracer.Trace(err)
 		return
 	}
+	if cfg.Claims == nil {
+		cfg.Claims = make(map[string]interface{})
+	}
 	gutil.ExtendMap(cfg.Claims, jwt.MapClaims{
 		"sub": sub,
 		"exp": time.Now().Add(cfg.ExpireTokenAfter).Unix(),
