@@ -106,8 +106,8 @@ func GenerateToken(u hexa.User, cfg GenerateTokenConfig) (token string, err erro
 	return t, tracer.Trace(err)
 }
 
-// GenerateRefreshToken refresh the jwt token by provided config.
-func GenerateRefreshToken(cfg RefreshTokenConfig) (user hexa.User, token string, err error) {
+// AuthorizeRefreshToken authorize the jwt refresh token
+func AuthorizeRefreshToken(cfg RefreshTokenConfig) (user hexa.User, err error) {
 	if err = tracer.Trace(validateRefreshTokenCfg(cfg)); err != nil {
 		return
 	}
@@ -125,13 +125,7 @@ func GenerateRefreshToken(cfg RefreshTokenConfig) (user hexa.User, token string,
 	// Authorize user to verify user can get new access token.
 	user, err = cfg.Authorizer(jToken.Claims.(jwt.MapClaims)["sub"].(string))
 
-	if err != nil {
-		err = tracer.Trace(err)
-		return
-	}
-
-	token, err = GenerateToken(user, cfg.GenerateTokenConfig)
-	return
+	return user, tracer.Trace(err)
 }
 
 func validateGenerateTokenCfg(cfg GenerateTokenConfig) error {
