@@ -11,7 +11,7 @@ import (
 	"time"
 )
 
-// Cryptography algorithms
+// Cryptography algorithms to sign our jwt token
 const (
 	AlgorithmHS256 = "HS256"
 	AlgorithmHS384 = "HS384"
@@ -107,7 +107,7 @@ func GenerateToken(u hexa.User, cfg GenerateTokenConfig) (token string, err erro
 }
 
 // GenerateRefreshToken refresh the jwt token by provided config.
-func GenerateRefreshToken(cfg RefreshTokenConfig) (token string, err error) {
+func GenerateRefreshToken(cfg RefreshTokenConfig) (user hexa.User, token string, err error) {
 	if err = tracer.Trace(validateRefreshTokenCfg(cfg)); err != nil {
 		return
 	}
@@ -123,14 +123,15 @@ func GenerateRefreshToken(cfg RefreshTokenConfig) (token string, err error) {
 	}
 
 	// Authorize user to verify user can get new access token.
-	user, err := cfg.Authorizer(jToken.Claims.(jwt.MapClaims)["sub"].(string))
+	user, err = cfg.Authorizer(jToken.Claims.(jwt.MapClaims)["sub"].(string))
 
 	if err != nil {
 		err = tracer.Trace(err)
 		return
 	}
 
-	return GenerateToken(user, cfg.GenerateTokenConfig)
+	token, err = GenerateToken(user, cfg.GenerateTokenConfig)
+	return
 }
 
 func validateGenerateTokenCfg(cfg GenerateTokenConfig) error {
