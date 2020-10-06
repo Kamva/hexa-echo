@@ -34,16 +34,17 @@ type SubGenerator func(user hexa.User) (string, error)
 // GenerateTokenConfig use as config to generate new token.
 type GenerateTokenConfig struct {
 	SingingMethod    jwt.SigningMethod
-	Key              interface{}
+	Key              interface{} // for rsa this is the private key
 	SubGenerator     SubGenerator
 	Claims           jwt.MapClaims
 	ExpireTokenAfter time.Duration
 }
 
-// RefreshTokenConfig use as config to refresh access token.
-type RefreshTokenConfig struct {
-	GenerateTokenConfig
-	RefreshToken string
+// AuthorizeRefreshTokenConfig use as config to refresh access token.
+type AuthorizeRefreshTokenConfig struct {
+	SingingMethod jwt.SigningMethod
+	Key           interface{} // for rsa this is the public key
+	RefreshToken  string
 	// Use Authorizer to verify that can get new token.
 	Authorizer RefreshTokenAuthorizer
 }
@@ -107,7 +108,7 @@ func GenerateToken(u hexa.User, cfg GenerateTokenConfig) (token string, err erro
 }
 
 // AuthorizeRefreshToken authorize the jwt refresh token
-func AuthorizeRefreshToken(cfg RefreshTokenConfig) (user hexa.User, err error) {
+func AuthorizeRefreshToken(cfg AuthorizeRefreshTokenConfig) (user hexa.User, err error) {
 	if err = tracer.Trace(validateRefreshTokenCfg(cfg)); err != nil {
 		return
 	}
@@ -140,11 +141,7 @@ func validateGenerateTokenCfg(cfg GenerateTokenConfig) error {
 	return nil
 }
 
-func validateRefreshTokenCfg(cfg RefreshTokenConfig) error {
-	if err := validateGenerateTokenCfg(cfg.GenerateTokenConfig); err != nil {
-		return tracer.Trace(err)
-	}
-
+func validateRefreshTokenCfg(cfg AuthorizeRefreshTokenConfig) error {
 	if cfg.Authorizer == nil {
 		return tracer.Trace(errors.New("authorizer can not be nil"))
 	}
