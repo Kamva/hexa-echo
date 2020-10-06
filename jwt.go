@@ -11,30 +11,42 @@ import (
 	"time"
 )
 
-type (
+// Cryptography algorithms
+const (
+	AlgorithmHS256 = "HS256"
+	AlgorithmHS384 = "HS384"
+	AlgorithmHS512 = "HS512"
 
-	// RefreshTokenAuthorizer is a type check that user can get new token.
-	RefreshTokenAuthorizer func(sub string) (hexa.User, error)
+	AlgorithmRS256 = "RS256"
+	AlgorithmRS384 = "RS384"
+	AlgorithmRS512 = "RS512"
 
-	SubGenerator func(user hexa.User) (string, error)
-
-	// GenerateTokenConfig use as config to generate new token.
-	GenerateTokenConfig struct {
-		SingingMethod    jwt.SigningMethod
-		Key              interface{}
-		SubGenerator     SubGenerator
-		Claims           jwt.MapClaims
-		ExpireTokenAfter time.Duration
-	}
-
-	// RefreshTokenConfig use as config to refresh access token.
-	RefreshTokenConfig struct {
-		GenerateTokenConfig
-		RefreshToken string
-		// Use Authorizer to verify that can get new token.
-		Authorizer RefreshTokenAuthorizer
-	}
+	AlgorithmES256 = "ES256"
+	AlgorithmES384 = "ES384"
+	AlgorithmES512 = "ES512"
 )
+
+// RefreshTokenAuthorizer is a type check that user can get new token.
+type RefreshTokenAuthorizer func(sub string) (hexa.User, error)
+
+type SubGenerator func(user hexa.User) (string, error)
+
+// GenerateTokenConfig use as config to generate new token.
+type GenerateTokenConfig struct {
+	SingingMethod    jwt.SigningMethod
+	Key              interface{}
+	SubGenerator     SubGenerator
+	Claims           jwt.MapClaims
+	ExpireTokenAfter time.Duration
+}
+
+// RefreshTokenConfig use as config to refresh access token.
+type RefreshTokenConfig struct {
+	GenerateTokenConfig
+	RefreshToken string
+	// Use Authorizer to verify that can get new token.
+	Authorizer RefreshTokenAuthorizer
+}
 
 //--------------------------------
 // JWT Middleware
