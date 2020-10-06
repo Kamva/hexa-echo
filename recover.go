@@ -2,6 +2,7 @@ package hecho
 
 import (
 	"fmt"
+	"github.com/kamva/tracer"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 )
@@ -26,11 +27,12 @@ func RecoverWithConfig(skipper middleware.Skipper) echo.MiddlewareFunc {
 
 			defer func() {
 				if r := recover(); r != nil {
+					//var ok bool
 					err, ok := r.(error)
 					if !ok {
 						err = fmt.Errorf("%v", r)
 					}
-					c.Error(err)
+					c.Error(tracer.Trace(err))
 				}
 			}()
 			return next(c)
