@@ -8,6 +8,7 @@ import (
 	"github.com/kamva/tracer"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
+	"regexp"
 	"time"
 )
 
@@ -26,8 +27,8 @@ const (
 	AlgorithmES512 = "ES512"
 )
 
-// RefreshTokenAuthorizer is a type check that user can get new token.
-type RefreshTokenAuthorizer func(sub string) (hexa.User, error)
+// TokenAuthorizer authorize the token.
+type TokenAuthorizer func(claims jwt.MapClaims) error
 
 type SubGenerator func(user hexa.User) (string, error)
 
@@ -44,9 +45,10 @@ type GenerateTokenConfig struct {
 type AuthorizeRefreshTokenConfig struct {
 	SingingMethod jwt.SigningMethod
 	Key           interface{} // for rsa this is the public key
-	RefreshToken  string
+	Token         string
 	// Use Authorizer to verify that can get new token.
-	Authorizer RefreshTokenAuthorizer
+	Authorizer TokenAuthorizer
+	UserFinder UserFinderBySub
 }
 
 //--------------------------------
@@ -72,6 +74,61 @@ func JwtErrorHandler(err error) error {
 
 	// otherwise authorization error
 	return errInvalidOrExpiredJwt.SetError(tracer.Trace(err))
+}
+
+func AuthorizeAudience(pattern string) TokenAuthorizer {
+	reg := regexp.MustCompile(pattern)
+	return func(claims jwt.MapClaims) error {
+		aud, ok := claims["aud"]
+		if !ok {
+			return errInvalidAudience
+		}
+		if !reg.MatchString(aud.(string)) {
+			return errInvalidAudience
+		}
+		return nil
+	}
+}
+
+//--------------------------------
+// JWT claim authorizer
+//--------------------------------
+type JwtClaimAuthorizerConfig struct {
+	Skipper       middleware.Skipper
+	JWTContextKey string
+	Authorizer    TokenAuthorizer
+}
+
+func JwtClaimAuthorizer(cfg JwtClaimAuthorizerConfig) echo.MiddlewareFunc {
+	return func(next echo.HandlerFunc) echo.HandlerFunc {
+		return func(ctx echo.Context) (err error) {
+
+			if cfg.Skipper == nil {
+				return errors.New("skipper can not be nil")
+			}
+
+			if cfg.Skipper(ctx) {
+				return next(ctx)
+			}
+
+			token, ok := ctx.Get(cfg.JWTContextKey).(*jwt.Token)
+			// Get jwt (if exists)
+			if !ok {
+				return errors.New("can not find jwt token")
+			}
+
+			claims, ok := token.Claims.(jwt.MapClaims)
+			if !ok {
+				return errors.New("invalid jwt claims")
+			}
+
+			if err := cfg.Authorizer(claims); err != nil {
+				return tracer.Trace(err)
+			}
+
+			return next(ctx)
+		}
+	}
 }
 
 //--------------------------------
@@ -110,14 +167,15 @@ func GenerateToken(u hexa.User, cfg GenerateTokenConfig) (token string, err erro
 	return t, tracer.Trace(err)
 }
 
-// AuthorizeRefreshToken authorize the jwt refresh token
+// AuthorizeRefreshToken authorize provided jwt token. it first fetch the user from token, and then
+// provide user and claim to the authorizer.
 func AuthorizeRefreshToken(cfg AuthorizeRefreshTokenConfig) (user hexa.User, err error) {
 	if err = tracer.Trace(validateRefreshTokenCfg(cfg)); err != nil {
 		return
 	}
 
 	// Parse token:
-	jToken, err := jwt.Parse(cfg.RefreshToken, func(token *jwt.Token) (interface{}, error) {
+	jToken, err := jwt.Parse(cfg.Token, func(token *jwt.Token) (interface{}, error) {
 		return cfg.Key, nil
 	})
 
@@ -127,9 +185,13 @@ func AuthorizeRefreshToken(cfg AuthorizeRefreshTokenConfig) (user hexa.User, err
 	}
 
 	// Authorize user to verify user can get new access token.
-	user, err = cfg.Authorizer(jToken.Claims.(jwt.MapClaims)["sub"].(string))
+	claims := jToken.Claims.(jwt.MapClaims)
+	user, err = cfg.UserFinder(claims["sub"].(string))
+	if err != nil {
+		return nil, tracer.Trace(err)
+	}
 
-	return user, tracer.Trace(err)
+	return user, cfg.Authorizer(claims)
 }
 
 func validateGenerateTokenCfg(cfg GenerateTokenConfig) error {
@@ -149,7 +211,11 @@ func validateRefreshTokenCfg(cfg AuthorizeRefreshTokenConfig) error {
 		return tracer.Trace(errors.New("authorizer can not be nil"))
 	}
 
-	if cfg.RefreshToken == "" {
+	if cfg.UserFinder == nil {
+		return tracer.Trace(errors.New("user finder can not be nil"))
+	}
+
+	if cfg.Token == "" {
 		return errRefreshTokenCanNotBeEmpty
 	}
 

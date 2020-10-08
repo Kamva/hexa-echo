@@ -39,7 +39,11 @@ var (
 		"lib.user.invalid_expired_jwt_error",
 		errors.New("invalid or expired jwt"),
 	)
-
+	errInvalidAudience = hexa.NewError(
+		http.StatusUnauthorized,
+		"lib.user.invalid_jwt_audience_error",
+		errors.New("audience value in the jwt token is not for us"),
+	)
 	errUserMustBeGuest = hexa.NewError(
 		http.StatusUnauthorized,
 		"lib.user.must_be_guest_error",
