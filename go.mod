@@ -4,8 +4,8 @@ go 1.13
 
 require (
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
-	github.com/google/uuid v1.1.1
-	github.com/kamva/gutil v0.0.0-20200802192905-f876666b3671
+	github.com/google/uuid v1.1.2
+	github.com/kamva/gutil v0.0.0-20201019205450-316c2ef1896d
 	github.com/kamva/hexa v0.0.0-20200821143343-21ecc792c92a
 	github.com/kamva/tracer v0.0.0-20200802193105-6c0f308b9655
 	github.com/labstack/echo/v4 v4.1.14

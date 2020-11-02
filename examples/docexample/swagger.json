@@ -1,0 +1,40 @@
+{
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "schemes": [
+    "http"
+  ],
+  "swagger": "2.0",
+  "info": {
+    "description": "Documentation of our awesome API.",
+    "title": "awesome.",
+    "version": "1.0.0"
+  },
+  "host": "some-url.com",
+  "basePath": "/",
+  "paths": {},
+  "responses": {
+    "hiSaySuccessResponse": {
+      "description": "success response",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "description": "response code",
+            "type": "string",
+            "x-go-name": "Code"
+          }
+        }
+      }
+    }
+  },
+  "securityDefinitions": {
+    "basic": {
+      "type": "basic"
+    }
+  }
+}
