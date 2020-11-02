@@ -5,7 +5,7 @@
 //     Schemes: http
 //     BasePath: /
 //     Version: 1.0.0
-//     Host: some-url.com
+//     Host: localhost:1323
 //
 //     Consumes:
 //     - application/json
@@ -23,18 +23,18 @@
 // swagger:meta
 package doc
 
+import "github.com/kamva/hexa-echo/examples/docexample/api"
+
 // route:begin: hi::say
 // swagger:route {{.hiSay.Method}} {{.hiSay.Path}} {{.hiSay.TagsString}} {{.hiSay.ParamsId}}
-//
+// say hi to yourself.
 // responses:
-//   2xx: {{.hiSay.SuccessRespId}}
+//   200: {{.hiSay.SuccessRespId}}
 
 // swagger:parameters {{.hiSay.ParamsId}}
 type hiSayParamsWrapper struct {
 	// in:body
-	Body struct{
-	    // -> place your params body here
-	}
+	Body api.HiRequest `json:"body"`
 }
 
 // success response
@@ -44,7 +44,7 @@ type hiSayResponseWrapper struct {
 	Body struct{
 	    // response code
     	Code string `json:"code"`
-    	// -> place your body data here
+    	Data api.HiResponse `json:"data"`
     }
 }
 

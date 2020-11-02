@@ -8,7 +8,7 @@
 type {{.Name}}ParamsWrapper struct {
 	// in:body
 	Body struct{
-	    // -> place your params body here
+	    // DOCTODO: place your params body here
 	}
 }
 
@@ -19,7 +19,7 @@ type {{.Name}}ResponseWrapper struct {
 	Body struct{
 	    // response code
     	Code string `json:"code"`
-    	// -> place your body data here
+    	// DOCTODO: place your body data here
     }
 }
 

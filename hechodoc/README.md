@@ -1,7 +1,7 @@
 Conventions:
 ---
 - You must not import package which contains openapi template file.
-  this is because `swagger-go` generate double docs if we import it in our project.
+  this is because `go-swagger` generates two docs if we import it in our project.
   
 - You must create openapi template go file
   initially (e.g., openapi_tpl.go), this is 

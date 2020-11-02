@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"github.com/kamva/tracer"
 	"github.com/labstack/echo/v4"
+	"strings"
 	"text/template"
 
 	"os"
-	"strings"
 )
 
 type Route struct {
@@ -20,11 +20,12 @@ type Route struct {
 }
 
 func newRoute(r *echo.Route, c RouteNameConverter) Route {
+
 	return Route{
 		Name:          c.CamelCase(r.Name),
 		Method:        r.Method,
 		Path:          r.Path,
-		TagsString:    strings.Join(c.Tags(r.Name), ","),
+		TagsString:    strings.Join(c.Tags(r.Name)," "),
 		ParamsId:      fmt.Sprintf("%sParams", c.CamelCase(r.Name)),
 		SuccessRespId: fmt.Sprintf("%sSuccessResponse", c.CamelCase(r.Name)),
 	}

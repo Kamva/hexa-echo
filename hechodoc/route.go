@@ -11,22 +11,29 @@ type RouteNameConverter interface {
 }
 
 // DefaultRouteNameConverter is the default route name Converter.
-var DefaultRouteNameConverter = NewDividerNameConverter("::")
+var DefaultRouteNameConverter = NewDividerNameConverter("::",0)
 
 // dividedNameConverter convert names which their format is just
 // multiple words which joined with a div like , or :.
 type dividedNameConverter struct {
 	div string
+	// specify maximum tags count which we can return. -1 means unlimited.
+	maxTag int
 }
 
-func NewDividerNameConverter(div string) RouteNameConverter {
+func NewDividerNameConverter(div string,maxTag int) RouteNameConverter {
 	return &dividedNameConverter{
 		div: div,
+		maxTag: maxTag,
 	}
 }
 
 func (c *dividedNameConverter) Tags(name string) []string {
-	return strings.Split(name, c.div)
+	tags:=strings.Split(name, c.div)
+	if c.maxTag==-1{
+		return tags
+	}
+	return tags[:c.maxTag]
 }
 
 func (c *dividedNameConverter) CamelCase(name string) string {

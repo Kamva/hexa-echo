@@ -1,0 +1,70 @@
+basePath: /
+consumes:
+- application/json
+definitions:
+  HiRequest:
+    properties:
+      age:
+        format: int64
+        type: integer
+        x-go-name: Age
+      name:
+        type: string
+        x-go-name: Name
+    type: object
+    x-go-package: github.com/kamva/hexa-echo/examples/docexample/api
+  HiResponse:
+    properties:
+      code:
+        type: string
+        x-go-name: Code
+      data:
+        $ref: '#/definitions/ResponseData'
+    type: object
+    x-go-package: github.com/kamva/hexa-echo/examples/docexample/api
+  ResponseData:
+    properties:
+      say:
+        type: string
+        x-go-name: Say
+    type: object
+    x-go-package: github.com/kamva/hexa-echo/examples/docexample/api
+host: localhost:1323
+info:
+  description: Documentation of our awesome API.
+  title: awesome.
+  version: 1.0.0
+paths:
+  /hi:
+    post:
+      operationId: hiSayParams
+      parameters:
+      - in: body
+        name: body
+        schema:
+          $ref: '#/definitions/HiRequest'
+        x-go-name: Body
+      responses:
+        "200":
+          $ref: '#/responses/hiSaySuccessResponse'
+      summary: say hi to yourself.
+produces:
+- application/json
+responses:
+  hiSaySuccessResponse:
+    description: success response
+    schema:
+      properties:
+        code:
+          description: response code
+          type: string
+          x-go-name: Code
+        data:
+          $ref: '#/definitions/HiResponse'
+      type: object
+schemes:
+- http
+securityDefinitions:
+  basic:
+    type: basic
+swagger: "2.0"
