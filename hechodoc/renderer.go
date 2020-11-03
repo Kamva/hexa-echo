@@ -25,7 +25,7 @@ func newRoute(r *echo.Route, c RouteNameConverter) Route {
 	return Route{
 		Name:          c.CamelCase(r.Name),
 		Method:        r.Method,
-		Path:          path.Join("/",r.Path),
+		Path:          path.Join("/",OpenApiPathFromEchoPath(r.Path)),
 		TagsString:    strings.Join(c.Tags(r.Name)," "),
 		ParamsId:      fmt.Sprintf("%sParams", c.CamelCase(r.Name)),
 		SuccessRespId: fmt.Sprintf("%sSuccessResponse", c.CamelCase(r.Name)),

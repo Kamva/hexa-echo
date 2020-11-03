@@ -140,6 +140,10 @@ github.com/kamva/gutil v0.0.0-20200802192905-f876666b3671 h1:spCCndvE6oZMhGM/QQw
 github.com/kamva/gutil v0.0.0-20200802192905-f876666b3671/go.mod h1:isEo5NPYgY0mNFbOrCbbDVTe7Cd5VujoEt1cKbG2oGg=
 github.com/kamva/gutil v0.0.0-20201019205450-316c2ef1896d h1:uvVFOwqkFtRcbWBTSJxlq0vMeA8dGZwVeFWVN6XScDE=
 github.com/kamva/gutil v0.0.0-20201019205450-316c2ef1896d/go.mod h1:YmR2JDqDX3WW/8T/qPNwsjlN+wQ/te7MeUQiHhzFXWI=
+github.com/kamva/gutil v0.0.0-20201103190326-2da659923fe1 h1:3EoQSYgTPUIYoVU5WrT0RAS8hiL1Yn9zSephGqUQ9jU=
+github.com/kamva/gutil v0.0.0-20201103190326-2da659923fe1/go.mod h1:+yeJ+Y3R35PgqbWDx9BecACSsOLC3gGQ/Ef5hre00ds=
+github.com/kamva/gutil v0.0.0-20201103190702-b797a8db5d4e h1:4B59oLc6lIveAZt6JNf304um1WRnYE8xscbjP4MFJns=
+github.com/kamva/gutil v0.0.0-20201103190702-b797a8db5d4e/go.mod h1:+yeJ+Y3R35PgqbWDx9BecACSsOLC3gGQ/Ef5hre00ds=
 github.com/kamva/hexa v0.0.0-20200802195555-bef52a2e7393 h1:4+ME9qQlZuy6dCOvmINvDGP2V11kdj7E/SBliCo1cXQ=
 github.com/kamva/hexa v0.0.0-20200802195555-bef52a2e7393/go.mod h1:AnYhdxq4Gr49oFv/vpKplvPfdjzn+63M3WBVfLzRsl4=
 github.com/kamva/hexa v0.0.0-20200816034542-f6e65f62cbe5 h1:eG3wlgdh7582zSbyrsuUjojh/OwSZV6RloIZT9n/yzo=
@@ -182,6 +186,7 @@ github.com/labstack/echo/v4 v4.1.14/go.mod h1:Q5KZ1vD3V5FEzjM79hjwVrC3ABr7F5IdM2
 github.com/labstack/gommon v0.3.0 h1:JEeO0bvc78PKdyHxloTKiF8BD5iGrH8T6MSeGvSgob0=
 github.com/labstack/gommon v0.3.0/go.mod h1:MULnywXg0yavhxWKc+lOruYdAhDwPK9wf0OL7NoOu+k=
 github.com/magiconair/properties v1.8.0/go.mod h1:PppfXfuXeibc/6YijjN8zIbojt8czPbwD3XqdrwzmxQ=
+github.com/magiconair/properties v1.8.1 h1:ZC2Vc7/ZFkGmsVC9KvOjumD+G5lXy2RtTKyzRKO2BQ4=
 github.com/magiconair/properties v1.8.1/go.mod h1:PppfXfuXeibc/6YijjN8zIbojt8czPbwD3XqdrwzmxQ=
 github.com/markbates/oncer v0.0.0-20181203154359-bf2de49a0be2/go.mod h1:Ld9puTsIW75CHf65OeIOkyKbteujpZVXDpWK6YGZbxE=
 github.com/markbates/safe v1.0.1/go.mod h1:nAqgmRi7cY2nqMc92/bSEeQA+R4OheNU2T1kNSCBdG0=

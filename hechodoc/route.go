@@ -1,6 +1,7 @@
 package hechodoc
 
 import (
+	"github.com/kamva/gutil"
 	"github.com/labstack/echo/v4"
 	"strings"
 )
@@ -50,4 +51,24 @@ func echoRawRouteNames(e *echo.Echo)[]string{
 	}
 
 	return routes
+}
+
+// OpenApiPathFromEchoPath convert echo path to openapi path.
+// e.g, a/:id/:code => a/{id}/{code}
+func OpenApiPathFromEchoPath(path string) string {
+	for {
+		colonIndex := strings.Index(path, ":")
+		if colonIndex == -1 {
+			return path
+		}
+		path = gutil.ReplaceRune(path, '{', colonIndex)
+
+		slashPath := path[colonIndex:]
+		slashIndex := strings.Index(slashPath, "/")
+		if slashIndex == -1 {
+			slashIndex = len(slashPath)
+		}
+		slashPath=gutil.ReplaceAt(slashPath,"}",slashIndex,slashIndex)
+		path = path[:colonIndex] + slashPath
+	}
 }
