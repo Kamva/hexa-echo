@@ -2,7 +2,7 @@
 // swagger:route {{hold .Name "Method"}} {{hold .Name "Path"}} {{hold .Name "TagsString"}} {{hold .Name "ParamsId"}}
 //
 // responses:
-//   2xx: {{hold .Name "SuccessRespId"}}
+//   200: {{hold .Name "SuccessRespId"}}
 
 // swagger:parameters {{hold .Name "ParamsId"}}
 type {{.Name}}ParamsWrapper struct {
