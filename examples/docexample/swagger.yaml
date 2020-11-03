@@ -1,34 +1,6 @@
 basePath: /
 consumes:
 - application/json
-definitions:
-  HiRequest:
-    properties:
-      age:
-        format: int64
-        type: integer
-        x-go-name: Age
-      name:
-        type: string
-        x-go-name: Name
-    type: object
-    x-go-package: github.com/kamva/hexa-echo/examples/docexample/api
-  HiResponse:
-    properties:
-      code:
-        type: string
-        x-go-name: Code
-      data:
-        $ref: '#/definitions/ResponseData'
-    type: object
-    x-go-package: github.com/kamva/hexa-echo/examples/docexample/api
-  ResponseData:
-    properties:
-      say:
-        type: string
-        x-go-name: Say
-    type: object
-    x-go-package: github.com/kamva/hexa-echo/examples/docexample/api
 host: localhost:1323
 info:
   description: Documentation of our awesome API.
@@ -36,21 +8,49 @@ info:
   version: 1.0.0
 paths:
   /hi:
-    post:
+    get:
       operationId: hiSayParams
       parameters:
       - in: body
-        name: body
+        name: Body
         schema:
-          $ref: '#/definitions/HiRequest'
-        x-go-name: Body
+          type: object
       responses:
         "200":
           $ref: '#/responses/hiSaySuccessResponse'
-      summary: say hi to yourself.
+  /hi/{id}/{code}:
+    post:
+      operationId: hiCreateParams
+      parameters:
+      - in: path
+        name: id
+        required: true
+        type: string
+        x-go-name: Id
+      - in: path
+        name: code
+        required: true
+        type: string
+        x-go-name: Code
+      - in: body
+        name: Body
+        schema:
+          type: object
+      responses:
+        "200":
+          $ref: '#/responses/hiCreateSuccessResponse'
 produces:
 - application/json
 responses:
+  hiCreateSuccessResponse:
+    description: success response
+    schema:
+      properties:
+        code:
+          description: response code
+          type: string
+          x-go-name: Code
+      type: object
   hiSaySuccessResponse:
     description: success response
     schema:
@@ -59,8 +59,6 @@ responses:
           description: response code
           type: string
           x-go-name: Code
-        data:
-          $ref: '#/definitions/HiResponse'
       type: object
 schemes:
 - http

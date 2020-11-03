@@ -4,7 +4,7 @@ import (
 	"github.com/kamva/gutil"
 	hecho "github.com/kamva/hexa-echo"
 	"github.com/kamva/hexa-echo/examples/docexample/api"
-	_ "github.com/kamva/hexa-echo/examples/docexample/doc/gen"
+	_ "github.com/kamva/hexa-echo/examples/docexample/doc"
 	"github.com/kamva/hexa-echo/hechodoc"
 	"github.com/kamva/hexa/hexatranslator"
 	"github.com/kamva/hexa/hlog"
@@ -25,8 +25,7 @@ func boot() *echo.Echo {
 }
 
 var converter = hechodoc.DefaultRouteNameConverter
-var extractPath = path.Join(gutil.SourcePath(), "doc/openapi_tpl.go")
-var renderPath = path.Join(gutil.SourcePath(), "doc/gen/openapi_autogen.go")
+var extractPath = path.Join(gutil.SourcePath(), "doc/openapi_docs.go")
 
 func main() {
 	// Echo instance
@@ -42,8 +41,6 @@ func main() {
 		runServer()
 	case "extract":
 		extract()
-	case "render":
-		renderTemplate()
 	case "trim":
 		trim()
 	default:
@@ -74,14 +71,4 @@ func trim() {
 	})
 
 	gutil.PanicErr(trimmer.Trim())
-}
-
-func renderTemplate() {
-	renderer := hechodoc.NewRenderer(hechodoc.RendererOptions{
-		Echo:              boot(),
-		ExtractedFilePath: extractPath,
-		Destination:       renderPath,
-		Converter:         converter,
-	})
-	gutil.PanicErr(renderer.Render())
 }

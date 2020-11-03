@@ -11,7 +11,7 @@ type HiRequest struct {
 	Age  int    `json:"age"`
 }
 type HiResponse struct {
-	Code string `json:"code"`
+	Code string       `json:"code"`
 	Data ResponseData `json:"data"`
 }
 
@@ -20,14 +20,25 @@ type ResponseData struct {
 }
 
 func RegisterRoutes(e *echo.Echo) {
-	e.POST("/hi", func(c echo.Context) error {
-		resp :=HiResponse{
-			Code: "hi.success",
-			Data:ResponseData{
+	e.GET("/hi", func(c echo.Context) error {
+		resp := HiResponse{
+			Code: "hi.success_get",
+			Data: ResponseData{
 				Say: "hiiii",
-			} ,
+			},
 		}
 
-		return c.JSON(http.StatusOK,gutil.StructToMap(resp))
-	}).Name="hi::say"
+		return c.JSON(http.StatusOK, gutil.StructToMap(resp))
+	}).Name = "hi::say"
+
+	e.POST("/hi/:id/:code", func(c echo.Context) error {
+		resp := HiResponse{
+			Code: "hi.success_create",
+			Data: ResponseData{
+				Say: "object created :)",
+			},
+		}
+
+		return c.JSON(http.StatusOK, gutil.StructToMap(resp))
+	}).Name = "hi::create"
 }

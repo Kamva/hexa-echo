@@ -1,11 +1,15 @@
 {{.BeginRouteVal}}
-// swagger:route {{hold .Name "Method"}} {{hold .Name "Path"}} {{hold .Name "TagsString"}} {{hold .Name "ParamsId"}}
+// swagger:route {{.Method}} {{.Path}} {{.TagsString}} {{.ParamsId}}
 //
 // responses:
-//   200: {{hold .Name "SuccessRespId"}}
+//   200: {{.SuccessRespId}}
 
-// swagger:parameters {{hold .Name "ParamsId"}}
+// swagger:parameters {{.ParamsId}}
 type {{.Name}}ParamsWrapper struct {
+  {{- range .PathParams}}
+     // in:path
+     {{.ExportedName}} string `json:"{{.Name}}"`
+  {{ end}}
 	// in:body
 	Body struct{
 	    // DOCTODO: place your params body here
@@ -13,7 +17,7 @@ type {{.Name}}ParamsWrapper struct {
 }
 
 // success response
-// swagger:response {{hold .Name "SuccessRespId"}}
+// swagger:response {{.SuccessRespId}}
 type {{.Name}}ResponseWrapper struct {
 	// in:body
 	Body struct{

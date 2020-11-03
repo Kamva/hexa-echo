@@ -18,16 +18,14 @@
   "basePath": "/",
   "paths": {
     "/hi": {
-      "post": {
-        "summary": "say hi to yourself.",
+      "get": {
         "operationId": "hiSayParams",
         "parameters": [
           {
-            "x-go-name": "Body",
-            "name": "body",
+            "name": "Body",
             "in": "body",
             "schema": {
-              "$ref": "#/definitions/HiRequest"
+              "type": "object"
             }
           }
         ],
@@ -37,49 +35,55 @@
           }
         }
       }
-    }
-  },
-  "definitions": {
-    "HiRequest": {
-      "type": "object",
-      "properties": {
-        "age": {
-          "type": "integer",
-          "format": "int64",
-          "x-go-name": "Age"
-        },
-        "name": {
-          "type": "string",
-          "x-go-name": "Name"
-        }
-      },
-      "x-go-package": "github.com/kamva/hexa-echo/examples/docexample/api"
     },
-    "HiResponse": {
-      "type": "object",
-      "properties": {
-        "code": {
-          "type": "string",
-          "x-go-name": "Code"
-        },
-        "data": {
-          "$ref": "#/definitions/ResponseData"
+    "/hi/{id}/{code}": {
+      "post": {
+        "operationId": "hiCreateParams",
+        "parameters": [
+          {
+            "type": "string",
+            "x-go-name": "Id",
+            "name": "id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "type": "string",
+            "x-go-name": "Code",
+            "name": "code",
+            "in": "path",
+            "required": true
+          },
+          {
+            "name": "Body",
+            "in": "body",
+            "schema": {
+              "type": "object"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/responses/hiCreateSuccessResponse"
+          }
         }
-      },
-      "x-go-package": "github.com/kamva/hexa-echo/examples/docexample/api"
-    },
-    "ResponseData": {
-      "type": "object",
-      "properties": {
-        "say": {
-          "type": "string",
-          "x-go-name": "Say"
-        }
-      },
-      "x-go-package": "github.com/kamva/hexa-echo/examples/docexample/api"
+      }
     }
   },
   "responses": {
+    "hiCreateSuccessResponse": {
+      "description": "success response",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "description": "response code",
+            "type": "string",
+            "x-go-name": "Code"
+          }
+        }
+      }
+    },
     "hiSaySuccessResponse": {
       "description": "success response",
       "schema": {
@@ -89,9 +93,6 @@
             "description": "response code",
             "type": "string",
             "x-go-name": "Code"
-          },
-          "data": {
-            "$ref": "#/definitions/HiResponse"
           }
         }
       }
