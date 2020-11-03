@@ -85,6 +85,8 @@ func (e *Extractor) Extract() error {
 	buf := bufio.NewWriter(file)
 	oldRoutes := oldExtractedRoutes(fBytes)
 
+	// TODO: check if echo has repetitive route name, return error, we must not have any repetitive routes.
+	// TODO: on each route check if route name is valid (using name converter), if its not valid => log and ignore it.
 	// append new routes
 	for _, r := range e.echo.Routes() {
 		if !gutil.Contains(oldRoutes, r.Name) {
