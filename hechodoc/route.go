@@ -6,6 +6,7 @@ import (
 	"github.com/labstack/echo/v4"
 	"path"
 	"regexp"
+	"sort"
 	"strings"
 )
 
@@ -133,4 +134,11 @@ func PathParams(p string) []PathParam {
 		}
 	}
 	return l
+}
+
+func SortEchoRoutesByName(routes []*echo.Route) []*echo.Route{
+	sort.Slice(routes, func(i, j int) bool {
+		return routes[i].Name<routes[j].Name
+	})
+	return routes
 }
