@@ -47,10 +47,27 @@ func (c *dividedNameConverter) CamelCase(name string) string {
 
 var _ RouteNameConverter = &dividedNameConverter{}
 
+func echoRoutes(e *echo.Echo) []*echo.Route {
+	routes := make([]*echo.Route, 0)
+	for _, r := range e.Routes() {
+		if !isEchoInternalRoute(r) {
+			routes = append(routes, r)
+		}
+	}
+	return routes
+}
+
+// isEchoInternalRoute detect whether route is for echo or defined by user.
+// By default name of each route in echo is its handler name, so if
+// route name is begins with "github.com/labstack/echo" its echo itself method.
+func isEchoInternalRoute(r *echo.Route) bool {
+	return strings.Index(r.Name, "github.com/labstack/echo") == 0
+}
+
 // echoRawRouteNames returns string list of echo route names.
 func echoRawRouteNames(e *echo.Echo) []string {
-	routes := make([]string, len(e.Routes()))
-	for i, r := range e.Routes() {
+	routes := make([]string, len(echoRoutes(e)))
+	for i, r := range echoRoutes(e) {
 		routes[i] = r.Name
 	}
 
@@ -136,9 +153,9 @@ func PathParams(p string) []PathParam {
 	return l
 }
 
-func SortEchoRoutesByName(routes []*echo.Route) []*echo.Route{
+func SortEchoRoutesByName(routes []*echo.Route) []*echo.Route {
 	sort.Slice(routes, func(i, j int) bool {
-		return routes[i].Name<routes[j].Name
+		return routes[i].Name < routes[j].Name
 	})
 	return routes
 }

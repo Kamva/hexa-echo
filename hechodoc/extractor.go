@@ -74,7 +74,7 @@ func (e *Extractor) Extract() error {
 	// TODO: check if echo has repetitive route name, return error, we must not have any repetitive routes.
 	// TODO: on each route check if route name is valid (using name converter), if its not valid => log and ignore it.
 	// append new routes
-	for _, r := range SortEchoRoutesByName(e.echo.Routes()) {
+	for _, r := range SortEchoRoutesByName(echoRoutes(e.echo)) {
 		if !gutil.Contains(oldRoutes, r.Name) {
 			if err := e.addRoute(r,buf); err != nil {
 				return tracer.Trace(err)
