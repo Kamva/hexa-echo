@@ -75,13 +75,13 @@ func JwtErrorHandler(err error) error {
 	return errInvalidOrExpiredJwt.SetError(tracer.Trace(err))
 }
 
-func AuthorizeAudience(aud string) TokenAuthorizer {
+func AuthorizeAudience(aud ...string) TokenAuthorizer {
 	return func(claims jwt.MapClaims) error {
 		claimAud, ok := claims["aud"]
 		if !ok {
 			return errInvalidAudience
 		}
-		if claimAud.(string) != aud {
+		if !gutil.Contains(aud,claimAud.(string)) {
 			return errInvalidAudience
 		}
 		return nil
