@@ -8,6 +8,7 @@ import (
 	"github.com/kamva/tracer"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
+	"strings"
 	"time"
 )
 
@@ -75,15 +76,22 @@ func JwtErrorHandler(err error) error {
 	return errInvalidOrExpiredJwt.SetError(tracer.Trace(err))
 }
 
-func AuthorizeAudience(aud ...string) TokenAuthorizer {
+func AuthorizeAudience(aud string) TokenAuthorizer {
 	return func(claims jwt.MapClaims) error {
 		claimAud, ok := claims["aud"]
 		if !ok {
 			return errInvalidAudience
 		}
-		if !gutil.Contains(aud,claimAud.(string)) {
+
+		if claimAud.(string) == "" {
 			return errInvalidAudience
 		}
+
+		audList := strings.Split(claimAud.(string), ",")
+		if !gutil.Contains(audList, aud) {
+			return errInvalidAudience
+		}
+
 		return nil
 	}
 }
