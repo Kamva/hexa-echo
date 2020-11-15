@@ -26,7 +26,7 @@ func HTTPErrorHandler(l hexa.Logger, t hexa.Translator, debug bool) echo.HTTPErr
 				httpErr.Internal = fmt.Errorf("route %s %s not found", c.Request().Method, c.Request().URL)
 			}
 
-			baseErr = baseErr.(hexa.Error).SetError(tracer.MoveStack(stacked, httpErr))
+			baseErr = baseErr.(hexa.Error).SetError(tracer.MoveStackIfNeeded(stacked, httpErr))
 		} else {
 			_, ok := baseErr.(hexa.Reply)
 			_, ok2 := baseErr.(hexa.Error)
