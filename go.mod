@@ -8,7 +8,7 @@ require (
 	github.com/google/uuid v1.1.2
 	github.com/kamva/gutil v0.0.0-20201107041453-68a864f6f946
 	github.com/kamva/hexa v0.0.0-20201115033432-5c9e77b6bdff
-	github.com/kamva/tracer v0.0.0-20201021233951-a5a489d058f5
+	github.com/kamva/tracer v0.0.0-20201115121238-86967fb5555a
 	github.com/labstack/echo/v4 v4.1.14
 	github.com/labstack/gommon v0.3.0
 	github.com/magiconair/properties v1.8.1
