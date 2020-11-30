@@ -56,7 +56,7 @@ func handleError(hexaErr hexa.Error, c echo.Context, l hexa.Logger, t hexa.Trans
 	msg, err := hexaErr.Localize(t)
 
 	if err != nil {
-		l.WithFields(hlog.String("translation_key", hexaErr.ID())).Warn("translation for error id not found.")
+		l.With(hlog.String("translation_key", hexaErr.ID())).Warn("translation for error id not found.")
 
 		d := hexaErr.ReportData()
 		d["__translation_err__"] = err.Error()
@@ -84,7 +84,7 @@ func handleReply(rep hexa.Reply, c echo.Context, l hexa.Logger, t hexa.Translato
 	msg, err := t.Translate(rep.ID(), gutil.MapToKeyValue(rep.Data())...)
 
 	if err != nil {
-		l.WithFields(hlog.String("translation_key", rep.ID())).Warn("translation for reply id not found.")
+		l.With(hlog.String("translation_key", rep.ID())).Warn("translation for reply id not found.")
 	}
 
 	body := hexa.NewBody(rep.ID(), msg, rep.Data())

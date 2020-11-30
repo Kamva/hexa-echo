@@ -65,7 +65,7 @@ func (l *echoLogger) Printf(format string, args ...interface{}) {
 }
 
 func (l *echoLogger) Printj(j log.JSON) {
-	l.logger.WithFields(hlog.MapToFields(j)...).Info("")
+	l.logger.With(hlog.MapToFields(j)...).Info("")
 }
 
 func (l *echoLogger) Debug(i ...interface{}) {
@@ -77,7 +77,7 @@ func (l *echoLogger) Debugf(format string, args ...interface{}) {
 }
 
 func (l *echoLogger) Debugj(j log.JSON) {
-	l.logger.WithFields(hlog.MapToFields(j)...).Debug("")
+	l.logger.With(hlog.MapToFields(j)...).Debug("")
 }
 
 func (l *echoLogger) Info(i ...interface{}) {
@@ -89,7 +89,7 @@ func (l *echoLogger) Infof(format string, args ...interface{}) {
 }
 
 func (l *echoLogger) Infoj(j log.JSON) {
-	l.logger.WithFields(hlog.MapToFields(j)...).Info("")
+	l.logger.With(hlog.MapToFields(j)...).Info("")
 }
 
 func (l *echoLogger) Warn(i ...interface{}) {
@@ -101,7 +101,7 @@ func (l *echoLogger) Warnf(format string, args ...interface{}) {
 }
 
 func (l *echoLogger) Warnj(j log.JSON) {
-	l.logger.WithFields(hlog.MapToFields(j)...).Warn("")
+	l.logger.With(hlog.MapToFields(j)...).Warn("")
 }
 
 func (l *echoLogger) Error(i ...interface{}) {
@@ -113,7 +113,7 @@ func (l *echoLogger) Errorf(format string, args ...interface{}) {
 }
 
 func (l *echoLogger) Errorj(j log.JSON) {
-	l.logger.WithFields(hlog.MapToFields(j)...).Error("")
+	l.logger.With(hlog.MapToFields(j)...).Error("")
 }
 
 func (l *echoLogger) Fatal(i ...interface{}) {
@@ -121,7 +121,7 @@ func (l *echoLogger) Fatal(i ...interface{}) {
 }
 
 func (l *echoLogger) Fatalj(j log.JSON) {
-	l.logger.WithFields(hlog.MapToFields(j)...).Error("")
+	l.logger.With(hlog.MapToFields(j)...).Error("")
 }
 
 func (l *echoLogger) Fatalf(format string, args ...interface{}) {
@@ -134,7 +134,7 @@ func (l *echoLogger) Panic(i ...interface{}) {
 }
 
 func (l *echoLogger) Panicj(j log.JSON) {
-	l.logger.WithFields(hlog.MapToFields(j)...).Error("")
+	l.logger.With(hlog.MapToFields(j)...).Error("")
 	panic(j)
 }
 

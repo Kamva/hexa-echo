@@ -48,7 +48,7 @@ func (t *Trimmer) Trim() error {
 	for _, r := range oldRoutes {
 		if !gutil.Contains(newRoutes, r) {
 			if err := t.removeRoute(&builder, r); err != nil {
-				hlog.WithFields(hlog.String("route", r), hlog.Err(err)).Error("can not remove old route")
+				hlog.With(hlog.String("route", r), hlog.Err(err)).Error("can not remove old route")
 				return tracer.Trace(err)
 			}
 		}
