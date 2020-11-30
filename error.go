@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/kamva/gutil"
 	"github.com/kamva/hexa"
+	"github.com/kamva/hexa/hlog"
 	"github.com/kamva/tracer"
 	"github.com/labstack/echo/v4"
 	"net/http"
@@ -55,7 +56,7 @@ func handleError(hexaErr hexa.Error, c echo.Context, l hexa.Logger, t hexa.Trans
 	msg, err := hexaErr.Localize(t)
 
 	if err != nil {
-		l.WithFields("translation_key", hexaErr.ID()).Warn("translation for error id not found.")
+		l.WithFields(hlog.String("translation_key", hexaErr.ID())).Warn("translation for error id not found.")
 
 		d := hexaErr.ReportData()
 		d["__translation_err__"] = err.Error()
@@ -75,7 +76,7 @@ func handleError(hexaErr hexa.Error, c echo.Context, l hexa.Logger, t hexa.Trans
 	err = c.JSON(hexaErr.HTTPStatus(), body)
 
 	if err != nil {
-		l.Error(err)
+		l.Error("occurred error on request", hlog.Err(err))
 	}
 }
 
@@ -83,7 +84,7 @@ func handleReply(rep hexa.Reply, c echo.Context, l hexa.Logger, t hexa.Translato
 	msg, err := t.Translate(rep.ID(), gutil.MapToKeyValue(rep.Data())...)
 
 	if err != nil {
-		l.WithFields("translation_key", rep.ID()).Warn("translation for reply id not found.")
+		l.WithFields(hlog.String("translation_key", rep.ID())).Warn("translation for reply id not found.")
 	}
 
 	body := hexa.NewBody(rep.ID(), msg, rep.Data())
@@ -91,6 +92,6 @@ func handleReply(rep hexa.Reply, c echo.Context, l hexa.Logger, t hexa.Translato
 	err = c.JSON(rep.HTTPStatus(), body)
 
 	if err != nil {
-		l.Error(err)
+		l.Error("occurred error on request", hlog.Err(err))
 	}
 }

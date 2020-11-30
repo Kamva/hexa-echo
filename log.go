@@ -2,8 +2,8 @@ package hecho
 
 import (
 	"fmt"
-	"github.com/kamva/gutil"
 	"github.com/kamva/hexa"
+	"github.com/kamva/hexa/hlog"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/gommon/log"
 	"io"
@@ -57,7 +57,7 @@ func (l *echoLogger) SetLevel(v log.Lvl) {}
 func (l *echoLogger) SetHeader(h string) {}
 
 func (l *echoLogger) Print(i ...interface{}) {
-	l.logger.Info(i...)
+	l.logger.Info(fmt.Sprintln(i...))
 }
 
 func (l *echoLogger) Printf(format string, args ...interface{}) {
@@ -65,11 +65,11 @@ func (l *echoLogger) Printf(format string, args ...interface{}) {
 }
 
 func (l *echoLogger) Printj(j log.JSON) {
-	l.logger.WithFields(gutil.MapToKeyValue(j)...).Info("")
+	l.logger.WithFields(hlog.MapToFields(j)...).Info("")
 }
 
 func (l *echoLogger) Debug(i ...interface{}) {
-	l.logger.Debug(i...)
+	l.logger.Debug(fmt.Sprintln(i...))
 }
 
 func (l *echoLogger) Debugf(format string, args ...interface{}) {
@@ -77,11 +77,11 @@ func (l *echoLogger) Debugf(format string, args ...interface{}) {
 }
 
 func (l *echoLogger) Debugj(j log.JSON) {
-	l.logger.WithFields(gutil.MapToKeyValue(j)...).Debug("")
+	l.logger.WithFields(hlog.MapToFields(j)...).Debug("")
 }
 
 func (l *echoLogger) Info(i ...interface{}) {
-	l.logger.Info(i...)
+	l.logger.Info(fmt.Sprintln(i...))
 }
 
 func (l *echoLogger) Infof(format string, args ...interface{}) {
@@ -89,11 +89,11 @@ func (l *echoLogger) Infof(format string, args ...interface{}) {
 }
 
 func (l *echoLogger) Infoj(j log.JSON) {
-	l.logger.WithFields(gutil.MapToKeyValue(j)...).Info("")
+	l.logger.WithFields(hlog.MapToFields(j)...).Info("")
 }
 
 func (l *echoLogger) Warn(i ...interface{}) {
-	l.logger.Warn(i...)
+	l.logger.Warn(fmt.Sprintln(i...))
 }
 
 func (l *echoLogger) Warnf(format string, args ...interface{}) {
@@ -101,11 +101,11 @@ func (l *echoLogger) Warnf(format string, args ...interface{}) {
 }
 
 func (l *echoLogger) Warnj(j log.JSON) {
-	l.logger.WithFields(gutil.MapToKeyValue(j)...).Warn("")
+	l.logger.WithFields(hlog.MapToFields(j)...).Warn("")
 }
 
 func (l *echoLogger) Error(i ...interface{}) {
-	l.logger.Error(i...)
+	l.logger.Error(fmt.Sprintln(i...))
 }
 
 func (l *echoLogger) Errorf(format string, args ...interface{}) {
@@ -113,15 +113,15 @@ func (l *echoLogger) Errorf(format string, args ...interface{}) {
 }
 
 func (l *echoLogger) Errorj(j log.JSON) {
-	l.logger.WithFields(gutil.MapToKeyValue(j)...).Error("")
+	l.logger.WithFields(hlog.MapToFields(j)...).Error("")
 }
 
 func (l *echoLogger) Fatal(i ...interface{}) {
-	l.logger.Error(i...)
+	l.logger.Error(fmt.Sprintln(i...))
 }
 
 func (l *echoLogger) Fatalj(j log.JSON) {
-	l.logger.WithFields(gutil.MapToKeyValue(j)...).Error("")
+	l.logger.WithFields(hlog.MapToFields(j)...).Error("")
 }
 
 func (l *echoLogger) Fatalf(format string, args ...interface{}) {
@@ -129,12 +129,12 @@ func (l *echoLogger) Fatalf(format string, args ...interface{}) {
 }
 
 func (l *echoLogger) Panic(i ...interface{}) {
-	l.logger.Error(i...)
+	l.logger.Error(fmt.Sprintln(i...))
 	panic(fmt.Sprint(i...))
 }
 
 func (l *echoLogger) Panicj(j log.JSON) {
-	l.logger.WithFields(gutil.MapToKeyValue(j)...).Error("")
+	l.logger.WithFields(hlog.MapToFields(j)...).Error("")
 	panic(j)
 }
 

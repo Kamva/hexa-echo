@@ -25,7 +25,7 @@ func reverseProxy() echo.MiddlewareFunc {
 	// Setup proxy
 	url1, err := url.Parse(dstUrl)
 	if err != nil {
-		hlog.Error(err)
+		hlog.Error("error on parse url", hlog.Err(err))
 	}
 
 	targets := []*hecho.ProxyTarget{{URL: url1}}
