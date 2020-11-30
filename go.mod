@@ -8,7 +8,7 @@ require (
 	github.com/golang/protobuf v1.4.3 // indirect
 	github.com/google/uuid v1.1.2
 	github.com/kamva/gutil v0.0.0-20201107041453-68a864f6f946
-	github.com/kamva/hexa v0.0.0-20201130114658-d62fdb8a5040
+	github.com/kamva/hexa v0.0.0-20201130132923-0b5fd2c248b3
 	github.com/kamva/tracer v0.0.0-20201115122932-ea39052d56cd
 	github.com/labstack/echo/v4 v4.1.14
 	github.com/labstack/gommon v0.3.0

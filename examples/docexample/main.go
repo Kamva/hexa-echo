@@ -17,9 +17,9 @@ import (
 func boot() *echo.Echo {
 	e := echo.New()
 	e.Debug = true
-	e.Logger = hecho.HexaToEchoLogger(hlog.NewPrinterDriver(), "debug")
+	e.Logger = hecho.HexaToEchoLogger(hlog.NewPrinterDriver(hlog.DebugLevel), "debug")
 	e.Use(hecho.Recover())
-	e.HTTPErrorHandler = hecho.HTTPErrorHandler(hlog.NewPrinterDriver(), hexatranslator.NewEmptyDriver(), true)
+	e.HTTPErrorHandler = hecho.HTTPErrorHandler(hlog.NewPrinterDriver(hlog.DebugLevel), hexatranslator.NewEmptyDriver(), true)
 	api.RegisterRoutes(e)
 	return e
 }
