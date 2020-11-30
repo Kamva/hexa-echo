@@ -8,7 +8,7 @@ import (
 )
 
 func main() {
-	l:=hlog.NewPrinterDriver(hlog.DebugLevel)
+	l := hlog.NewPrinterDriver(hlog.DebugLevel)
 	e := echo.New()
 	e.Debug = true
 
