@@ -6,28 +6,20 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-// NewCtx get hexa Context and return itself context.
-type CtxCreator func(ctx hexa.Context) hexa.Context
-
 const (
 
 	// ContextKeyHexaRequestID uses as key in context to store request id to use in context middleware
-	ContextKeyHexaRequestID = "__hexa_ctx.rid__"
+	ContextKeyHexaRequestID = "_hexa_ctx.rid"
 
 	// ContextKeyHexaCorrelationID uses as key in context to store correlation id to use in context middleware
-	ContextKeyHexaCorrelationID = "__hexa_ctx.cid__"
+	ContextKeyHexaCorrelationID = "_hexa_ctx.cid"
 
 	// ContextKeyHexaCtx is the identifier to set the hexa context as a field in the context of a request.
-	ContextKeyHexaCtx = "__hexa_ctx.ctx__"
+	ContextKeyHexaCtx = "_hexa_ctx.ctx"
 
 	// ContextKeyHexaUser is the identifier to set the hexa user as a field in the context of a request.
-	ContextKeyHexaUser = "__hexa_ctx.user__"
+	ContextKeyHexaUser = "_hexa_ctx.user"
 )
-
-// This is default implementation of context creator.
-func DefaultCtxCreator(ctx hexa.Context) hexa.Context {
-	return ctx
-}
 
 // getHexaUser returns hexa user instance from the current user.
 func getHexaUser(ctx echo.Context) (hexa.User, hexa.Error) {
@@ -58,7 +50,7 @@ func getCorrelationID(ctx echo.Context) (string, hexa.Error) {
 }
 
 // HexaContext set hexa context on each request.
-func HexaContext(ctxCreator CtxCreator, logger hexa.Logger, translator hexa.Translator) echo.MiddlewareFunc {
+func HexaContext(logger hexa.Logger, translator hexa.Translator) echo.MiddlewareFunc {
 	return func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(ctx echo.Context) error {
 			req := ctx.Request()
@@ -78,7 +70,14 @@ func HexaContext(ctxCreator CtxCreator, logger hexa.Logger, translator hexa.Tran
 			al := req.Header.Get("Accept-Language")
 
 			// Set context
-			ctx.Set(ContextKeyHexaCtx, ctxCreator(hexa.NewCtx(ctx.Request(), cid, al, user, logger, translator)))
+			ctx.Set(ContextKeyHexaCtx, hexa.NewContext(hexa.ContextParams{
+				Request:       req,
+				CorrelationId: cid,
+				Locale:        al,
+				User:          user,
+				Logger:        logger,
+				Translator:    translator,
+			}))
 
 			return next(ctx)
 		}

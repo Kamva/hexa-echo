@@ -59,7 +59,7 @@ func handleError(hexaErr hexa.Error, c echo.Context, l hexa.Logger, t hexa.Trans
 		l.With(hlog.String("translation_key", hexaErr.ID())).Warn("translation for error id not found.")
 
 		d := hexaErr.ReportData()
-		d["__translation_err__"] = err.Error()
+		d["_translation_err"] = err.Error()
 		hexaErr = hexaErr.SetReportData(d)
 	}
 

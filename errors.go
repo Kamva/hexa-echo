@@ -2,8 +2,9 @@ package hecho
 
 import (
 	"errors"
-	"github.com/kamva/hexa"
 	"net/http"
+
+	"github.com/kamva/hexa"
 )
 
 var (

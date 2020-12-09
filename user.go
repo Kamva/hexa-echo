@@ -2,6 +2,7 @@ package hecho
 
 import (
 	"errors"
+
 	"github.com/dgrijalva/jwt-go"
 	"github.com/kamva/gutil"
 	"github.com/kamva/hexa"
@@ -15,7 +16,6 @@ type (
 
 	// CurrentUserConfig is the config to use in CurrentUser middleware.
 	CurrentUserConfig struct {
-		userSDK        hexa.UserSDK
 		uf             UserFinderBySub // Can be nil if ExtendJWT is false.
 		ExtendJWT      bool
 		UserContextKey string
@@ -32,10 +32,9 @@ var (
 // CurrentUser is a middleware to set the user in the context.
 // If provided jwt, so this function find user and set it as user
 // otherwise set guest user.
-func CurrentUser(uf UserFinderBySub, userSDK hexa.UserSDK) echo.MiddlewareFunc {
+func CurrentUser(uf UserFinderBySub) echo.MiddlewareFunc {
 	return CurrentUserWithConfig(CurrentUserConfig{
 		ExtendJWT:      true,
-		userSDK:        userSDK,
 		uf:             uf,
 		UserContextKey: CurrentUserContextKey,
 		JWTContextKey:  JwtContextKey,
@@ -44,11 +43,10 @@ func CurrentUser(uf UserFinderBySub, userSDK hexa.UserSDK) echo.MiddlewareFunc {
 
 // CurrentUserWithoutFetch is for when you have a gateway that find the user and include
 // it in the jwt. so you will dont need to any user finder.
-func CurrentUserWithoutFetch(userSDK hexa.UserSDK) echo.MiddlewareFunc {
+func CurrentUserWithoutFetch() echo.MiddlewareFunc {
 	return CurrentUserWithConfig(CurrentUserConfig{
 		ExtendJWT:      false,
 		uf:             nil,
-		userSDK:        userSDK,
 		UserContextKey: CurrentUserContextKey,
 		JWTContextKey:  JwtContextKey,
 	})
@@ -61,7 +59,7 @@ func CurrentUserWithConfig(cfg CurrentUserConfig) echo.MiddlewareFunc {
 	return func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(ctx echo.Context) (err error) {
 
-			var user = cfg.userSDK.NewGuest()
+			var user = hexa.NewGuest()
 
 			// Get jwt (if exists)
 			if token, ok := ctx.Get(cfg.JWTContextKey).(*jwt.Token); ok {
@@ -72,18 +70,17 @@ func CurrentUserWithConfig(cfg CurrentUserConfig) echo.MiddlewareFunc {
 							err = tracer.Trace(err)
 							return err
 						}
-						extension, err := cfg.userSDK.Export(user)
-						gutil.ExtendMap(claims, extension, true)
+						gutil.ExtendMap(claims, user.MetaData(), true)
 					}
 
-					user, err = cfg.userSDK.Import(hexa.Map(claims))
+					user, err = hexa.NewUserFromMeta(hexa.Map(claims))
 					if err != nil {
 						err = tracer.Trace(err)
 						return
 					}
 
 				} else {
-					return errors.New("JWT claims is not valid")
+					return errors.New("JWT claims are not valid")
 				}
 
 			}

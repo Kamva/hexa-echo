@@ -143,7 +143,7 @@ func JwtClaimAuthorizer(cfg JwtClaimAuthorizerConfig) echo.MiddlewareFunc {
 
 // IDAsSubjectGenerator return user's id as jwt subject (sub).
 func IDAsSubjectGenerator(user hexa.User) (string, error) {
-	return user.Identifier().String(), nil
+	return user.Identifier(), nil
 }
 
 // GenerateToken generate new token for the user.
