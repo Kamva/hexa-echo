@@ -28,7 +28,7 @@ var converter = hechodoc.DefaultRouteNameConverter
 var extractPath = path.Join(gutil.SourcePath(), "doc/openapi_docs.go")
 
 func main() {
-	// Echo instance
+	// echo instance
 	if len(os.Args) < 2 {
 		log.Fatal("provide action name please")
 	}
