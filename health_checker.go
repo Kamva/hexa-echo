@@ -117,7 +117,7 @@ func (c *echoHealthChecker) checkStatus(r hexa.HealthReporter) echo.HandlerFunc 
 func DefaultHealthCheckerOptions(echo *echo.Echo, statusMiddlewares ...echo.MiddlewareFunc) HealthCheckerOptions {
 	return HealthCheckerOptions{
 		Echo:              echo,
-		LivenessRoute:     "/live",
+		LivenessRoute:     "/alive",
 		ReadinessRoute:    "/ready",
 		StatusRoute:       "/status",
 		StatusMiddlewares: statusMiddlewares,
