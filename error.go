@@ -16,15 +16,12 @@ func HTTPErrorHandler(l hexa.Logger, t hexa.Translator, debug bool) echo.HTTPErr
 	return func(rErr error, c echo.Context) {
 		l := l
 		t := t
-		hlog.Debug("I'm handling error ---------------------")
 		// We finally need to have a Reply or Error that internal error is stacked.
 		stacked, baseErr := rErr, gutil.CauseErr(rErr)
 
 		if httpErr, ok := baseErr.(*echo.HTTPError); ok {
 			baseErr = errEchoHTTPError.SetHTTPStatus(httpErr.Code)
-			hlog.Debug("is httpError")
 			if httpErr.Code == http.StatusNotFound {
-				hlog.Debug("is status not found")
 				baseErr = errHTTPNotFoundError
 				// NOTE: Do not set the "Internal" field of the http.StatusNotFound error.
 				// otherwise for next 404 requests Echo checks if its internal error field
@@ -36,12 +33,10 @@ func HTTPErrorHandler(l hexa.Logger, t hexa.Translator, debug bool) echo.HTTPErr
 
 			baseErr = baseErr.(hexa.Error).SetError(tracer.MoveStackIfNeeded(stacked, httpErr))
 		} else {
-			hlog.Debug("is not http error",hlog.String("base_error",fmt.Sprint(baseErr)))
 			_, ok := baseErr.(hexa.Reply)
 			_, ok2 := baseErr.(hexa.Error)
 
 			if !ok && !ok2 {
-				hlog.Debug("is not hexa error or reply")
 				baseErr = errUnknownError.SetError(stacked)
 			}
 		}
