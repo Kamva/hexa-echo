@@ -21,12 +21,19 @@ type (
 		UserContextKey string
 		JWTContextKey  string
 	}
+
+	CurrentUserBySubConfig struct {
+		UserFinder     UserFinderBySub
+		SubContextKey  string
+		UserContextKey string
+	}
 )
 
 var (
 	// CurrentUserContextKey is the context key to set
 	// the current user in the request context.
 	CurrentUserContextKey = "user"
+	SubContextKey         = "sub"
 )
 
 // CurrentUser is a middleware to set the user in the context.
@@ -88,7 +95,41 @@ func CurrentUserWithConfig(cfg CurrentUserConfig) echo.MiddlewareFunc {
 			// Set user in context with the given key
 			ctx.Set(cfg.UserContextKey, user)
 
-			// Also set for user to uas in hexa context
+			// Also set for user to ua in hexa context
+			ctx.Set(ContextKeyHexaUser, user)
+
+			return next(ctx)
+		}
+	}
+}
+
+func CurrentUserBySub(uf UserFinderBySub) echo.MiddlewareFunc {
+	return CurrentUserBySubWithConfig(CurrentUserBySubConfig{
+		UserFinder:     uf,
+		SubContextKey:  SubContextKey,
+		UserContextKey: CurrentUserContextKey,
+	})
+}
+
+func CurrentUserBySubWithConfig(cfg CurrentUserBySubConfig) echo.MiddlewareFunc {
+	return func(next echo.HandlerFunc) echo.HandlerFunc {
+		return func(ctx echo.Context) error {
+			var user = hexa.NewGuest()
+			var err error
+			sub, ok := ctx.Get(cfg.SubContextKey).(string)
+
+			if ok {
+				user, err = cfg.UserFinder(sub)
+				if err != nil {
+					err = tracer.Trace(err)
+					return err
+				}
+			}
+
+			// Set user in context with the given key
+			ctx.Set(cfg.UserContextKey, user)
+
+			// Also set for user to use in hexa context
 			ctx.Set(ContextKeyHexaUser, user)
 
 			return next(ctx)
