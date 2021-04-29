@@ -70,7 +70,7 @@ func HexaContext(logger hexa.Logger, translator hexa.Translator) echo.Middleware
 			al := req.Header.Get("Accept-Language")
 
 			// Set context
-			ctx.Set(ContextKeyHexaCtx, hexa.NewContext(hexa.ContextParams{
+			ctx.Set(ContextKeyHexaCtx, hexa.NewContext(nil,hexa.ContextParams{
 				Request:       req,
 				CorrelationId: cid,
 				Locale:        al,

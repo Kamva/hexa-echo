@@ -6,8 +6,8 @@ require (
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/golang/protobuf v1.4.3 // indirect
 	github.com/google/uuid v1.1.2
-	github.com/kamva/gutil v0.0.0-20201228200354-f965254d674b
-	github.com/kamva/hexa v0.0.0-20201229094246-e2ea041ecabe
+	github.com/kamva/gutil v0.0.0-20210429104414-128b9b78e4cf
+	github.com/kamva/hexa v0.0.0-20210429185558-346581114177
 	github.com/kamva/tracer v0.0.0-20201115122932-ea39052d56cd
 	github.com/labstack/echo/v4 v4.1.17
 	github.com/labstack/gommon v0.3.0
