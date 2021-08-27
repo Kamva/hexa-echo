@@ -47,7 +47,7 @@ func main() {
 
 	r := hexa.NewHealthReporter()
 	r.AddToChecks(&HealthExample{})
-	gutil.PanicErr(hecho.NewHealthChecker(hecho.DefaultHealthCheckerOptions(e)).StartServer(r))
+	gutil.PanicErr(hecho.NewHealthChecker(hecho.DefaultHealthCheckerOptions(e, r)).Run())
 
 	e.Logger.Fatal(e.Start(":4444"))
 }

@@ -3,7 +3,7 @@ package hecho
 import (
 	"context"
 
-	"github.com/kamva/hexa/sr"
+	"github.com/kamva/hexa"
 	"github.com/kamva/tracer"
 	"github.com/labstack/echo/v4"
 )
@@ -22,5 +22,5 @@ func (s *EchoService) Shutdown(ctx context.Context) error {
 	return tracer.Trace(s.Echo.Shutdown(ctx))
 }
 
-var _ sr.Runnable = &EchoService{}
-var _ sr.Shutdownable = &EchoService{}
+var _ hexa.Runnable = &EchoService{}
+var _ hexa.Shutdownable = &EchoService{}

@@ -22,6 +22,7 @@ type HealthCheckerOptions struct {
 	StatusRoute    string // Empty route means disabled status
 
 	StatusMiddlewares []echo.MiddlewareFunc
+	Reporter          hexa.HealthReporter
 }
 
 // this healthChecker assume echo server is your default server and start,stop
@@ -39,6 +40,7 @@ type echoHealthChecker struct {
 	statusRoute    string
 
 	statusMiddlewares []echo.MiddlewareFunc
+	reporter          hexa.HealthReporter
 }
 
 func NewHealthChecker(o HealthCheckerOptions) hexa.HealthChecker {
@@ -48,24 +50,25 @@ func NewHealthChecker(o HealthCheckerOptions) hexa.HealthChecker {
 		readinessRoute:    o.ReadinessRoute,
 		statusRoute:       o.StatusRoute,
 		statusMiddlewares: o.StatusMiddlewares,
+		reporter:          o.Reporter,
 	}
 }
 
-func (c *echoHealthChecker) StartServer(r hexa.HealthReporter) error {
-	if c.initialized {
+func (h *echoHealthChecker) Run() error {
+	if h.initialized {
 		return tracer.Trace(errors.New("you can not start server after first start, create new instance"))
 	}
 
-	if c.livenessRoute != "" {
-		c.echo.GET(c.livenessRoute, c.checkLiveness(r))
+	if h.livenessRoute != "" {
+		h.echo.GET(h.livenessRoute, h.checkLiveness())
 	}
 
-	if c.readinessRoute != "" {
-		c.echo.GET(c.readinessRoute, c.checkReadiness(r))
+	if h.readinessRoute != "" {
+		h.echo.GET(h.readinessRoute, h.checkReadiness())
 	}
 
-	if c.statusRoute != "" {
-		c.echo.GET(c.statusRoute, c.checkStatus(r), c.statusMiddlewares...)
+	if h.statusRoute != "" {
+		h.echo.GET(h.statusRoute, h.checkStatus(), h.statusMiddlewares...)
 	}
 
 	// This healthChecker don't start the Echo server. If you need to start the Echo
@@ -73,14 +76,14 @@ func (c *echoHealthChecker) StartServer(r hexa.HealthReporter) error {
 	return nil
 }
 
-func (c *echoHealthChecker) StopServer() error {
+func (h *echoHealthChecker) Shutdown(_ context.Context) error {
 	// Don't need to do anything.
 	return nil
 }
 
-func (c *echoHealthChecker) checkLiveness(r hexa.HealthReporter) echo.HandlerFunc {
+func (h *echoHealthChecker) checkLiveness() echo.HandlerFunc {
 	return func(c echo.Context) error {
-		status := r.LivenessStatus(context.Background())
+		status := h.reporter.LivenessStatus(context.Background())
 		c.Response().Header().Set(hexa.LivenessStatusKey, string(status))
 
 		if status != hexa.StatusAlive {
@@ -90,9 +93,9 @@ func (c *echoHealthChecker) checkLiveness(r hexa.HealthReporter) echo.HandlerFun
 		return livenessReply
 	}
 }
-func (c *echoHealthChecker) checkReadiness(r hexa.HealthReporter) echo.HandlerFunc {
+func (h *echoHealthChecker) checkReadiness() echo.HandlerFunc {
 	return func(c echo.Context) error {
-		status := r.ReadinessStatus(context.Background())
+		status := h.reporter.ReadinessStatus(context.Background())
 		c.Response().Header().Set(hexa.ReadinessStatusKey, string(status))
 
 		if status != hexa.StatusReady {
@@ -103,9 +106,9 @@ func (c *echoHealthChecker) checkReadiness(r hexa.HealthReporter) echo.HandlerFu
 	}
 }
 
-func (c *echoHealthChecker) checkStatus(r hexa.HealthReporter) echo.HandlerFunc {
+func (h *echoHealthChecker) checkStatus() echo.HandlerFunc {
 	return func(c echo.Context) error {
-		report := r.HealthReport(context.Background())
+		report := h.reporter.HealthReport(context.Background())
 
 		c.Response().Header().Set(hexa.LivenessStatusKey, string(report.Alive))
 		c.Response().Header().Set(hexa.ReadinessStatusKey, string(report.Ready))
@@ -114,12 +117,13 @@ func (c *echoHealthChecker) checkStatus(r hexa.HealthReporter) echo.HandlerFunc 
 	}
 }
 
-func DefaultHealthCheckerOptions(echo *echo.Echo, statusMiddlewares ...echo.MiddlewareFunc) HealthCheckerOptions {
+func DefaultHealthCheckerOptions(echo *echo.Echo, r hexa.HealthReporter, statusMiddlewares ...echo.MiddlewareFunc) HealthCheckerOptions {
 	return HealthCheckerOptions{
 		Echo:              echo,
 		LivenessRoute:     "/live",
 		ReadinessRoute:    "/ready",
 		StatusRoute:       "/status",
 		StatusMiddlewares: statusMiddlewares,
+		Reporter:          r,
 	}
 }
