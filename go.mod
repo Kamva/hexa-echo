@@ -3,11 +3,13 @@ module github.com/kamva/hexa-echo
 go 1.13
 
 require (
+	github.com/aws/aws-sdk-go v1.35.28 // indirect
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
+	github.com/go-sql-driver/mysql v1.5.0 // indirect
 	github.com/golang/protobuf v1.4.3 // indirect
 	github.com/google/uuid v1.1.2
-	github.com/kamva/gutil v0.0.0-20210429104414-128b9b78e4cf
-	github.com/kamva/hexa v0.0.0-20210429185558-346581114177
+	github.com/kamva/gutil v0.0.0-20210827084201-35b6a3421580
+	github.com/kamva/hexa v0.0.0-20210827133510-0e2248dc2c3e
 	github.com/kamva/tracer v0.0.0-20201115122932-ea39052d56cd
 	github.com/labstack/echo/v4 v4.1.17
 	github.com/labstack/gommon v0.3.0
