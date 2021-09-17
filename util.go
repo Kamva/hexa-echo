@@ -1,10 +1,13 @@
 package hecho
 
 import (
-	"github.com/google/uuid"
+	"errors"
 	"regexp"
 	"strconv"
 	"strings"
+
+	"github.com/google/uuid"
+	"github.com/kamva/hexa"
 )
 
 // uuidGenerator generate new UUID
@@ -37,4 +40,33 @@ func singleJoiningSlash(a, b string) string {
 		return a + "/" + b
 	}
 	return a + b
+}
+
+// isInternalErr returns true, if error is an real app error not an hexa Reply or
+// Error without server error status code.
+// Note:if we decided to do not return hexa.Reply or non-internal errors(e.g, error 4xx,...) as an error
+// return param in in echo handler, we can remove this function, because in that situation the
+// Echo handler's error return param surely is an app error.
+func isInternalErr(err error) bool {
+	if err == nil {
+		return false
+	}
+
+	for err != nil {
+		if _, ok := err.(hexa.Reply); ok {
+			return false
+		}
+
+		if hexaErr, ok := err.(hexa.Error); ok {
+			if hexaErr.HTTPStatus() >= 50 { // its an internal error.
+				return true
+			}
+			return false
+		}
+
+		err = errors.Unwrap(err)
+	}
+
+	// its not hexa Error or Reply, so its an app error.
+	return true
 }

@@ -53,31 +53,29 @@ func getCorrelationID(ctx echo.Context) (string, hexa.Error) {
 func HexaContext(logger hexa.Logger, translator hexa.Translator) echo.MiddlewareFunc {
 	return func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(ctx echo.Context) error {
-			req := ctx.Request()
-
+			r := ctx.Request()
 			user, err := getHexaUser(ctx)
-
 			if err != nil {
 				return tracer.Trace(err)
 			}
 
 			cid, err := getCorrelationID(ctx)
-
 			if err != nil {
 				return tracer.Trace(err)
 			}
 
-			al := req.Header.Get("Accept-Language")
-
 			// Set context
-			ctx.Set(ContextKeyHexaCtx, hexa.NewContext(nil,hexa.ContextParams{
-				Request:       req,
+			hexaCtx := hexa.NewContext(ctx.Request().Context(), hexa.ContextParams{
+				Request:       r,
 				CorrelationId: cid,
-				Locale:        al,
+				Locale:        r.Header.Get("Accept-Language"),
 				User:          user,
 				Logger:        logger,
 				Translator:    translator,
-			}))
+			})
+
+			ctx.Set(ContextKeyHexaCtx, hexaCtx)
+			ctx.SetRequest(r.Clone(hexaCtx))
 
 			return next(ctx)
 		}

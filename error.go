@@ -2,16 +2,17 @@ package hecho
 
 import (
 	"fmt"
+	"net/http"
+
 	"github.com/kamva/gutil"
 	"github.com/kamva/hexa"
 	"github.com/kamva/hexa/hlog"
 	"github.com/kamva/tracer"
 	"github.com/labstack/echo/v4"
-	"net/http"
 )
 
 // HTTPErrorHandler is the echo error handler.
-// this function need to the HexaContext middleware.
+// This function needs to the HexaContext middleware.
 func HTTPErrorHandler(l hexa.Logger, t hexa.Translator, debug bool) echo.HTTPErrorHandler {
 	return func(rErr error, c echo.Context) {
 		l := l
