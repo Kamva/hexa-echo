@@ -26,7 +26,8 @@ users accept-languages and then fallback and default languages.
     - hexa `hecho.CurrentUser` middleware.
 * `hecho.SetContextLogger` middleware requires
     - hexa `hexa.HexaContext`
-    
+* `hecho.TracingDataFromUserContext` middleware requires
+  - hexa `hecho.HexaContext`
 
 #### Todo:
 - [ ] Map echo errors (see errors list in `echo.go:263`) to hexa error with translation.
