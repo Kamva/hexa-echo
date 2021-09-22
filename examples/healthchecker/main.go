@@ -41,12 +41,8 @@ func main() {
 	e := echo.New()
 	e.Debug = true
 	e.Logger = hecho.HexaToEchoLogger(l, "debug")
-
-	// hecho ErrorHandler is required for healthChecker(to convert reply to response)
-	e.HTTPErrorHandler = hecho.HTTPErrorHandler(l, hexatranslator.NewEmptyDriver(), true)
-
 	r := hexa.NewHealthReporter()
 	r.AddToChecks(&HealthExample{})
-	gutil.PanicErr(hecho.NewHealthChecker(hecho.DefaultHealthCheckerOptions(e, r)).Run())
+	gutil.PanicErr(hecho.NewHealthChecker(hecho.DefaultHealthCheckerOptions(e, r, l, hexatranslator.NewEmptyDriver())).Run())
 	e.Logger.Fatal(e.Start(":4444"))
 }

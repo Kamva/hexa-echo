@@ -23,6 +23,8 @@ type HealthCheckerOptions struct {
 
 	StatusMiddlewares []echo.MiddlewareFunc
 	Reporter          hexa.HealthReporter
+	Logger            hexa.Logger
+	Translator        hexa.Translator
 }
 
 // this healthChecker assume echo server is your default server and start,stop
@@ -41,6 +43,9 @@ type echoHealthChecker struct {
 
 	statusMiddlewares []echo.MiddlewareFunc
 	reporter          hexa.HealthReporter
+
+	l hexa.Logger
+	t hexa.Translator
 }
 
 func NewHealthChecker(o HealthCheckerOptions) hexa.HealthChecker {
@@ -87,10 +92,10 @@ func (h *echoHealthChecker) checkLiveness() echo.HandlerFunc {
 		c.Response().Header().Set(hexa.LivenessStatusKey, string(status))
 
 		if status != hexa.StatusAlive {
-			return livenessReply.SetHTTPStatus(http.StatusInternalServerError)
+			return WriteWithOpts(c, h.l, h.t, livenessReply.SetHTTPStatus(http.StatusInternalServerError))
 		}
 
-		return livenessReply
+		return WriteWithOpts(c, h.l, h.t, livenessReply)
 	}
 }
 func (h *echoHealthChecker) checkReadiness() echo.HandlerFunc {
@@ -99,10 +104,10 @@ func (h *echoHealthChecker) checkReadiness() echo.HandlerFunc {
 		c.Response().Header().Set(hexa.ReadinessStatusKey, string(status))
 
 		if status != hexa.StatusReady {
-			return readinessReply.SetHTTPStatus(http.StatusServiceUnavailable)
+			return WriteWithOpts(c, h.l, h.t, readinessReply.SetHTTPStatus(http.StatusServiceUnavailable))
 		}
 
-		return readinessReply
+		return WriteWithOpts(c, h.l, h.t, readinessReply)
 	}
 }
 
@@ -112,12 +117,11 @@ func (h *echoHealthChecker) checkStatus() echo.HandlerFunc {
 
 		c.Response().Header().Set(hexa.LivenessStatusKey, string(report.Alive))
 		c.Response().Header().Set(hexa.ReadinessStatusKey, string(report.Ready))
-
-		return StatusReply.SetData(gutil.StructToMap(report))
+		return WriteWithOpts(c, h.l, h.t, StatusReply.SetData(gutil.StructToMap(report)))
 	}
 }
 
-func DefaultHealthCheckerOptions(echo *echo.Echo, r hexa.HealthReporter, statusMiddlewares ...echo.MiddlewareFunc) HealthCheckerOptions {
+func DefaultHealthCheckerOptions(echo *echo.Echo, r hexa.HealthReporter, l hexa.Logger, t hexa.Translator, statusMiddlewares ...echo.MiddlewareFunc) HealthCheckerOptions {
 	return HealthCheckerOptions{
 		Echo:              echo,
 		LivenessRoute:     "/live",
@@ -125,5 +129,7 @@ func DefaultHealthCheckerOptions(echo *echo.Echo, r hexa.HealthReporter, statusM
 		StatusRoute:       "/status",
 		StatusMiddlewares: statusMiddlewares,
 		Reporter:          r,
+		Logger:            l,
+		Translator:        t,
 	}
 }

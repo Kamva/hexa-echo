@@ -1,10 +1,10 @@
 package hecho
 
 import (
+	"errors"
 	"fmt"
 	"net/http"
 
-	"github.com/kamva/gutil"
 	"github.com/kamva/hexa"
 	"github.com/kamva/hexa/hlog"
 	"github.com/kamva/tracer"
@@ -17,42 +17,33 @@ func HTTPErrorHandler(l hexa.Logger, t hexa.Translator, debug bool) echo.HTTPErr
 	return func(rErr error, c echo.Context) {
 		l := l
 		t := t
-		// We finally need to have a Reply or Error that internal error is stacked.
-		stacked, baseErr := rErr, gutil.CauseErr(rErr)
+		hexaErr := hexa.AsHexaErr(rErr)
+		if hexaErr == nil {
+			httpErr := &echo.HTTPError{}
+			if errors.As(rErr, &httpErr) {
+				hexaErr = errEchoHTTPError.SetHTTPStatus(httpErr.Code)
+				if httpErr.Code == http.StatusNotFound {
+					hexaErr = errHTTPNotFoundError
+					// NOTE: Do not set the "Internal" field of the http.StatusNotFound error.
+					// otherwise for next 404 requests Echo checks if its internal error field
+					// is not empty, it pass the internal field to this function as error instead
+					// of real 404 error !
 
-		if httpErr, ok := baseErr.(*echo.HTTPError); ok {
-			baseErr = errEchoHTTPError.SetHTTPStatus(httpErr.Code)
-			if httpErr.Code == http.StatusNotFound {
-				baseErr = errHTTPNotFoundError
-				// NOTE: Do not set the "Internal" field of the http.StatusNotFound error.
-				// otherwise for next 404 requests Echo checks if its internal error field
-				// is not empty, it pass the internal field to this function as error instead
-				// of real 404 error !
+					httpErr.Message = fmt.Sprintf("route %s %s not found", c.Request().Method, c.Request().URL)
+				}
 
-				httpErr.Message = fmt.Sprintf("route %s %s not found", c.Request().Method, c.Request().URL)
-			}
-
-			baseErr = baseErr.(hexa.Error).SetError(tracer.MoveStackIfNeeded(stacked, httpErr))
-		} else {
-			_, ok := baseErr.(hexa.Reply)
-			_, ok2 := baseErr.(hexa.Error)
-
-			if !ok && !ok2 {
-				baseErr = errUnknownError.SetError(stacked)
+				hexaErr = hexaErr.SetError(tracer.MoveStackIfNeeded(rErr, httpErr))
+			} else {
+				hexaErr = errUnknownError.SetError(rErr)
 			}
 		}
 
 		// Maybe error occur before set hexa context in middleware
-		if hexaCtx, ok := c.Get(ContextKeyHexaCtx).(hexa.Context); ok {
+		if hexaCtx := Ctx(c); hexaCtx != nil {
 			l = hexaCtx.Logger()
 			t = hexaCtx.Translator()
 		}
-
-		if hexaErr, ok := baseErr.(hexa.Error); ok {
-			handleError(hexaErr, c, l, t, debug)
-		} else {
-			handleReply(baseErr.(hexa.Reply), c, l, t)
-		}
+		handleError(hexaErr, c, l, t, debug)
 	}
 
 }
@@ -81,18 +72,3 @@ func handleError(hexaErr hexa.Error, c echo.Context, l hexa.Logger, t hexa.Trans
 	}
 }
 
-func handleReply(rep hexa.Reply, c echo.Context, l hexa.Logger, t hexa.Translator) {
-	msg, err := t.Translate(rep.ID(), gutil.MapToKeyValue(rep.Data())...)
-
-	if err != nil {
-		l.With(hlog.String("translation_key", rep.ID())).Warn("translation for reply id not found.")
-	}
-
-	body := hexa.NewBody(rep.ID(), msg, rep.Data())
-
-	err = c.JSON(rep.HTTPStatus(), body)
-
-	if err != nil {
-		l.Error("occurred error on request", hlog.Err(err))
-	}
-}

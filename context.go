@@ -81,3 +81,8 @@ func HexaContext(logger hexa.Logger, translator hexa.Translator) echo.Middleware
 		}
 	}
 }
+
+// Ctx returns hexa Context from the echo context.
+func Ctx(c echo.Context) hexa.Context {
+	return c.Get(ContextKeyHexaCtx).(hexa.Context)
+}

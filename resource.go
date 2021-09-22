@@ -2,6 +2,7 @@ package hecho
 
 import (
 	"fmt"
+
 	"github.com/kamva/hexa"
 	"github.com/labstack/echo/v4"
 )
@@ -37,7 +38,7 @@ type (
 
 // Ctx method extract the hexa context from the echo context.
 func (r Resource) Ctx(c echo.Context) hexa.Context {
-	return c.Get(ContextKeyHexaCtx).(hexa.Context)
+	return Ctx(c)
 }
 
 // Resource define each method that exists in provided resource.
