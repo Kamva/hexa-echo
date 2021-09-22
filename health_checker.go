@@ -17,14 +17,14 @@ var StatusReply = hexa.NewReply(http.StatusOK, "status")
 
 type HealthCheckerOptions struct {
 	Echo           *echo.Echo
+	Logger         hexa.Logger
+	Translator     hexa.Translator
 	LivenessRoute  string // Empty value means disabled liveness
 	ReadinessRoute string // Empty route means disabled readiness
 	StatusRoute    string // Empty route means disabled status
 
 	StatusMiddlewares []echo.MiddlewareFunc
 	Reporter          hexa.HealthReporter
-	Logger            hexa.Logger
-	Translator        hexa.Translator
 }
 
 // this healthChecker assume echo server is your default server and start,stop
@@ -37,20 +37,21 @@ type HealthCheckerOptions struct {
 type echoHealthChecker struct {
 	initialized    bool
 	echo           *echo.Echo
+	l              hexa.Logger
+	t              hexa.Translator
 	livenessRoute  string
 	readinessRoute string
 	statusRoute    string
 
 	statusMiddlewares []echo.MiddlewareFunc
 	reporter          hexa.HealthReporter
-
-	l hexa.Logger
-	t hexa.Translator
 }
 
 func NewHealthChecker(o HealthCheckerOptions) hexa.HealthChecker {
 	return &echoHealthChecker{
 		echo:              o.Echo,
+		l:                 o.Logger,
+		t:                 o.Translator,
 		livenessRoute:     o.LivenessRoute,
 		readinessRoute:    o.ReadinessRoute,
 		statusRoute:       o.StatusRoute,
@@ -121,15 +122,15 @@ func (h *echoHealthChecker) checkStatus() echo.HandlerFunc {
 	}
 }
 
-func DefaultHealthCheckerOptions(echo *echo.Echo, r hexa.HealthReporter, l hexa.Logger, t hexa.Translator, statusMiddlewares ...echo.MiddlewareFunc) HealthCheckerOptions {
+func DefaultHealthCheckerOptions(echo *echo.Echo, l hexa.Logger, t hexa.Translator, r hexa.HealthReporter, statusMiddlewares ...echo.MiddlewareFunc) HealthCheckerOptions {
 	return HealthCheckerOptions{
 		Echo:              echo,
+		Logger:            l,
+		Translator:        t,
 		LivenessRoute:     "/live",
 		ReadinessRoute:    "/ready",
 		StatusRoute:       "/status",
 		StatusMiddlewares: statusMiddlewares,
 		Reporter:          r,
-		Logger:            l,
-		Translator:        t,
 	}
 }
