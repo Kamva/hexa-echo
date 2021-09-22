@@ -13,6 +13,7 @@ import (
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/exporters/jaeger"
+	"go.opentelemetry.io/otel/propagation"
 	"go.opentelemetry.io/otel/sdk/resource"
 	tracesdk "go.opentelemetry.io/otel/sdk/trace"
 	semconv "go.opentelemetry.io/otel/semconv/v1.4.0"
@@ -54,6 +55,19 @@ func tracerProvider(url string) (*tracesdk.TracerProvider, error) {
 }
 
 func main() {
+	// Run jaeger server:
+	// docker run -d --name jaeger \
+	//  -e COLLECTOR_ZIPKIN_HOST_PORT=:9411 \
+	//  -p 5775:5775/udp \
+	//  -p 6831:6831/udp \
+	//  -p 6832:6832/udp \
+	//  -p 5778:5778 \
+	//  -p 16686:16686 \
+	//  -p 14268:14268 \
+	//  -p 14250:14250 \
+	//  -p 9411:9411 \
+	//  jaegertracing/all-in-one:1.26
+	// Navigate to http://localhost:16686/ to view jaeger UI.
 	tp, err := tracerProvider("http://localhost:14268/api/traces")
 	if err != nil {
 		gutil.PanicErr(err)
@@ -74,9 +88,9 @@ func main() {
 	e.Logger = hecho.HexaToEchoLogger(l, "debug")
 
 	e.Use(hecho.Tracing(hecho.TracingConfig{
-		Tracer:     tp.Tracer("server"),
-		ServerName: "lab",
-		SpanName:   "http_server",
+		Propagator:     propagation.NewCompositeTextMapPropagator(propagation.TraceContext{}, propagation.Baggage{}),
+		TracerProvider: tp,
+		ServerName:     "lab",
 	}))
 
 	e.Use(hecho.Recover())

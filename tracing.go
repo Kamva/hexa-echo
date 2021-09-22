@@ -1,11 +1,13 @@
 package hecho
 
 import (
+	"fmt"
 	"strings"
 
 	"github.com/kamva/hexa"
 	"github.com/kamva/hexa/htel"
 	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
 	"go.opentelemetry.io/otel/codes"
 	"go.opentelemetry.io/otel/propagation"
 	semconv "go.opentelemetry.io/otel/semconv/v1.4.0"
@@ -13,11 +15,16 @@ import (
 )
 
 type TracingConfig struct {
-	Propagator propagation.TextMapPropagator
-	Tracer     trace.Tracer
-	ServerName string
-	SpanName   string
+	Skipper middleware.Skipper
+
+	Propagator     propagation.TextMapPropagator
+	TracerProvider trace.TracerProvider
+	ServerName     string
 }
+
+const (
+	tracerName = "github.com/kamva/hecho"
+)
 
 // Tracing Enables distributed tracing using openTelemetry library.
 // In echo if a handler panic error, it will catch by the `Recover`
@@ -27,34 +34,57 @@ type TracingConfig struct {
 // You can use TracingDataFromUserContext middleware to set user_id
 // and correlation_id too.
 func Tracing(cfg TracingConfig) echo.MiddlewareFunc {
+	if cfg.Skipper == nil {
+		cfg.Skipper = middleware.DefaultSkipper
+	}
+
+	tracer := cfg.TracerProvider.Tracer(tracerName)
+
 	return func(next echo.HandlerFunc) echo.HandlerFunc {
-		return func(context echo.Context) error {
-			r := context.Request()
-			attrs := semconv.HTTPServerAttributesFromHTTPRequest(cfg.ServerName, r.URL.Path, r)
+		return func(c echo.Context) error {
+			if cfg.Skipper(c) {
+				return next(c)
+			}
+
+			r := c.Request()
+			opts := []trace.SpanStartOption{
+				trace.WithAttributes(semconv.NetAttributesFromHTTPRequest("tcp", r)...),
+				trace.WithAttributes(semconv.EndUserAttributesFromHTTPRequest(r)...),
+				trace.WithAttributes(semconv.HTTPServerAttributesFromHTTPRequest(cfg.ServerName, c.Path(), r)...),
+				trace.WithSpanKind(trace.SpanKindServer),
+			}
+
+			spanName := c.Path()
+			if spanName == "" {
+				spanName = fmt.Sprintf("HTTP %s route not found", r.Method)
+			}
 
 			// Extract the parent from the request, but this is a gateway that users
 			// send request to it, check if propagation from external requests has any
 			// security issue.
-			// TODO: check if we should not get parent for external requests, remove it.
 			ctx := cfg.Propagator.Extract(r.Context(), propagation.HeaderCarrier(r.Header))
 
-			ctx, span := cfg.Tracer.Start(ctx, cfg.SpanName, trace.WithAttributes(attrs...))
-			context.SetRequest(r.Clone(ctx))
+			ctx, span := tracer.Start(ctx, spanName, opts...)
+			defer func() { span.End() }()
 
-			defer func() {
-				span.End()
-			}()
+			c.SetRequest(r.Clone(ctx))
 
-			err := next(context)
-			if isInternalErr(err) { // ignore hexa.Reply or hexa.Error with code out of 5XX range.
-				span.RecordError(err)
-				span.SetStatus(codes.Error, err.Error())
+			err := next(c)
+			if err != nil {
+				c.Error(err) // apply the error to set the response code
 			}
 
-			// Set http status code and user's data as context:
-			semconv.HTTPAttributesFromHTTPStatusCode(context.Response().Status)
+			span.SetAttributes(semconv.HTTPAttributesFromHTTPStatusCode(c.Response().Status)...)
 
-			return err
+			// Set span status:
+			if c.Response().Status >= 500 && err != nil {
+				span.RecordError(err)
+				span.SetStatus(codes.Error, err.Error())
+			} else {
+				span.SetStatus(semconv.SpanStatusFromHTTPStatusCode(c.Response().Status))
+			}
+
+			return nil // we applied the error, so we don't need to return it again.
 		}
 	}
 }
@@ -74,10 +104,10 @@ func TracingDataFromUserContext() echo.MiddlewareFunc {
 			// Add user's id, correlation_id
 			span := trace.SpanFromContext(hexaCtx)
 			span.SetAttributes(
-				semconv.EnduserIDKey.String(user.Identifier()), // enduser.id
-				htel.EnduserUsernameKey.String(user.Username()), // enduser.username
+				semconv.EnduserIDKey.String(user.Identifier()),                 // enduser.id
+				htel.EnduserUsernameKey.String(user.Username()),                // enduser.username
 				semconv.EnduserRoleKey.String(strings.Join(user.Roles(), ",")), // enduser.role
-				htel.CorrelationIDKey.String(hexaCtx.CorrelationID()), // ctx.correlation_id
+				htel.CorrelationIDKey.String(hexaCtx.CorrelationID()),          // ctx.correlation_id
 			)
 
 			return next(c)
