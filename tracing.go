@@ -23,7 +23,7 @@ type TracingConfig struct {
 }
 
 const (
-	tracerName = "github.com/kamva/hecho"
+	instrumentationName = "github.com/kamva/hecho"
 )
 
 // Tracing Enables distributed tracing using openTelemetry library.
@@ -38,7 +38,7 @@ func Tracing(cfg TracingConfig) echo.MiddlewareFunc {
 		cfg.Skipper = middleware.DefaultSkipper
 	}
 
-	tracer := cfg.TracerProvider.Tracer(tracerName)
+	tracer := cfg.TracerProvider.Tracer(instrumentationName)
 
 	return func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(c echo.Context) error {
