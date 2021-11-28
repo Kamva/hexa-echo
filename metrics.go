@@ -1,7 +1,6 @@
 package hecho
 
 import (
-	"fmt"
 	"time"
 
 	"github.com/labstack/echo/v4"
@@ -22,8 +21,8 @@ func Metrics(cfg MetricsConfig) echo.MiddlewareFunc {
 	}
 
 	meter := metric.Must(cfg.MeterProvider.Meter(instrumentationName))
-	requestCounter := meter.NewFloat64Counter("request_count")
-	requestDuration := meter.NewFloat64Histogram("request_duration")
+	requestCounter := meter.NewFloat64Counter("requests_total")
+	requestDuration := meter.NewFloat64Histogram("requests_duration_second")
 
 	return func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(c echo.Context) error {
@@ -31,13 +30,8 @@ func Metrics(cfg MetricsConfig) echo.MiddlewareFunc {
 				return next(c)
 			}
 
-			begin := time.Now()
+			startTime := time.Now()
 			r := c.Request()
-
-			spanName := c.Path()
-			if spanName == "" {
-				spanName = fmt.Sprintf("HTTP %s route not found", r.Method)
-			}
 
 			// Extract the parent from the request, but this is a gateway that users
 			// send request to it, check if propagation from external requests has any
@@ -53,7 +47,7 @@ func Metrics(cfg MetricsConfig) echo.MiddlewareFunc {
 
 			attrs = append(attrs, semconv.HTTPAttributesFromHTTPStatusCode(c.Response().Status)...)
 
-			elapsed := float64(time.Since(begin)) / float64(time.Second)
+			elapsed := float64(time.Since(startTime)) / float64(time.Second)
 
 			requestCounter.Add(r.Context(), 1, attrs...)
 			requestDuration.Record(r.Context(), elapsed, attrs...)

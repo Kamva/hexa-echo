@@ -163,6 +163,8 @@ github.com/kamva/hexa v0.0.0-20211128114918-8e0a4d8d0390 h1:Glf1ywOypIqDHDnisERL
 github.com/kamva/hexa v0.0.0-20211128114918-8e0a4d8d0390/go.mod h1:OMtQ+zyLqkvUp6VRDBbW5Kt1nHxqIGxUld3iJPoN4jA=
 github.com/kamva/hexa v0.0.0-20211128125917-9272ab25f887 h1:aQpSBvYwDavRX5Nsnx5rsGN6sLBlOjujK9wkJ6NfP50=
 github.com/kamva/hexa v0.0.0-20211128125917-9272ab25f887/go.mod h1:c6oZdwdg0tjMXJwsvvRr1joHdSNCCSh7nVbUzMYyR1M=
+github.com/kamva/hexa v0.0.0-20211128175703-59125a2fe5ec h1:8nMCUlyV0+CSm0G2F3+PFPhEuXDyReaMvvIhH/PzIAs=
+github.com/kamva/hexa v0.0.0-20211128175703-59125a2fe5ec/go.mod h1:c6oZdwdg0tjMXJwsvvRr1joHdSNCCSh7nVbUzMYyR1M=
 github.com/kamva/mgm/v3 v3.4.0/go.mod h1:DzYf1/ZcxUUp90O/GGkj4r9MbgppvNqNtVgE6NDNcLk=
 github.com/kamva/tracer v0.0.0-20201115122932-ea39052d56cd h1:Wa2QzkBIqaWTsWb9gVtQxijZqweUXKkakFLhXOacG5k=
 github.com/kamva/tracer v0.0.0-20201115122932-ea39052d56cd/go.mod h1:6TmvuXxFe7FD95QvNyIVEt2ZPfYBk3QiKGhGt+UwFbQ=

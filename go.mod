@@ -6,7 +6,7 @@ require (
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/google/uuid v1.1.2
 	github.com/kamva/gutil v0.0.0-20210827084201-35b6a3421580
-	github.com/kamva/hexa v0.0.0-20211128125917-9272ab25f887
+	github.com/kamva/hexa v0.0.0-20211128175703-59125a2fe5ec
 	github.com/kamva/tracer v0.0.0-20201115122932-ea39052d56cd
 	github.com/labstack/echo/v4 v4.1.17
 	github.com/labstack/gommon v0.3.0
