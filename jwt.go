@@ -2,14 +2,15 @@ package hecho
 
 import (
 	"errors"
+	"strings"
+	"time"
+
 	"github.com/dgrijalva/jwt-go"
 	"github.com/kamva/gutil"
 	"github.com/kamva/hexa"
 	"github.com/kamva/tracer"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
-	"strings"
-	"time"
 )
 
 // Cryptography algorithms to sign our jwt token
@@ -99,6 +100,7 @@ func AuthorizeAudience(aud string) TokenAuthorizer {
 //--------------------------------
 // JWT claim authorizer
 //--------------------------------
+
 type JwtClaimAuthorizerConfig struct {
 	Skipper       middleware.Skipper
 	JWTContextKey string
