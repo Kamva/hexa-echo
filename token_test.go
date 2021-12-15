@@ -25,7 +25,7 @@ func TestExtractToken(t *testing.T) {
 		TokenLocationContextKey: AuthTokenLocationContextKey,
 		Extractors: []TokenExtractor{
 			CookieTokenExtractor(TokenCookieFieldAuthToken),
-			HeaderTokenExtractor(TokenHeaderAuthorization),
+			HeaderAuthTokenExtractor(TokenHeaderAuthorization),
 			SessionTokenExtractor(sessionStore, sessionName, tokenSessionKey),
 		},
 	}

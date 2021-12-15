@@ -19,11 +19,14 @@ const AuthTokenLocationContextKey = "auth_token_location"
 type TokenLocation int
 
 const (
-	TokenLocationHeader = iota
+	TokenLocationUnknown = iota
+	TokenLocationHeader
 	TokenLocationCookie
 	TokenLocationSession
 )
 
+// TokenExtractor extracts a token from somewhere and then returns the
+// token and its location.
 type TokenExtractor func(ctx echo.Context) (string, TokenLocation, error)
 
 type ExtractTokenConfig struct {
@@ -72,7 +75,7 @@ func ExtractTokenWithConfig(cfg ExtractTokenConfig) echo.MiddlewareFunc {
 	}
 }
 
-func HeaderTokenExtractor(headerFieldName string) TokenExtractor {
+func HeaderAuthTokenExtractor(headerFieldName string) TokenExtractor {
 	return func(ctx echo.Context) (string, TokenLocation, error) {
 		headerVal := ctx.Request().Header.Get(headerFieldName)
 		if headerVal == "" {
@@ -89,6 +92,12 @@ func HeaderTokenExtractor(headerFieldName string) TokenExtractor {
 		}
 
 		return token, TokenLocationHeader, nil
+	}
+}
+
+func HeaderTokenExtractor(headerFieldName string) TokenExtractor {
+	return func(ctx echo.Context) (string, TokenLocation, error) {
+		return ctx.Request().Header.Get(headerFieldName), TokenLocationHeader, nil
 	}
 }
 
