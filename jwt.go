@@ -1,6 +1,7 @@
 package hecho
 
 import (
+	"context"
 	"errors"
 	"strings"
 	"time"
@@ -194,7 +195,7 @@ func AuthorizeRefreshToken(cfg AuthorizeRefreshTokenConfig) (user hexa.User, err
 
 	// Authorize user to verify user can get new access token.
 	claims := jToken.Claims.(jwt.MapClaims)
-	user, err = cfg.UserFinder(claims["sub"].(string))
+	user, err = cfg.UserFinder(context.Background(), claims["sub"].(string))
 	if err != nil {
 		return nil, tracer.Trace(err)
 	}

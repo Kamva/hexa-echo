@@ -1,6 +1,7 @@
 package hecho
 
 import (
+	"context"
 	"errors"
 
 	"github.com/dgrijalva/jwt-go"
@@ -12,7 +13,7 @@ import (
 
 type (
 	// UserFinderBySub find the user by provided sub.
-	UserFinderBySub func(sub string) (hexa.User, error)
+	UserFinderBySub func(ctx context.Context, sub string) (hexa.User, error)
 
 	// CurrentUserConfig is the config to use in CurrentUser middleware.
 	CurrentUserConfig struct {
@@ -72,7 +73,7 @@ func CurrentUserWithConfig(cfg CurrentUserConfig) echo.MiddlewareFunc {
 			if token, ok := ctx.Get(cfg.JWTContextKey).(*jwt.Token); ok {
 				if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
 					if cfg.ExtendJWT {
-						user, err := cfg.uf(claims["sub"].(string))
+						user, err := cfg.uf(ctx.Request().Context(), claims["sub"].(string))
 						if err != nil {
 							err = tracer.Trace(err)
 							return err
@@ -119,7 +120,7 @@ func CurrentUserBySubWithConfig(cfg CurrentUserBySubConfig) echo.MiddlewareFunc 
 			sub, ok := ctx.Get(cfg.SubContextKey).(string)
 
 			if ok {
-				user, err = cfg.UserFinder(sub)
+				user, err = cfg.UserFinder(ctx.Request().Context(), sub)
 				if err != nil {
 					err = tracer.Trace(err)
 					return err
