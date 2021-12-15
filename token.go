@@ -3,7 +3,6 @@ package hecho
 import (
 	"strings"
 
-	"github.com/gorilla/sessions"
 	"github.com/kamva/tracer"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
@@ -11,7 +10,7 @@ import (
 
 const TokenHeaderAuthorization = "Authorization"
 const TokenCookieFieldAuthToken = "hexa_auth_token"
-const TokenSessionFieldToken = "token"
+//const TokenSessionFieldToken = "token"
 
 const AuthTokenContextKey = "auth_token"
 const AuthTokenLocationContextKey = "auth_token_location"
@@ -22,7 +21,7 @@ const (
 	TokenLocationUnknown = iota
 	TokenLocationHeader
 	TokenLocationCookie
-	TokenLocationSession
+	//TokenLocationSession
 )
 
 // TokenExtractor extracts a token from somewhere and then returns the
@@ -95,12 +94,6 @@ func HeaderAuthTokenExtractor(headerFieldName string) TokenExtractor {
 	}
 }
 
-func HeaderTokenExtractor(headerFieldName string) TokenExtractor {
-	return func(ctx echo.Context) (string, TokenLocation, error) {
-		return ctx.Request().Header.Get(headerFieldName), TokenLocationHeader, nil
-	}
-}
-
 func CookieTokenExtractor(cookieFieldName string) TokenExtractor {
 	return func(ctx echo.Context) (string, TokenLocation, error) {
 		if cookie, err := ctx.Cookie(cookieFieldName); err == nil {
@@ -110,12 +103,12 @@ func CookieTokenExtractor(cookieFieldName string) TokenExtractor {
 	}
 }
 
-func SessionTokenExtractor(store sessions.Store, sessionName string, tokenField string) TokenExtractor {
-	return func(ctx echo.Context) (string, TokenLocation, error) {
-		if sess, err := store.Get(ctx.Request(), sessionName); sess != nil && err == nil {
-			token, _ := sess.Values[tokenField].(string)
-			return token, TokenLocationSession, nil
-		}
-		return "", 0, nil
-	}
-}
+//func SessionTokenExtractor(store sessions.Store, sessionName string, tokenField string) TokenExtractor {
+//	return func(ctx echo.Context) (string, TokenLocation, error) {
+//		if sess, err := store.Get(ctx.Request(), sessionName); sess != nil && err == nil {
+//			token, _ := sess.Values[tokenField].(string)
+//			return token, TokenLocationSession, nil
+//		}
+//		return "", 0, nil
+//	}
+//}
