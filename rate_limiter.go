@@ -37,6 +37,13 @@ type RateLimiterConfig struct {
 	KeyExtractor KeyExtractor
 }
 
+func RateLimiterByIP(rl throttled.RateLimiter) echo.MiddlewareFunc {
+	return RateLimiter(RateLimiterConfig{
+		RateLimiter:  rl,
+		KeyExtractor: IPKeyExtractor,
+	})
+}
+
 func RateLimiter(cfg RateLimiterConfig) echo.MiddlewareFunc {
 	if cfg.Skipper == nil {
 		cfg.Skipper = middleware.DefaultSkipper
@@ -74,6 +81,6 @@ func RateLimiter(cfg RateLimiterConfig) echo.MiddlewareFunc {
 	}
 }
 
-func RealIPKeyExtractor(c echo.Context) (string, error) {
+func IPKeyExtractor(c echo.Context) (string, error) {
 	return c.RealIP(), nil
 }
