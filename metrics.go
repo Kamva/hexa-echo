@@ -21,8 +21,9 @@ func Metrics(cfg MetricsConfig) echo.MiddlewareFunc {
 	}
 
 	meter := metric.Must(cfg.MeterProvider.Meter(instrumentationName))
-	requestCounter := meter.NewFloat64Counter("requests_total")
-	requestDuration := meter.NewFloat64Histogram("requests_duration_second")
+	requestCounter := meter.NewFloat64Counter("http_requests_total")
+	requestDuration := meter.NewFloat64Histogram("http_request_duration_seconds")
+	requestSize := meter.NewInt64Histogram("http_response_size_bytes")
 
 	return func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(c echo.Context) error {
@@ -51,6 +52,7 @@ func Metrics(cfg MetricsConfig) echo.MiddlewareFunc {
 
 			requestCounter.Add(r.Context(), 1, attrs...)
 			requestDuration.Record(r.Context(), elapsed, attrs...)
+			requestSize.Record(r.Context(), c.Response().Size, attrs...)
 
 			return nil // we applied the error, so we don't need to return it again.
 		}
