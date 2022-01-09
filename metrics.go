@@ -5,14 +5,13 @@ import (
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
+	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/metric"
-	semconv "go.opentelemetry.io/otel/semconv/v1.4.0"
 )
 
 type MetricsConfig struct {
 	Skipper       middleware.Skipper
 	MeterProvider metric.MeterProvider
-	ServerName    string
 }
 
 func Metrics(cfg MetricsConfig) echo.MiddlewareFunc {
@@ -34,19 +33,17 @@ func Metrics(cfg MetricsConfig) echo.MiddlewareFunc {
 			startTime := time.Now()
 			r := c.Request()
 
-			// Extract the parent from the request, but this is a gateway that users
-			// send request to it, check if propagation from external requests has any
-			// security issue.
-			attrs := semconv.NetAttributesFromHTTPRequest("tcp", r)
-			attrs = append(attrs, semconv.EndUserAttributesFromHTTPRequest(r)...)
-			attrs = append(attrs, semconv.HTTPServerAttributesFromHTTPRequest(cfg.ServerName, c.Path(), r)...)
+			attrs := []attribute.KeyValue{
+				attribute.String("method", r.Method),
+				attribute.String("handler", c.Path()),
+			}
 
 			err := next(c)
 			if err != nil {
 				c.Error(err) // apply the error to set the response code
 			}
 
-			attrs = append(attrs, semconv.HTTPAttributesFromHTTPStatusCode(c.Response().Status)...)
+			attrs = append(attrs, attribute.Int("status", c.Response().Status))
 
 			elapsed := float64(time.Since(startTime)) / float64(time.Second)
 

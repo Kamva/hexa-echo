@@ -73,7 +73,6 @@ func main() {
 
 	e.Use(hecho.Metrics(hecho.MetricsConfig{
 		MeterProvider: global.GetMeterProvider(),
-		ServerName:    "lab",
 	}))
 
 	e.Use(hecho.Recover())
