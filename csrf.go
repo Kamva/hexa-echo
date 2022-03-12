@@ -9,8 +9,8 @@ import (
 // We do csrf check when user's token is in the cookie or session.
 // and the request method is post too.
 func CSRFSkipperByAuthTokenLocation(ctx echo.Context) bool {
-	l := ctx.Get(AuthTokenLocationContextKey)
-	return l != TokenLocationCookie && l != TokenLocationSession
+	l, ok := ctx.Get(AuthTokenLocationContextKey).(TokenLocation)
+	return !ok ||  (l != TokenLocationCookie && l != TokenLocationSession)
 }
 
 var _ middleware.Skipper = CSRFSkipperByAuthTokenLocation
