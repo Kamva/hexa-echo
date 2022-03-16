@@ -9,6 +9,7 @@ import (
 	"github.com/kamva/hexa/hlog"
 	"github.com/kamva/tracer"
 	"github.com/labstack/echo/v4"
+	"github.com/mailru/easyjson"
 )
 
 // HTTPErrorHandler is the echo error handler.
@@ -61,14 +62,20 @@ func handleError(hexaErr hexa.Error, c echo.Context, l hexa.Logger, t hexa.Trans
 	debugData := hexaErr.ReportData()
 	debugData["err"] = hexaErr.Error()
 
-	body := hexa.NewBody(hexaErr.ID(), msg, hexaErr.Data())
+	body := &hexa.HttpRespBody{
+		Code:    hexaErr.ID(),
+		Message: msg,
+		Data:    hexaErr.Data(),
+	}
+	if debug {
+		body.Debug = debugData
+	}
 
-	body = body.Debug(debug, debugData)
-
-	err = c.JSON(hexaErr.HTTPStatus(), body)
-
+	w := c.Response().Writer
+	w.Header().Set(echo.HeaderContentType, echo.MIMEApplicationJSONCharsetUTF8)
+	w.WriteHeader(hexaErr.HTTPStatus())
+	_, err = easyjson.MarshalToWriter(body, w)
 	if err != nil {
 		l.Error("occurred error on request", hlog.Err(err))
 	}
 }
-

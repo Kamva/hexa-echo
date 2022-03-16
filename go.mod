@@ -7,11 +7,12 @@ require (
 	github.com/google/uuid v1.1.2
 	github.com/gorilla/sessions v1.2.1
 	github.com/kamva/gutil v0.0.0-20210827084201-35b6a3421580
-	github.com/kamva/hexa v0.0.0-20211128175703-59125a2fe5ec
+	github.com/kamva/hexa v0.0.0-20220316125933-1868ed871fa1
 	github.com/kamva/tracer v0.0.0-20201115122932-ea39052d56cd
 	github.com/labstack/echo/v4 v4.1.17
 	github.com/labstack/gommon v0.3.0
 	github.com/magiconair/properties v1.8.1
+	github.com/mailru/easyjson v0.7.7
 	github.com/mattn/go-colorable v0.1.8 // indirect
 	github.com/sethvargo/go-limiter v0.7.2
 	github.com/stretchr/testify v1.7.0

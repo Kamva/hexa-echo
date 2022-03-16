@@ -3,11 +3,11 @@ package hecho
 import (
 	"errors"
 
-	"github.com/kamva/gutil"
 	"github.com/kamva/hexa"
 	"github.com/kamva/hexa/hlog"
 	"github.com/kamva/tracer"
 	"github.com/labstack/echo/v4"
+	"github.com/mailru/easyjson"
 )
 
 // Write writes reply as response.
@@ -26,13 +26,21 @@ func Write(c echo.Context, reply hexa.Reply) error {
 
 // WriteWithOpts writes the reply as response.
 func WriteWithOpts(c echo.Context, l hexa.Logger, t hexa.Translator, reply hexa.Reply) error {
-	msg, err := t.Translate(reply.ID(), gutil.MapToKeyValue(reply.Data())...)
+	msg, err := t.Translate(reply.ID())
 	if err != nil {
 		l.With(hlog.String("translation_key", reply.ID())).Warn("translation for reply id not found.")
 	}
 
-	body := hexa.NewBody(reply.ID(), msg, reply.Data())
-	err = c.JSON(reply.HTTPStatus(), body)
+	body := &hexa.HttpRespBody{
+		Code:    reply.ID(),
+		Message: msg,
+		Data:    reply.Data(),
+	}
+
+	w := c.Response().Writer
+	w.Header().Set(echo.HeaderContentType, echo.MIMEApplicationJSONCharsetUTF8)
+	w.WriteHeader(reply.HTTPStatus())
+	_, err = easyjson.MarshalToWriter(body, w)
 	if err != nil {
 		l.Error("occurred error on request", hlog.Err(err))
 	}
