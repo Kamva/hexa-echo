@@ -95,19 +95,20 @@ func Tracing(cfg TracingConfig) echo.MiddlewareFunc {
 func TracingDataFromUserContext() echo.MiddlewareFunc {
 	return func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(c echo.Context) error {
-			hexaCtx, ok := c.Get(ContextKeyHexaCtx).(hexa.Context)
-			if !ok {
+			ctx := c.Request().Context()
+
+			user := hexa.CtxUser(ctx)
+			if user == nil {
 				return next(c)
 			}
 
-			user := hexaCtx.User()
 			// Add user's id, correlation_id
-			span := trace.SpanFromContext(hexaCtx)
+			span := trace.SpanFromContext(ctx)
 			span.SetAttributes(
 				semconv.EnduserIDKey.String(user.Identifier()),                 // enduser.id
 				htel.EnduserUsernameKey.String(user.Username()),                // enduser.username
 				semconv.EnduserRoleKey.String(strings.Join(user.Roles(), ",")), // enduser.role
-				htel.CorrelationIDKey.String(hexaCtx.CorrelationID()),          // ctx.correlation_id
+				htel.CorrelationIDKey.String(hexa.CtxCorrelationId(ctx)),       // ctx.correlation_id
 			)
 
 			return next(c)

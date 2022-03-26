@@ -1,7 +1,7 @@
 package hecho
 
 import (
-	"github.com/kamva/hexa"
+	"github.com/kamva/hexa/hlog"
 	"github.com/labstack/echo/v4"
 )
 
@@ -10,8 +10,7 @@ func SetContextLogger(level string) echo.MiddlewareFunc {
 	return func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(ctx echo.Context) error {
 			// Set context logger
-			hexaContext := ctx.Get(ContextKeyHexaCtx).(hexa.Context)
-			ctx.SetLogger(HexaToEchoLogger(hexaContext.Logger(), level))
+			ctx.SetLogger(HexaToEchoLogger(hlog.CtxLogger(ctx.Request().Context()), level))
 			return next(ctx)
 		}
 	}

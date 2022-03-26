@@ -16,8 +16,6 @@ import (
 // This function needs to the HexaContext middleware.
 func HTTPErrorHandler(l hexa.Logger, t hexa.Translator, debug bool) echo.HTTPErrorHandler {
 	return func(rErr error, c echo.Context) {
-		l := l
-		t := t
 		hexaErr := hexa.AsHexaErr(rErr)
 		if hexaErr == nil {
 			httpErr := &echo.HTTPError{}
@@ -40,10 +38,17 @@ func HTTPErrorHandler(l hexa.Logger, t hexa.Translator, debug bool) echo.HTTPErr
 		}
 
 		// Maybe error occur before set hexa context in middleware
-		if hexaCtx := Ctx(c); hexaCtx != nil {
-			l = hexaCtx.Logger()
-			t = hexaCtx.Translator()
+		ctx := c.Request().Context()
+		logger := hexa.CtxLogger(ctx)
+		translator := hexa.CtxTranslator(ctx)
+
+		if logger == nil {
+			logger = l
 		}
+		if translator == nil {
+			translator = t
+		}
+
 		handleError(hexaErr, c, l, t, debug)
 	}
 

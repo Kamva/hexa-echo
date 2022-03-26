@@ -167,6 +167,8 @@ github.com/kamva/gutil v0.0.0-20210827084201-35b6a3421580 h1:YNVqKgUtekv53gpKWFx
 github.com/kamva/gutil v0.0.0-20210827084201-35b6a3421580/go.mod h1:+yeJ+Y3R35PgqbWDx9BecACSsOLC3gGQ/Ef5hre00ds=
 github.com/kamva/hexa v0.0.0-20220316125933-1868ed871fa1 h1:/0B/Lc9mskTj8wWRGzPwojJGuMqMIHmpUet+ozBWk8I=
 github.com/kamva/hexa v0.0.0-20220316125933-1868ed871fa1/go.mod h1:T1oNftUOQU1V7ADt3t84CjQBkFEOjt8sLcxfgwE25CQ=
+github.com/kamva/hexa v0.0.0-20220326081636-83739571eaff h1:Q+Kqxi7ludvzCb2e1NXHA8yaqEOWKQbQ6W35EnDOCwY=
+github.com/kamva/hexa v0.0.0-20220326081636-83739571eaff/go.mod h1:T1oNftUOQU1V7ADt3t84CjQBkFEOjt8sLcxfgwE25CQ=
 github.com/kamva/mgm/v3 v3.4.0/go.mod h1:DzYf1/ZcxUUp90O/GGkj4r9MbgppvNqNtVgE6NDNcLk=
 github.com/kamva/tracer v0.0.0-20201115122932-ea39052d56cd h1:Wa2QzkBIqaWTsWb9gVtQxijZqweUXKkakFLhXOacG5k=
 github.com/kamva/tracer v0.0.0-20201115122932-ea39052d56cd/go.mod h1:6TmvuXxFe7FD95QvNyIVEt2ZPfYBk3QiKGhGt+UwFbQ=

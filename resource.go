@@ -3,7 +3,6 @@ package hecho
 import (
 	"fmt"
 
-	"github.com/kamva/hexa"
 	"github.com/labstack/echo/v4"
 )
 
@@ -31,17 +30,9 @@ type (
 	DeleteResource interface {
 		Delete(c echo.Context) error
 	}
-
-	Resource struct {
-	}
 )
 
-// Ctx method extract the hexa context from the echo context.
-func (r Resource) Ctx(c echo.Context) hexa.Context {
-	return Ctx(c)
-}
-
-// Resource define each method that exists in provided resource.
+// ResourceAPI defines every http route which its method is satisfied by the resource.
 func ResourceAPI(group *echo.Group, resource interface{}, prefix string, m ...echo.MiddlewareFunc) {
 	if r, ok := resource.(QueryResource); ok {
 		group.GET("", r.Query, m...).Name = routeName(prefix, "query")

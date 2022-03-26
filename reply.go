@@ -4,6 +4,7 @@ import (
 	"errors"
 
 	"github.com/kamva/hexa"
+	"github.com/kamva/hexa/hexatranslator"
 	"github.com/kamva/hexa/hlog"
 	"github.com/kamva/tracer"
 	"github.com/labstack/echo/v4"
@@ -14,12 +15,12 @@ import (
 // You MUST have hexa context in your echo context to use
 // this function to use its logger and translator.
 func Write(c echo.Context, reply hexa.Reply) error {
-	hexaCtx := Ctx(c)
-	if hexaCtx == nil {
+	ctx := c.Request().Context()
+	if ctx == nil {
 		return tracer.Trace(errors.New("invalid hexa context, we can not write reply as response"))
 	}
-	l := hexaCtx.Logger()
-	t := hexaCtx.Translator()
+	l := hlog.CtxLogger(ctx)
+	t := hexatranslator.CtxTranslator(ctx)
 
 	return WriteWithOpts(c, l, t, reply)
 }

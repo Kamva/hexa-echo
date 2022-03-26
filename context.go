@@ -14,9 +14,6 @@ const (
 	// ContextKeyHexaCorrelationID uses as key in context to store correlation id to use in context middleware
 	ContextKeyHexaCorrelationID = "_hexa_ctx.cid"
 
-	// ContextKeyHexaCtx is the identifier to set the hexa context as a field in the context of a request.
-	ContextKeyHexaCtx = "_hexa_ctx.ctx"
-
 	// ContextKeyHexaUser is the identifier to set the hexa user as a field in the context of a request.
 	ContextKeyHexaUser = "_hexa_ctx.user"
 )
@@ -66,24 +63,17 @@ func HexaContext(logger hexa.Logger, translator hexa.Translator) echo.Middleware
 
 			// Set context
 			hexaCtx := hexa.NewContext(ctx.Request().Context(), hexa.ContextParams{
-				Request:       r,
-				CorrelationId: cid,
-				Locale:        r.Header.Get("Accept-Language"),
-				User:          user,
-				Logger:        logger,
-				Translator:    translator,
+				Request:        r,
+				CorrelationId:  cid,
+				Locale:         r.Header.Get("Accept-Language"),
+				User:           user,
+				BaseLogger:     logger,
+				BaseTranslator: translator,
 			})
 
-			ctx.Set(ContextKeyHexaCtx, hexaCtx)
 			ctx.SetRequest(r.Clone(hexaCtx))
 
 			return next(ctx)
 		}
 	}
-}
-
-// Ctx returns hexa Context from the echo context.
-func Ctx(c echo.Context) hexa.Context {
-	val, _ := c.Get(ContextKeyHexaCtx).(hexa.Context)
-	return val
 }
