@@ -65,6 +65,10 @@ func handleError(hexaErr hexa.Error, c echo.Context, l hexa.Logger, t hexa.Trans
 	hexaErr.ReportIfNeeded(l, t)
 
 	debugData := hexaErr.ReportData()
+	if debugData == nil {
+		debugData = make(map[string]interface{}, 0)
+	}
+
 	debugData["err"] = hexaErr.Error()
 
 	body := &hexa.HttpRespBody{
