@@ -10,7 +10,7 @@ import (
 // and the request method is post too.
 func CSRFSkipperByAuthTokenLocation(ctx echo.Context) bool {
 	l, ok := ctx.Get(AuthTokenLocationContextKey).(TokenLocation)
-	return !(ok && (l == TokenLocationCookie || l == TokenLocationSession))
+	return !(!ok || (l==TokenLocationUnknown || l == TokenLocationCookie || l == TokenLocationSession))
 }
 
 var _ middleware.Skipper = CSRFSkipperByAuthTokenLocation

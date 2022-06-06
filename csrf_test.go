@@ -19,7 +19,7 @@ func TestCSRFSkipperByAuthTokenLocation(t *testing.T) {
 		TokenLocation TokenLocation
 		Skip          bool
 	}{
-		{"t1", TokenLocationUnknown, true},
+		{"t1", TokenLocationUnknown, false},
 		{"t1", TokenLocationHeader, true},
 		{"t1", TokenLocationCookie, false},
 		{"t1", TokenLocationSession, false},
