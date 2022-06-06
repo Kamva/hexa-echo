@@ -9,11 +9,10 @@ require (
 	github.com/kamva/gutil v0.0.0-20210827084201-35b6a3421580
 	github.com/kamva/hexa v0.0.0-20220326081636-83739571eaff
 	github.com/kamva/tracer v0.0.0-20201115122932-ea39052d56cd
-	github.com/labstack/echo/v4 v4.1.17
-	github.com/labstack/gommon v0.3.0
+	github.com/labstack/echo/v4 v4.7.2
+	github.com/labstack/gommon v0.3.1
 	github.com/magiconair/properties v1.8.1
 	github.com/mailru/easyjson v0.7.7
-	github.com/mattn/go-colorable v0.1.8 // indirect
 	github.com/sethvargo/go-limiter v0.7.2
 	github.com/stretchr/testify v1.7.0
 	go.opentelemetry.io/otel v1.2.0
@@ -24,5 +23,4 @@ require (
 	go.opentelemetry.io/otel/sdk/export/metric v0.25.0
 	go.opentelemetry.io/otel/sdk/metric v0.25.0
 	go.opentelemetry.io/otel/trace v1.2.0
-	golang.org/x/text v0.3.6 // indirect
 )
