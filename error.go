@@ -49,7 +49,7 @@ func HTTPErrorHandler(l hexa.Logger, t hexa.Translator, debug bool) echo.HTTPErr
 			translator = t
 		}
 
-		handleError(hexaErr, c, l, t, debug)
+		handleError(hexaErr, c, logger, translator, debug)
 	}
 
 }

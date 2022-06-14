@@ -62,7 +62,7 @@ func HexaContext(logger hexa.Logger, translator hexa.Translator) echo.Middleware
 			}
 
 			// Set context
-			hexaCtx := hexa.NewContext(ctx.Request().Context(), hexa.ContextParams{
+			hexaCtx := hexa.NewContext(r.Context(), hexa.ContextParams{
 				Request:        r,
 				CorrelationId:  cid,
 				Locale:         r.Header.Get("Accept-Language"),
@@ -72,7 +72,6 @@ func HexaContext(logger hexa.Logger, translator hexa.Translator) echo.Middleware
 			})
 
 			ctx.SetRequest(r.Clone(hexaCtx))
-
 			return next(ctx)
 		}
 	}
