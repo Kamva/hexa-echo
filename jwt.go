@@ -6,7 +6,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/dgrijalva/jwt-go"
+	"github.com/golang-jwt/jwt"
 	"github.com/kamva/gutil"
 	"github.com/kamva/hexa"
 	"github.com/kamva/tracer"

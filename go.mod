@@ -3,7 +3,7 @@ module github.com/kamva/hexa-echo
 go 1.13
 
 require (
-	github.com/dgrijalva/jwt-go v3.2.0+incompatible
+	github.com/golang-jwt/jwt v3.2.2+incompatible
 	github.com/google/uuid v1.1.2
 	github.com/gorilla/sessions v1.2.1
 	github.com/kamva/gutil v0.0.0-20210827084201-35b6a3421580
