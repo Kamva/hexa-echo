@@ -12,7 +12,7 @@ import (
 func LimitBodySize(n int64) echo.MiddlewareFunc {
 	return func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(c echo.Context) error {
-			if n <= 0 {
+			if n > 0 {
 				r := c.Request()
 				r.Body = http.MaxBytesReader(c.Response(), r.Body, n)
 			}
