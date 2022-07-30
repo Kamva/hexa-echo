@@ -66,7 +66,7 @@ func handleError(hexaErr hexa.Error, c echo.Context, l hexa.Logger, t hexa.Trans
 
 	debugData := hexaErr.ReportData()
 	if debugData == nil {
-		debugData = make(map[string]interface{}, 0)
+		debugData = make(map[string]any, 0)
 	}
 
 	debugData["err"] = hexaErr.Error()

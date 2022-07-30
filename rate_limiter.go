@@ -14,7 +14,7 @@ import (
 	"github.com/sethvargo/go-limiter/httplimit"
 )
 
-var ErrTooManyRequests = hexa.NewError(http.StatusTooManyRequests, "lib.http.too_many_requests_error", nil)
+var ErrTooManyRequests = hexa.NewError(http.StatusTooManyRequests, "lib.http.too_many_requests_error")
 
 type KeyExtractor func(c echo.Context) (string, error)
 

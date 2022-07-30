@@ -17,85 +17,55 @@ var (
 	//--------------------------------
 	// User and authentication Errors
 	//--------------------------------
-	errUserNotFound = hexa.NewError(
-		http.StatusInternalServerError,
-		"lib.user.not_found_error",
-		errors.New("user not found"),
-	)
+	errUserNotFound = hexa.NewError(http.StatusInternalServerError, "lib.user.not_found_error")
 
 	errContextUserNotImplementedHexaUser = hexa.NewError(
 		http.StatusInternalServerError,
 		"lib.user.interface_not_implemented_error",
-		errors.New("user in the hexa context does not implemented User interface"),
-	)
+	).SetError(errors.New("user in the hexa context does not implemented User interface"))
 
 	errJwtMissing = hexa.NewError(
 		http.StatusBadRequest,
 		"lib.user.missing_jwt_token_error",
-		errors.New("missing or malformed jwt"),
-	)
+	).SetError(errors.New("missing or malformed jwt"))
 
 	errInvalidOrExpiredJwt = hexa.NewError(
 		http.StatusUnauthorized,
 		"lib.user.invalid_expired_jwt_error",
-		errors.New("invalid or expired jwt"),
-	)
+	).SetError(errors.New("invalid or expired jwt"))
+
 	errInvalidAudience = hexa.NewError(
 		http.StatusUnauthorized,
 		"lib.user.invalid_jwt_audience_error",
-		errors.New("audience value in the jwt token is not for us"),
-	)
-	errUserMustBeGuest = hexa.NewError(
-		http.StatusUnauthorized,
-		"lib.user.must_be_guest_error",
-		errors.New("the user must be guest to access this API"),
-	)
+	).SetError(errors.New("audience value in the jwt token is not for this app"))
 
-	errUserNeedToAuthenticate = hexa.NewError(
-		http.StatusUnauthorized,
-		"lib.user.must_authenticate_error",
-		errors.New("the user need to login to access this API"),
-	)
+	errUserMustBeGuest = hexa.NewError(http.StatusUnauthorized, "lib.user.must_be_guest_error")
 
-	errRefreshTokenCanNotBeEmpty = hexa.NewError(
-		http.StatusBadRequest,
-		"lib.user.refresh_token_is_empty_error",
-		errors.New("refresh token can not be empty"),
-	)
+	errUserNeedToAuthenticate = hexa.NewError(http.StatusUnauthorized, "lib.user.must_authenticate_error")
 
-	errInvalidRefreshToken = hexa.NewError(http.StatusBadRequest, "lib.user.invalid_refresh_token_error", nil)
+	errRefreshTokenCanNotBeEmpty = hexa.NewError(http.StatusBadRequest, "lib.user.refresh_token_is_empty_error")
+
+	errInvalidRefreshToken = hexa.NewError(http.StatusBadRequest, "lib.user.invalid_refresh_token_error")
 
 	//--------------------------------
 	// Request errors
 	//--------------------------------
-	errRequestIdNotFound = hexa.NewError(
-		http.StatusInternalServerError,
-		"lib.request.request_id_not_found_error",
-		errors.New("request id not found in the request"),
-	)
+	errRequestIdNotFound = hexa.NewError(http.StatusInternalServerError, "lib.request.request_id_not_found_error")
 
-	errCorrelationIDNotFound = hexa.NewError(
-		http.StatusInternalServerError,
-		"lib.request.correlation_id_not_found_error",
-		errors.New("correlation id not found in the request"),
-	)
+	errCorrelationIDNotFound = hexa.NewError(http.StatusInternalServerError, "lib.request.correlation_id_not_found_error")
 
 	//--------------------------------
 	// DEBUG
 	//--------------------------------
-	errRouteAvailableInDebugMode = hexa.NewError(
-		http.StatusUnauthorized,
-		"lib.route.available_in_debug_mode_error",
-		errors.New("route is available just in debug mode"),
-	)
+	errRouteAvailableInDebugMode = hexa.NewError(http.StatusUnauthorized, "lib.route.available_in_debug_mode_error")
 
 	//--------------------------------
 	// Other errors
 	//--------------------------------
-	errHTTPNotFoundError = hexa.NewError(http.StatusNotFound, "lib.route.not_found_error", nil)
+	errHTTPNotFoundError = hexa.NewError(http.StatusNotFound, "lib.route.not_found_error")
 
 	// Set this error status manually on return relative to echo error code.
-	errEchoHTTPError = hexa.NewError(http.StatusNotFound, "lib.http_server.occurred_http_error", nil)
+	errEchoHTTPError = hexa.NewError(http.StatusNotFound, "lib.http_server.occurred_http_error")
 
-	errUnknownError = hexa.NewError(http.StatusInternalServerError, "lib.http_server.unknown_error", nil)
+	errUnknownError = hexa.NewError(http.StatusInternalServerError, "lib.http_server.unknown_error")
 )

@@ -37,7 +37,7 @@ type SubGenerator func(user hexa.User) (string, error)
 // GenerateTokenConfig use as config to generate new token.
 type GenerateTokenConfig struct {
 	SingingMethod    jwt.SigningMethod
-	Key              interface{} // for rsa this is the private key
+	Key              any // for rsa this is the private key
 	SubGenerator     SubGenerator
 	Claims           jwt.MapClaims
 	ExpireTokenAfter time.Duration
@@ -46,7 +46,7 @@ type GenerateTokenConfig struct {
 // AuthorizeRefreshTokenConfig use as config to refresh access token.
 type AuthorizeRefreshTokenConfig struct {
 	SingingMethod jwt.SigningMethod
-	Key           interface{} // for rsa this is the public key
+	Key           any // for rsa this is the public key
 	Token         string
 	// Use Authorizer to verify that can get new token.
 	Authorizer TokenAuthorizer
@@ -161,7 +161,7 @@ func GenerateToken(u hexa.User, cfg GenerateTokenConfig) (token string, err erro
 		return
 	}
 	if cfg.Claims == nil {
-		cfg.Claims = make(map[string]interface{})
+		cfg.Claims = make(map[string]any)
 	}
 	gutil.ExtendMap(cfg.Claims, jwt.MapClaims{
 		"sub": sub,
@@ -184,7 +184,7 @@ func AuthorizeRefreshToken(cfg AuthorizeRefreshTokenConfig) (user hexa.User, err
 	}
 
 	// Parse token:
-	jToken, err := jwt.Parse(cfg.Token, func(token *jwt.Token) (interface{}, error) {
+	jToken, err := jwt.Parse(cfg.Token, func(token *jwt.Token) (any, error) {
 		return cfg.Key, nil
 	})
 

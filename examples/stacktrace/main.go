@@ -16,7 +16,7 @@ func main() {
 	e.Use(hecho.Recover())
 	e.HTTPErrorHandler = hecho.HTTPErrorHandler(l, hexatranslator.NewEmptyDriver(), true)
 	e.GET("/hi", func(c echo.Context) error {
-		var a map[string]interface{}
+		var a map[string]any
 		a["a"] = "12"
 		return nil
 	})

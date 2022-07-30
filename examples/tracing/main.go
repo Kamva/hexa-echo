@@ -97,7 +97,7 @@ func main() {
 
 	e.HTTPErrorHandler = hecho.HTTPErrorHandler(l, hexatranslator.NewEmptyDriver(), true)
 	e.GET("/hi", func(c echo.Context) error {
-		//var a map[string]interface{}
+		//var a map[string]any
 		//a["a"] = "12"
 		c.String(http.StatusAccepted, "hi :)")
 		//return errors.New("fake error")

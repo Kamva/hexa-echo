@@ -19,7 +19,7 @@ func TestCSRFSkipperByAuthTokenLocation(t *testing.T) {
 		TokenLocation TokenLocation
 		Skip          bool
 	}{
-		{"t1", TokenLocationUnknown, false},
+		{"t1", TokenLocationUnknown, true},
 		{"t1", TokenLocationHeader, true},
 		{"t1", TokenLocationCookie, false},
 		{"t1", TokenLocationSession, false},
@@ -28,8 +28,8 @@ func TestCSRFSkipperByAuthTokenLocation(t *testing.T) {
 	for _, item := range table {
 		t.Run(item.Tag, func(t *testing.T) {
 			c := e.NewContext(req, rec)
-			c.Set(AuthTokenLocationContextKey,item.TokenLocation)
-			assert.Equal(t, item.Skip,CSRFSkipperByAuthTokenLocation(c))
+			c.Set(AuthTokenLocationContextKey, item.TokenLocation)
+			assert.Equal(t, item.Skip, CSRFSkipperByAuthTokenLocation(c))
 		})
 	}
 }

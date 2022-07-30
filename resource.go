@@ -33,7 +33,7 @@ type (
 )
 
 // ResourceAPI defines every http route which its method is satisfied by the resource.
-func ResourceAPI(group *echo.Group, resource interface{}, prefix string, m ...echo.MiddlewareFunc) {
+func ResourceAPI(group *echo.Group, resource any, prefix string, m ...echo.MiddlewareFunc) {
 	if r, ok := resource.(QueryResource); ok {
 		group.GET("", r.Query, m...).Name = routeName(prefix, "query")
 	}
