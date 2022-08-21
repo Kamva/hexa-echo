@@ -7,7 +7,7 @@ require (
 	github.com/google/uuid v1.1.2
 	github.com/gorilla/sessions v1.2.1
 	github.com/kamva/gutil v0.0.0-20210827084201-35b6a3421580
-	github.com/kamva/hexa v0.0.0-20220730171748-0bdb74fc67ca
+	github.com/kamva/hexa v0.0.0-20220821205325-ac27273ade86
 	github.com/kamva/tracer v0.0.0-20201115122932-ea39052d56cd
 	github.com/labstack/echo/v4 v4.7.2
 	github.com/labstack/gommon v0.3.1
@@ -29,7 +29,6 @@ require (
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/cespare/xxhash/v2 v2.1.1 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
-	github.com/getsentry/sentry-go v0.6.1 // indirect
 	github.com/golang/protobuf v1.4.3 // indirect
 	github.com/gorilla/securecookie v1.1.1 // indirect
 	github.com/josharian/intern v1.0.0 // indirect

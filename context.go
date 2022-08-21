@@ -2,6 +2,7 @@ package hecho
 
 import (
 	"github.com/kamva/hexa"
+	"github.com/kamva/hexa/hlog"
 	"github.com/kamva/tracer"
 	"github.com/labstack/echo/v4"
 )
@@ -47,7 +48,7 @@ func getCorrelationID(ctx echo.Context) (string, hexa.Error) {
 }
 
 // HexaContext set hexa context on each request.
-func HexaContext(logger hexa.Logger, translator hexa.Translator) echo.MiddlewareFunc {
+func HexaContext(logger hlog.Logger, translator hexa.Translator) echo.MiddlewareFunc {
 	return func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(ctx echo.Context) error {
 			r := ctx.Request()

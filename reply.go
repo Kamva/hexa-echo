@@ -19,14 +19,14 @@ func Write(c echo.Context, reply hexa.Reply) error {
 	if ctx == nil {
 		return tracer.Trace(errors.New("invalid hexa context, we can not write reply as response"))
 	}
-	l := hlog.CtxLogger(ctx)
+	l := hexa.Logger(ctx)
 	t := hexatranslator.CtxTranslator(ctx)
 
 	return WriteWithOpts(c, l, t, reply)
 }
 
 // WriteWithOpts writes the reply as response.
-func WriteWithOpts(c echo.Context, l hexa.Logger, t hexa.Translator, reply hexa.Reply) error {
+func WriteWithOpts(c echo.Context, l hlog.Logger, t hexa.Translator, reply hexa.Reply) error {
 	msg, err := t.Translate(reply.ID())
 	if err != nil {
 		l.With(hlog.String("translation_key", reply.ID())).Warn("translation for reply id not found.")

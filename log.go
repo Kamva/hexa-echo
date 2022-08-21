@@ -6,14 +6,13 @@ import (
 	"os"
 	"strings"
 
-	"github.com/kamva/hexa"
 	"github.com/kamva/hexa/hlog"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/gommon/log"
 )
 
 type echoLogger struct {
-	logger hexa.Logger
+	logger hlog.Logger
 	level  string
 }
 
@@ -145,7 +144,7 @@ func (l *echoLogger) Panicf(format string, args ...any) {
 }
 
 // HexaToEchoLogger convert hexa logger to echo logger.
-func HexaToEchoLogger(logger hexa.Logger, level string) echo.Logger {
+func HexaToEchoLogger(logger hlog.Logger, level string) echo.Logger {
 	return &echoLogger{
 		logger: logger,
 		level:  level,

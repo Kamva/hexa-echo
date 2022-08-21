@@ -14,7 +14,7 @@ import (
 
 // HTTPErrorHandler is the echo error handler.
 // This function needs to the HexaContext middleware.
-func HTTPErrorHandler(l hexa.Logger, t hexa.Translator, debug bool) echo.HTTPErrorHandler {
+func HTTPErrorHandler(l hlog.Logger, t hexa.Translator, debug bool) echo.HTTPErrorHandler {
 	return func(rErr error, c echo.Context) {
 		hexaErr := hexa.AsHexaErr(rErr)
 		if hexaErr == nil {
@@ -54,7 +54,7 @@ func HTTPErrorHandler(l hexa.Logger, t hexa.Translator, debug bool) echo.HTTPErr
 
 }
 
-func handleError(hexaErr hexa.Error, c echo.Context, l hexa.Logger, t hexa.Translator, debug bool) {
+func handleError(hexaErr hexa.Error, c echo.Context, l hlog.Logger, t hexa.Translator, debug bool) {
 	msg, err := hexaErr.Localize(t)
 
 	if err != nil {
