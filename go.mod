@@ -7,7 +7,7 @@ require (
 	github.com/google/uuid v1.1.2
 	github.com/gorilla/sessions v1.2.1
 	github.com/kamva/gutil v0.0.0-20210827084201-35b6a3421580
-	github.com/kamva/hexa v0.1.1-0.20220909101955-08a024cf54b5
+	github.com/kamva/hexa v0.1.1-0.20221015210256-81850dbe1771
 	github.com/kamva/tracer v0.0.0-20201115122932-ea39052d56cd
 	github.com/labstack/echo/v4 v4.7.2
 	github.com/labstack/gommon v0.3.1
